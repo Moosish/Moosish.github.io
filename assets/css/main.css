@@ -35,6 +35,12 @@ body {
 	line-height: 1;
 }
 
+.resized-image {
+	width: 75px; /* Or any other size */
+	height: auto; /* Keeps the aspect ratio */
+}
+
+
 ol, ul {
 	list-style: none;
 }
@@ -3322,3 +3328,15 @@ input, select, textarea {
 		}
 
 	}
+
+.experience-image img {
+	max-width: 100%; /* Ensures the image width does not exceed the container width */
+	height: auto;
+	padding-right: 40px; /* Adjust space on the right */
+	padding-bottom: 20px; /* Adjust space below */
+	padding-left: 20px; /* Adjust space on the right */
+	padding-top: 20px; /* Adjust space below */
+	display: block; /* Treats the image as a block-level element, providing better control over spacing */
+	float: left; /* Aligns the image to the left */
+}
+
