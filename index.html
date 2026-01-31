@@ -1,528 +1,566 @@
-	<!DOCTYPE HTML>
-<!--
-	Read Only by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+<!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Thomas Pasley Portfolio</title>
+		<title>Thomas Pasley - Data Scientist Portfolio</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<meta name="description" content="Thomas Pasley - Junior Data Scientist specializing in machine learning, data analytics, and cloud technologies" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
+		<link rel="stylesheet" href="assets/css/redesign.css" />
 	</head>
-	<body class="is-preload">
+	<body>
 
-		<!-- Header -->
-			<section id="header">
-				<header>
-					<span class="image avatar"><img src="images/avatar.jpg" alt="" /></span>
-					<h1 id="logo">
-						<a href="#">
-							Thomas Pasley
+		<!-- Navigation Header -->
+		<nav id="main-nav">
+			<div class="nav-container">
+				<div class="nav-brand">
+					<span class="brand-icon">TP</span>
+					<span class="brand-name">Thomas Pasley</span>
+				</div>
+				<div class="nav-menu" id="navMenu">
+					<a href="#home" class="nav-link active">Home</a>
+					<a href="#about" class="nav-link">About</a>
+					<a href="#skills" class="nav-link">Skills</a>
+					<a href="#experience" class="nav-link">Experience</a>
+					<a href="#education" class="nav-link">Education</a>
+					<a href="#contact" class="nav-link">Contact</a>
+				</div>
+				<button class="nav-toggle" id="navToggle">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+			</div>
+		</nav>
+
+		<!-- Hero Section -->
+		<section id="home" class="hero-section">
+			<div class="hero-background">
+				<div class="gradient-orb orb-1"></div>
+				<div class="gradient-orb orb-2"></div>
+				<div class="gradient-orb orb-3"></div>
+			</div>
+			<div class="hero-content">
+				<div class="hero-text">
+					<p class="hero-greeting">Hello, I'm</p>
+					<h1 class="hero-name">Thomas Pasley</h1>
+					<h2 class="hero-title">Junior Data Scientist</h2>
+					<p class="hero-description">
+						Transforming data into actionable insights through advanced analytics,
+						machine learning, and cloud technologies in the financial services sector.
+					</p>
+					<div class="hero-cta">
+						<a href="#contact" class="btn btn-primary">
+							<i class="fas fa-envelope"></i> Get In Touch
 						</a>
-					</h1>
-					<p>MSc Data Science Student at UWE Bristol</p>
-				</header>
-				<nav id="nav">
-					<ul>
-						<li><a href="#one" class="active">About</a></li>
-						<li><a href="#two">My Skills</a></li>
-						<li><a href="#three">My Experience</a></li>
-						<li><a href="#five">Contact Me</a></li>
-					</ul>
-				</nav>
-				<footer>
-					<ul class="icons">
-						<li><a href="https://github.com/Moosish" class="icon brands fa-github"><span class="label">Github</span></a></li>
-						<li><a href="mailto:tpasley95@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
-						<li><a href="https://www.linkedin.com/in/thomas-pasley/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-					</ul>
-				</footer>
-			</section>
+						<a href="#about" class="btn btn-secondary">
+							<i class="fas fa-user"></i> Learn More
+						</a>
+					</div>
+					<div class="hero-social">
+						<a href="https://github.com/Moosish" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+							<i class="fab fa-github"></i>
+						</a>
+						<a href="https://www.linkedin.com/in/thomas-pasley/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+							<i class="fab fa-linkedin"></i>
+						</a>
+						<a href="mailto:tpasley95@gmail.com" aria-label="Email">
+							<i class="fas fa-envelope"></i>
+						</a>
+					</div>
+				</div>
+				<div class="hero-image">
+					<div class="image-wrapper">
+						<img src="images/avatar.jpg" alt="Thomas Pasley" />
+						<div class="image-border"></div>
+					</div>
+				</div>
+			</div>
+			<div class="scroll-indicator">
+				<span></span>
+				<p>Scroll Down</p>
+			</div>
+		</section>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
-
-				<!-- Main -->
-				<div id="main">
-
-					<!-- One -->
-					<section id="one">
-						<div class="image main" data-position="center">
-							<img src="images/banner.jpg" alt="" />
+		<!-- Stats Section -->
+		<section class="stats-section">
+			<div class="container">
+				<div class="stats-grid">
+					<div class="stat-item">
+						<div class="stat-icon">
+							<i class="fas fa-briefcase"></i>
 						</div>
-						<div class="container">
-							<header class="major">
-								<h2>About Me</h2>
-								<p>Data Scientist and ML Enthusiast</p>
-							</header>
-							<p>I am an enthusiastic and skilled Data Science and Games Technology professional, with a solid foundation in Python, C++, and machine learning, complemented by a keen interest in AI applications and cybersecurity.
-								Graduating from the University of the West of England,
-								I have developed a robust portfolio of projects demonstrating my ability to leverage technology in solving complex problems,
-								particularly within the realms of sports analytics and game development.
-								My experience extends beyond technical proficiency, embodying strong communication skills and a collaborative spirit honed through diverse roles in IT liaison, customer service, and community volunteering.
-								I am passionately seeking opportunities to apply my technical skills and innovative thinking in environments that challenge and foster professional growth.</p>
+						<h3 class="stat-number" data-target="2">0</h3>
+						<p class="stat-label">Years Experience</p>
+					</div>
+					<div class="stat-item">
+						<div class="stat-icon">
+							<i class="fas fa-certificate"></i>
 						</div>
-					</section>
-
-					<!-- Two -->
-					<section id="two">
-						<div class="container">
-							<h3>My Skills</h3>
-							<p>My academic and project work has equipped me with a diverse set of skills:</p>
-							<ul class="feature-icons">
-								<li class="icon solid fa-code">Advanced Programming in Python & C++</li>
-								<li class="icon solid fa-brain">Proficient in Machine Learning & AI</li>
-								<li class="icon solid fa-shield-alt">Foundational Knowledge in Cybersecurity</li>
-								<li class="icon solid fa-gamepad">Game Development using Unity</li>
-								<li class="icon solid fa-network-wired">Experience with DevOps & Cloud Technologies</li>
-								<li class="icon solid fa-users">Leadership & Team Collaboration</li>
-							</ul>
-
+						<h3 class="stat-number" data-target="3">0</h3>
+						<p class="stat-label">Certifications</p>
+					</div>
+					<div class="stat-item">
+						<div class="stat-icon">
+							<i class="fas fa-graduation-cap"></i>
 						</div>
-					</section>
+						<h3 class="stat-number" data-target="2">0</h3>
+						<p class="stat-label">Degrees</p>
+					</div>
+					<div class="stat-item">
+						<div class="stat-icon">
+							<i class="fas fa-code"></i>
+						</div>
+						<h3 class="stat-number" data-target="10">0</h3>
+						<p class="stat-label">Technologies</p>
+					</div>
+				</div>
+			</div>
+		</section>
 
-					<!-- Three -->
-					<section id="three">
-						<div class="container">
-							<h3>My Experience</h3>
-							<p>Through my employment history, I've gained valuable skills and experiences:</p>
-							<div class="features">
-								<article>
-									<a href="#" class="experience-image"><img src="images/nailsea.jpg" alt="" /></a>
-									<div class="inner">
-										<h4>Bar Staff</h4>
-										<h5>Oct. 2023 – Present • Nailsea and Backwell RFC</h5>
-										<p>
-										<ul>
-											<li>Developed exceptional customer service skills.</li>
-											<li>Effectively managed diverse customer needs.</li>
-											<li>Enhanced multitasking and time management abilities.</li>
-										</ul>
-										</p>
-									</div>
-								</article>
-								<article>
-									<a href="#" class="experience-image"><img src="images/waitrose.jpg" alt="" /></a>
-									<div class="inner">
-										<h4>Site Point of Contact (SPoC)</h4>
-										<h5>May 2021 – June 2023 • Waitrose and Partners</h5>
-										<p>
-										<ul>
-											<li>Lead for IT liaison and operational initiatives within our branch.</li>
-											<li>Ensured seamless communication and collaboration with the IT department.</li>
-											<li>Implemented new IT infrastructures and changes.</li>
-										</ul>
-										</p>
-									</div>
-								</article>
-								<article>
-									<a href="#" class="experience-image"><img src="images/waitrose.jpg" alt="" /></a>
-									<div class="inner">
-										<h4>Supermarket Assistant</h4>
-										<h5>Oct. 2017 – June 2023 • Waitrose and Partners</h5>
-										<p>
-										<ul>
-											<li>Gained experience in customer service, team collaboration, and leadership.</li>
-											<li>Ensured high customer satisfaction levels.</li>
-										</ul>
-										</p>
-									</div>
-								</article>
-								<article>
-									<a href="#" class="experience-image"><img src="images/nhs.jpg" alt="" /></a>
-									<div class="inner">
-										<h4>Vaccination Program Volunteer</h4>
-										<h5>June 2021 – July 2021 • West Walk Surgery</h5>
-										<p>
-										<ul>
-											<li>Supported the vaccine rollout program.</li>
-											<li>Assisted with administration and provided guidance and information to recipients.</li>
-										</ul>
-										</p>
-									</div>
-								</article>
-								<article>
-									<a href="#" class="experience-image"><img src="images/stjohns.jpg" alt="" /></a>
-									<div class="inner">
-										<h4>St Johns Ambulance Cadet</h4>
-										<h5>Jan 2015 – May 2019</h5>
-										<p>
-										<ul>
-											<li>Acquired fundamental first aid skills.</li>
-											<li>Developed strong communication and teamwork abilities.</li>
-											<li>Participated in training and real-life emergency response situations.</li>
-										</ul>
-										</p>
-									</div>
-								</article>
+		<!-- About Section -->
+		<section id="about" class="about-section">
+			<div class="container">
+				<div class="section-header">
+					<span class="section-tag">Introduction</span>
+					<h2 class="section-title">About Me</h2>
+					<p class="section-subtitle">Professional Data Scientist in Financial Services</p>
+				</div>
+				<div class="about-content">
+					<div class="about-text">
+						<p class="lead">
+							Data professional with experience spanning data science, analytics, and engineering
+							within a regulated financial services environment.
+						</p>
+						<p>
+							Currently working as a <strong>Junior Data Scientist at Parmenion</strong>, I deliver
+							data-driven systems, business intelligence, and analytical solutions that improve
+							decision-making across sales, product, and operational teams.
+						</p>
+						<p>
+							With a strong technical foundation in Python, SQL, machine learning, and cloud platforms,
+							I'm complemented by experience engaging stakeholders and contributing to applied AI initiatives.
+						</p>
+						<p>
+							I hold an <strong>MSc in Data Science (First Class)</strong> from the University of the
+							West of England, with a focus on practical application of advanced machine learning
+							techniques to real-world problems.
+						</p>
+						<div class="about-highlights">
+							<div class="highlight-item">
+								<i class="fas fa-check-circle"></i>
+								<span>AI & Machine Learning Expert</span>
+							</div>
+							<div class="highlight-item">
+								<i class="fas fa-check-circle"></i>
+								<span>Cloud Technologies (GCP)</span>
+							</div>
+							<div class="highlight-item">
+								<i class="fas fa-check-circle"></i>
+								<span>Data Engineering & Analytics</span>
+							</div>
+							<div class="highlight-item">
+								<i class="fas fa-check-circle"></i>
+								<span>Business Intelligence</span>
 							</div>
 						</div>
-					</section>
+					</div>
+				</div>
+			</div>
+		</section>
 
-
-
-					<!-- Five -->
-					<section id="five">
-						<div class="container">
-							<h3>Contact Me</h3>
-							<a href="https://www.linkedin.com/in/thomas-pasley/">LinkedIn</a><a href="https://github.com/Moosish">GitHub</a><a href="mailto:tpasley95@gmail.com">Personal Email</a><a href="mailto:thomas2.pasley@live.uwe.ac.uk">University Email</a>
+		<!-- Skills Section -->
+		<section id="skills" class="skills-section">
+			<div class="container">
+				<div class="section-header">
+					<span class="section-tag">Expertise</span>
+					<h2 class="section-title">Skills & Technologies</h2>
+					<p class="section-subtitle">Technical proficiency developed through professional experience and advanced education</p>
+				</div>
+				<div class="skills-grid">
+					<div class="skill-category">
+						<div class="category-header">
+							<i class="fas fa-code"></i>
+							<h3>Programming & Data</h3>
 						</div>
-					</section>
+						<div class="skill-items">
+							<div class="skill-item">
+								<span class="skill-name">Python</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="95"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">SQL</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="90"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">C++</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="30"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-					<!-- Five -->
-					<!--
-								<section id="five">
-									<div class="container">
-										<h3>Elements</h3>
+					<div class="skill-category">
+						<div class="category-header">
+							<i class="fas fa-brain"></i>
+							<h3>Machine Learning</h3>
+						</div>
+						<div class="skill-items">
+							<div class="skill-item">
+								<span class="skill-name">Supervised Learning</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="90"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">Deep Learning</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="85"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">NLP</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="80"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">Computer Vision</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="80"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-										<section>
-											<h4>Text</h4>
-											<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-											This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-											This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-											<hr />
-											<header>
-												<h4>Heading with a Subtitle</h4>
-												<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-											</header>
-											<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-											<header>
-												<h5>Heading with a Subtitle</h5>
-												<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-											</header>
-											<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-											<hr />
-											<h2>Heading Level 2</h2>
-											<h3>Heading Level 3</h3>
-											<h4>Heading Level 4</h4>
-											<h5>Heading Level 5</h5>
-											<h6>Heading Level 6</h6>
-											<hr />
-											<h5>Blockquote</h5>
-											<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-											<h5>Preformatted</h5>
-											<pre><code>i = 0;
+					<div class="skill-category">
+						<div class="category-header">
+							<i class="fas fa-cloud"></i>
+							<h3>Cloud & DevOps</h3>
+						</div>
+						<div class="skill-items">
+							<div class="skill-item">
+								<span class="skill-name">REST APIs</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="95"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">Google Cloud Platform</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="65"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">Docker</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="55"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-	while (!deck.isInOrder()) {
-		print 'Iteration ' + i;
-		deck.shuffle();
-		i++;
-	}
+					<div class="skill-category">
+						<div class="category-header">
+							<i class="fas fa-chart-line"></i>
+							<h3>Data Visualization</h3>
+						</div>
+						<div class="skill-items">
+							<div class="skill-item">
+								<span class="skill-name">Power BI</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="95"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">Streamlit</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="75"></div>
+								</div>
+							</div>
+							<div class="skill-item">
+								<span class="skill-name">Looker</span>
+								<div class="skill-bar">
+									<div class="skill-progress" data-progress="40"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-	print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-										</section>
+		<!-- Experience Section -->
+		<section id="experience" class="experience-section">
+			<div class="container">
+				<div class="section-header">
+					<span class="section-tag">Career Path</span>
+					<h2 class="section-title">Professional Experience</h2>
+					<p class="section-subtitle">Journey through data science, analytics, and engineering</p>
+				</div>
+				<div class="timeline">
+					<div class="timeline-item">
+						<div class="timeline-marker"></div>
+						<div class="timeline-content">
+							<span class="timeline-date">August 2025 – Present</span>
+							<h3>Junior Data Scientist</h3>
+							<h4>Parmenion</h4>
+							<ul>
+								<li>Created cutting-edge data driven systems and policies to improve functions and insight across the business</li>
+								<li>Key contributor to AI working group, leading research and discussions on emerging AI technology opportunities</li>
+								<li>Developed effective solutions to enhance B2B Sales operations and product development using a variety of tools and methodologies</li>
+							</ul>
+							<div class="timeline-tags">
+								<span class="tag">Python</span>
+								<span class="tag">Machine Learning</span>
+								<span class="tag">AI</span>
+								<span class="tag">BI</span>
+							</div>
+						</div>
+					</div>
 
-										<section>
-											<h4>Lists</h4>
-											<div class="row">
-												<div class="col-6 col-12-xsmall">
-													<h5>Unordered</h5>
-													<ul>
-														<li>Dolor pulvinar etiam magna etiam.</li>
-														<li>Sagittis adipiscing lorem eleifend.</li>
-														<li>Felis enim feugiat dolore viverra.</li>
-													</ul>
-													<h5>Alternate</h5>
-													<ul class="alt">
-														<li>Dolor pulvinar etiam magna etiam.</li>
-														<li>Sagittis adipiscing lorem eleifend.</li>
-														<li>Felis enim feugiat dolore viverra.</li>
-													</ul>
-												</div>
-												<div class="col-6 col-12-xsmall">
-													<h5>Ordered</h5>
-													<ol>
-														<li>Dolor pulvinar etiam magna etiam.</li>
-														<li>Etiam vel felis at lorem sed viverra.</li>
-														<li>Felis enim feugiat dolore viverra.</li>
-														<li>Dolor pulvinar etiam magna etiam.</li>
-														<li>Etiam vel felis at lorem sed viverra.</li>
-														<li>Felis enim feugiat dolore viverra.</li>
-													</ol>
-													<h5>Icons</h5>
-													<ul class="icons">
-														<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-														<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-														<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-														<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-														<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-														<li><a href="#" class="icon brands fa-tumblr"><span class="label">Tumblr</span></a></li>
-													</ul>
-												</div>
-											</div>
-											<h5>Actions</h5>
-											<ul class="actions">
-												<li><a href="#" class="button primary">Default</a></li>
-												<li><a href="#" class="button">Default</a></li>
-												<li><a href="#" class="button alt">Default</a></li>
-											</ul>
-											<ul class="actions small">
-												<li><a href="#" class="button primary small">Small</a></li>
-												<li><a href="#" class="button small">Small</a></li>
-												<li><a href="#" class="button alt small">Small</a></li>
-											</ul>
-											<div class="row">
-												<div class="col-3 col-6-medium col-12-xsmall">
-													<ul class="actions stacked">
-														<li><a href="#" class="button primary">Default</a></li>
-														<li><a href="#" class="button">Default</a></li>
-														<li><a href="#" class="button alt">Default</a></li>
-													</ul>
-												</div>
-												<div class="col-3 col-6 col-12-xsmall">
-													<ul class="actions stacked">
-														<li><a href="#" class="button primary small">Small</a></li>
-														<li><a href="#" class="button small">Small</a></li>
-														<li><a href="#" class="button alt small">Small</a></li>
-													</ul>
-												</div>
-												<div class="col-3 col-6-medium col-12-xsmall">
-													<ul class="actions stacked">
-														<li><a href="#" class="button primary fit">Default</a></li>
-														<li><a href="#" class="button fit">Default</a></li>
-														<li><a href="#" class="button alt fit">Default</a></li>
-													</ul>
-												</div>
-												<div class="col-3 col-6-medium col-12-xsmall">
-													<ul class="actions stacked">
-														<li><a href="#" class="button primary small fit">Small</a></li>
-														<li><a href="#" class="button small fit">Small</a></li>
-														<li><a href="#" class="button alt small fit">Small</a></li>
-													</ul>
-												</div>
-											</div>
-										</section>
+					<div class="timeline-item">
+						<div class="timeline-marker"></div>
+						<div class="timeline-content">
+							<span class="timeline-date">December 2024 – August 2025</span>
+							<h3>MI & Reporting Analyst</h3>
+							<h4>Parmenion</h4>
+							<ul>
+								<li>Took ownership of key analytical processes across the entire business</li>
+								<li>Developed and maintained company-wide BI reporting to track KPIs and support senior management decision-making</li>
+								<li>Engaged and led projects with stakeholders to deliver optimal outcomes for all items of our data suite</li>
+							</ul>
+							<div class="timeline-tags">
+								<span class="tag">Analytics</span>
+								<span class="tag">Looker</span>
+								<span class="tag">SQL</span>
+								<span class="tag">Stakeholder Management</span>
+							</div>
+						</div>
+					</div>
 
-										<section>
-											<h4>Table</h4>
-											<h5>Default</h5>
-											<div class="table-wrapper">
-												<table>
-													<thead>
-														<tr>
-															<th>Name</th>
-															<th>Description</th>
-															<th>Price</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>Item One</td>
-															<td>Ante turpis integer aliquet porttitor.</td>
-															<td>29.99</td>
-														</tr>
-														<tr>
-															<td>Item Two</td>
-															<td>Vis ac commodo adipiscing arcu aliquet.</td>
-															<td>19.99</td>
-														</tr>
-														<tr>
-															<td>Item Three</td>
-															<td> Morbi faucibus arcu accumsan lorem.</td>
-															<td>29.99</td>
-														</tr>
-														<tr>
-															<td>Item Four</td>
-															<td>Vitae integer tempus condimentum.</td>
-															<td>19.99</td>
-														</tr>
-														<tr>
-															<td>Item Five</td>
-															<td>Ante turpis integer aliquet porttitor.</td>
-															<td>29.99</td>
-														</tr>
-													</tbody>
-													<tfoot>
-														<tr>
-															<td colspan="2"></td>
-															<td>100.00</td>
-														</tr>
-													</tfoot>
-												</table>
-											</div>
+					<div class="timeline-item">
+						<div class="timeline-marker"></div>
+						<div class="timeline-content">
+							<span class="timeline-date">July 2024 – September 2024</span>
+							<h3>Cloud Technical Writer</h3>
+							<h4>Appsbroker CTS (Now Qodea)</h4>
+							<ul>
+								<li>Curated tailor-made Google Cloud Platform on-demand training specific to customer needs</li>
+								<li>Worked with delivery leads to provide effective training courses in AI & ML, Big Data, IaaS, PaaS, SaaS, Security, and Development</li>
+								<li>Completed hands-on Google Cloud training, labs and projects to bolster subject matter knowledge</li>
+							</ul>
+							<div class="timeline-tags">
+								<span class="tag">GCP</span>
+								<span class="tag">Technical Writing</span>
+								<span class="tag">Cloud Computing</span>
+							</div>
+						</div>
+					</div>
 
-											<h5>Alternate</h5>
-											<div class="table-wrapper">
-												<table class="alt">
-													<thead>
-														<tr>
-															<th>Name</th>
-															<th>Description</th>
-															<th>Price</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>Item One</td>
-															<td>Ante turpis integer aliquet porttitor.</td>
-															<td>29.99</td>
-														</tr>
-														<tr>
-															<td>Item Two</td>
-															<td>Vis ac commodo adipiscing arcu aliquet.</td>
-															<td>19.99</td>
-														</tr>
-														<tr>
-															<td>Item Three</td>
-															<td> Morbi faucibus arcu accumsan lorem.</td>
-															<td>29.99</td>
-														</tr>
-														<tr>
-															<td>Item Four</td>
-															<td>Vitae integer tempus condimentum.</td>
-															<td>19.99</td>
-														</tr>
-														<tr>
-															<td>Item Five</td>
-															<td>Ante turpis integer aliquet porttitor.</td>
-															<td>29.99</td>
-														</tr>
-													</tbody>
-													<tfoot>
-														<tr>
-															<td colspan="2"></td>
-															<td>100.00</td>
-														</tr>
-													</tfoot>
-												</table>
-											</div>
-										</section>
+					<div class="timeline-item">
+						<div class="timeline-marker"></div>
+						<div class="timeline-content">
+							<span class="timeline-date">October 2017 – June 2023</span>
+							<h3>Supermarket Assistant / Site Point of Contact</h3>
+							<h4>Waitrose & Partners</h4>
+							<ul>
+								<li>Served as primary Site Point of Contact (SPoC), leading IT liaison and operational initiatives</li>
+								<li>Collaborated with IT department to implement new infrastructures and changes, enhancing operational efficiency</li>
+								<li>Delivered training to partners, increasing proficiency with IT services</li>
+							</ul>
+							<div class="timeline-tags">
+								<span class="tag">IT Liaison</span>
+								<span class="tag">Training</span>
+								<span class="tag">Operations</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-										<section>
-											<h4>Buttons</h4>
-											<ul class="actions">
-												<li><a href="#" class="button primary">Primary</a></li>
-												<li><a href="#" class="button">Default</a></li>
-												<li><a href="#" class="button alt">Alternate</a></li>
-											</ul>
-											<ul class="actions">
-												<li><a href="#" class="button primary large">Large</a></li>
-												<li><a href="#" class="button">Default</a></li>
-												<li><a href="#" class="button alt small">Small</a></li>
-											</ul>
-											<ul class="actions fit">
-												<li><a href="#" class="button primary fit">Fit</a></li>
-												<li><a href="#" class="button fit">Fit</a></li>
-												<li><a href="#" class="button alt fit">Fit</a></li>
-											</ul>
-											<ul class="actions fit small">
-												<li><a href="#" class="button primary fit small">Fit + Small</a></li>
-												<li><a href="#" class="button fit small">Fit + Small</a></li>
-												<li><a href="#" class="button alt fit small">Fit + Small</a></li>
-											</ul>
-											<ul class="actions">
-												<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-												<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-												<li><a href="#" class="button alt icon solid fa-check">Icon</a></li>
-											</ul>
-											<ul class="actions">
-												<li><span class="button primary disabled">Primary</span></li>
-												<li><span class="button disabled">Default</span></li>
-												<li><span class="button alt disabled">Alternate</span></li>
-											</ul>
-										</section>
-
-										<section>
-											<h4>Form</h4>
-											<form method="post" action="#">
-												<div class="row gtr-uniform">
-													<div class="col-6 col-12-xsmall">
-														<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
-													</div>
-													<div class="col-6 col-12-xsmall">
-														<input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
-													</div>
-													<div class="col-12">
-														<select name="demo-category" id="demo-category">
-															<option value="">- Category -</option>
-															<option value="1">Manufacturing</option>
-															<option value="1">Shipping</option>
-															<option value="1">Administration</option>
-															<option value="1">Human Resources</option>
-														</select>
-													</div>
-													<div class="col-4 col-12-medium">
-														<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-														<label for="demo-priority-low">Low Priority</label>
-													</div>
-													<div class="col-4 col-12-medium">
-														<input type="radio" id="demo-priority-normal" name="demo-priority">
-														<label for="demo-priority-normal">Normal Priority</label>
-													</div>
-													<div class="col-4 col-12-medium">
-														<input type="radio" id="demo-priority-high" name="demo-priority">
-														<label for="demo-priority-high">High Priority</label>
-													</div>
-													<div class="col-6 col-12-medium">
-														<input type="checkbox" id="demo-copy" name="demo-copy">
-														<label for="demo-copy">Email me a copy of this message</label>
-													</div>
-													<div class="col-6 col-12-medium">
-														<input type="checkbox" id="demo-human" name="demo-human" checked>
-														<label for="demo-human">I am a human and not a robot</label>
-													</div>
-													<div class="col-12">
-														<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-													</div>
-													<div class="col-12">
-														<ul class="actions">
-															<li><input type="submit" value="Send Message" /></li>
-															<li><input type="reset" value="Reset" class="alt" /></li>
-														</ul>
-													</div>
-												</div>
-											</form>
-										</section>
-
-										<section>
-											<h4>Image</h4>
-											<h5>Fit</h5>
-											<span class="image fit"><img src="images/banner.jpg" alt="" /></span>
-											<div class="box alt">
-												<div class="row gtr-50 gtr-uniform">
-													<div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div>
-													<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-												</div>
-											</div>
-											<h5>Left &amp; Right</h5>
-											<p><span class="image left"><img src="images/avatar.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-											<p><span class="image right"><img src="images/avatar.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-										</section>
-
-									</div>
-								</section>
-							-->
-
+		<!-- Education Section -->
+		<section id="education" class="education-section">
+			<div class="container">
+				<div class="section-header">
+					<span class="section-tag">Academic Background</span>
+					<h2 class="section-title">Education & Certifications</h2>
+					<p class="section-subtitle">Advanced academic achievements and professional certifications</p>
 				</div>
 
-				<!-- Footer -->
-					<section id="footer">
-						<div class="container">
-							<ul class="copyright">
-								<li>&copy; Thomas Pasley. All rights reserved.</li>
+				<div class="education-grid">
+					<div class="education-card">
+						<div class="education-icon">
+							<i class="fas fa-graduation-cap"></i>
+						</div>
+						<div class="education-content">
+							<span class="education-date">September 2023 – August 2024</span>
+							<h3>MSc Data Science</h3>
+							<h4>University of the West of England</h4>
+							<span class="education-grade">First Class Honours</span>
+							<ul>
+								<li>Advanced AI and machine learning concepts including neural networks and deep learning</li>
+								<li>Data preprocessing, feature engineering, and model optimisation using TensorFlow and PyTorch</li>
+								<li>Built applications, dashboards, and data pipelines with focus on scalability</li>
+								<li>Applied AI to real-world use cases in business intelligence and financial services</li>
 							</ul>
 						</div>
-					</section>
+					</div>
 
+					<div class="education-card">
+						<div class="education-icon">
+							<i class="fas fa-graduation-cap"></i>
+						</div>
+						<div class="education-content">
+							<span class="education-date">September 2019 – August 2023</span>
+							<h3>BSc Games Technology (Hons)</h3>
+							<h4>University of the West of England</h4>
+							<span class="education-grade">2:1 Honours</span>
+							<ul>
+								<li>Game development frameworks and engines, particularly Unity</li>
+								<li>Advanced programming skills in C++ for high-performance applications</li>
+								<li>Game design principles and 3D modelling</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="certifications-wrapper">
+					<h3 class="certifications-title">Professional Certifications</h3>
+					<div class="certifications-grid">
+						<div class="cert-card">
+							<div class="cert-icon">
+								<i class="fas fa-database"></i>
+							</div>
+							<h4>Data Engineer Associate</h4>
+							<p>Datacamp</p>
+							<span class="cert-date">September 2025</span>
+						</div>
+						<div class="cert-card">
+							<div class="cert-icon">
+								<i class="fas fa-robot"></i>
+							</div>
+							<h4>Machine Learning Professional</h4>
+							<p>IBM</p>
+							<span class="cert-date">May 2024</span>
+						</div>
+						<div class="cert-card">
+							<div class="cert-icon">
+								<i class="fas fa-shield-alt"></i>
+							</div>
+							<h4>Cybersecurity Professional</h4>
+							<p>Google</p>
+							<span class="cert-date">October 2024</span>
+						</div>
+					</div>
+				</div>
 			</div>
+		</section>
+
+		<!-- Contact Section -->
+		<section id="contact" class="contact-section">
+			<div class="container">
+				<div class="section-header">
+					<span class="section-tag">Get In Touch</span>
+					<h2 class="section-title">Contact Me</h2>
+					<p class="section-subtitle">Let's connect and discuss opportunities</p>
+				</div>
+				<div class="contact-grid">
+					<div class="contact-info">
+						<h3>Let's work together</h3>
+						<p>
+							I'm always interested in hearing about new opportunities, collaborations,
+							or just having a conversation about data science and technology.
+						</p>
+						<div class="contact-methods">
+							<a href="mailto:tpasley95@gmail.com" class="contact-method">
+								<div class="method-icon">
+									<i class="fas fa-envelope"></i>
+								</div>
+								<div class="method-content">
+									<h4>Email</h4>
+									<p>tpasley95@gmail.com</p>
+								</div>
+							</a>
+							<a href="https://www.linkedin.com/in/thomas-pasley/" target="_blank" rel="noopener noreferrer" class="contact-method">
+								<div class="method-icon">
+									<i class="fab fa-linkedin"></i>
+								</div>
+								<div class="method-content">
+									<h4>LinkedIn</h4>
+									<p>thomas-pasley</p>
+								</div>
+							</a>
+							<a href="https://github.com/Moosish" target="_blank" rel="noopener noreferrer" class="contact-method">
+								<div class="method-icon">
+									<i class="fab fa-github"></i>
+								</div>
+								<div class="method-content">
+									<h4>GitHub</h4>
+									<p>@Moosish</p>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="contact-cta">
+						<div class="cta-card">
+							<h3>Quick Links</h3>
+							<div class="quick-links">
+								<a href="mailto:tpasley95@gmail.com" class="quick-link">
+									<i class="fas fa-paper-plane"></i>
+									Send Email
+								</a>
+								<a href="https://www.linkedin.com/in/thomas-pasley/" target="_blank" rel="noopener noreferrer" class="quick-link">
+									<i class="fab fa-linkedin"></i>
+									Connect on LinkedIn
+								</a>
+								<a href="https://github.com/Moosish" target="_blank" rel="noopener noreferrer" class="quick-link">
+									<i class="fab fa-github"></i>
+									View GitHub Profile
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer class="site-footer">
+			<div class="container">
+				<div class="footer-content">
+					<div class="footer-brand">
+						<h3>Thomas Pasley</h3>
+						<p>Junior Data Scientist</p>
+					</div>
+					<div class="footer-social">
+						<a href="https://github.com/Moosish" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+							<i class="fab fa-github"></i>
+						</a>
+						<a href="https://www.linkedin.com/in/thomas-pasley/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+							<i class="fab fa-linkedin"></i>
+						</a>
+						<a href="mailto:tpasley95@gmail.com" aria-label="Email">
+							<i class="fas fa-envelope"></i>
+						</a>
+					</div>
+				</div>
+				<div class="footer-bottom">
+					<p>&copy; 2026 Thomas Pasley. All rights reserved.</p>
+				</div>
+			</div>
+		</footer>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
+		<script src="assets/js/redesign.js"></script>
 	</body>
 </html>
