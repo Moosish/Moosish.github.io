@@ -6,27 +6,27 @@
 /* ==================== ROOT VARIABLES ==================== */
 :root {
     /* Colors */
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --primary-light: #818cf8;
-    --secondary: #10b981;
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --primary-light: #34d399;
+    --secondary: #22c55e;
     --accent: #f59e0b;
     --success: #10b981;
     --warning: #f59e0b;
     --error: #ef4444;
 
     /* Backgrounds */
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
-    --bg-card: rgba(30, 41, 59, 0.6);
-    --bg-hover: rgba(99, 102, 241, 0.1);
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #2d2d2d;
+    --bg-card: rgba(26, 26, 26, 0.6);
+    --bg-hover: rgba(16, 185, 129, 0.1);
 
     /* Text Colors */
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
-    --text-inverse: #0f172a;
+    --text-inverse: #0f0f0f;
 
     /* Borders */
     --border-color: rgba(148, 163, 184, 0.1);
@@ -97,7 +97,7 @@ ul {
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(15, 15, 15, 0.8);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
     z-index: 1000;
@@ -106,7 +106,7 @@ ul {
 
 #main-nav.scrolled {
     box-shadow: var(--shadow-md);
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(15, 15, 15, 0.95);
 }
 
 .nav-container {
@@ -327,12 +327,12 @@ ul {
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6);
 }
 
 .btn-secondary {
@@ -371,7 +371,7 @@ ul {
     background: var(--primary);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
 .hero-image {
@@ -460,7 +460,7 @@ ul {
 .stat-item:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
 }
 
 .stat-icon {
@@ -608,7 +608,7 @@ ul {
 
 .skill-category:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
     border-color: var(--primary);
 }
 
@@ -667,7 +667,7 @@ ul {
     border-radius: 50px;
     width: 0;
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
 
 /* ==================== EXPERIENCE SECTION ==================== */
@@ -721,7 +721,7 @@ ul {
 .timeline-content:hover {
     transform: translateX(10px);
     border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
 }
 
 .timeline-date {
@@ -811,7 +811,7 @@ ul {
 .education-card:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
 }
 
 .education-icon {
@@ -920,7 +920,7 @@ ul {
 .cert-card:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
 }
 
 .cert-icon {
@@ -1005,7 +1005,7 @@ ul {
 .contact-method:hover {
     border-color: var(--primary);
     transform: translateX(10px);
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
 }
 
 .method-icon {
@@ -1189,7 +1189,7 @@ ul {
         top: 70px;
         left: -100%;
         width: 100%;
-        background: rgba(15, 23, 42, 0.98);
+        background: rgba(15, 15, 15, 0.98);
         backdrop-filter: blur(10px);
         flex-direction: column;
         padding: 2rem;

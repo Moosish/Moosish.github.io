@@ -41,17 +41,16 @@
             });
         });
 
-        // Smooth scroll for navigation links
+        // Smooth scroll for anchor navigation links only
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (!href || !href.startsWith('#')) return; // let real URLs navigate
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-
+                const targetSection = document.querySelector(href);
                 if (targetSection) {
-                    const offsetTop = targetSection.offsetTop - 80;
                     window.scrollTo({
-                        top: offsetTop,
+                        top: targetSection.offsetTop - 80,
                         behavior: 'smooth'
                     });
                 }
@@ -308,7 +307,7 @@
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
         }
 
         .back-to-top.visible {
@@ -318,7 +317,7 @@
 
         .back-to-top:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6);
         }
 
         .back-to-top i {
@@ -418,7 +417,7 @@
     }
 
     // ==================== CONSOLE MESSAGE ====================
-    console.log('%c👋 Hello there!', 'font-size: 20px; font-weight: bold; color: #6366f1;');
+    console.log('%c👋 Hello there!', 'font-size: 20px; font-weight: bold; color: #10b981;');
     console.log('%c🚀 Thanks for checking out the code!', 'font-size: 14px; color: #cbd5e1;');
     console.log('%c💼 Looking for a data scientist? Let\'s connect!', 'font-size: 14px; color: #10b981;');
 

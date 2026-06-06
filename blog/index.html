@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>Blog — Thomas Pasley</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="description" content="Technical writing on data science, machine learning, and engineering by Thomas Pasley." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="../assets/css/redesign.css" />
+    <link rel="stylesheet" href="./blog.css" />
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-icon">TP</span>
+                <span class="brand-name">Thomas Pasley</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/" class="nav-link">Portfolio</a>
+                <a href="/blog/" class="nav-link active">Blog</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="blog-hero">
+        <h1>Technical Blog</h1>
+        <p class="blog-hero-subtitle">
+            Deep dives into data science, machine learning, and engineering — written from the field.
+        </p>
+
+        <!-- Tag filter — populated by blog.js -->
+        <div class="tag-filter" id="tagFilter" role="group" aria-label="Filter posts by tag"></div>
+    </header>
+
+    <!-- Posts -->
+    <main class="posts-section" id="postsRoot">
+        <div class="posts-container">
+            <!-- Featured card injected here -->
+            <div id="featuredZone"></div>
+
+            <!-- Regular cards grid -->
+            <div class="regular-posts" id="regularGrid"></div>
+
+            <!-- Empty state -->
+            <p class="posts-empty" id="postsEmpty">No posts match that tag yet.</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Thomas Pasley</h3>
+                    <p>Junior Data Scientist</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/Moosish" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/thomas-pasley/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:tpasley95@gmail.com" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Thomas Pasley. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./posts.js"></script>
+    <script src="./blog.js"></script>
+</body>
+</html>
