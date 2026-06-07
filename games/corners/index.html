@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Corner Streak — Games — Thomas Pasley</title>
@@ -160,8 +160,8 @@
     var PS_D  = Math.round(11    * SCALE);   // 187  penalty spot depth
     var D_R   = Math.round(10    * SCALE);   // 170  penalty arc radius
     var CR    = Math.round(1     * SCALE);   // 17   corner arc radius
-    var C_X   = PA_X + PA_W;                 // 743  corner flag x
-    var C_Y   = PA_Y + PA_H;                 // 325  corner flag y
+    var C_X   = PA_X + PA_W;                 // 743  corner flag x (right touchline)
+    var C_Y   = PA_Y;                         // 44   corner flag y (goal line)
 
     // ── Colour helpers ─────────────────────────────────────────────────────────
     function rgba(hex, a) {
@@ -197,8 +197,8 @@
           p: { low:0.30,        medium:0.85,            high:1.25 } },
     ];
 
-    // ── Auto-placed zonal defenders ────────────────────────────────────────────
-    var DEF = [
+    // ── Zonal defender base positions + randomised instances ──────────────────
+    var DEF_BASE = [
         { x: G_X + 8,          y: PA_Y + 5,            zone: 'np' },
         { x: G_X + GW - 8,     y: PA_Y + 5,            zone: 'bp' },
         { x: SB_X + 55,        y: PA_Y + SB_H * 0.6,   zone: '6y' },
@@ -206,6 +206,14 @@
         { x: PA_X + PA_W/2,    y: PA_Y + PS_D,          zone: 'ps' },
         { x: PA_X + PA_W/2,    y: PA_Y + PA_H - 28,     zone: 'eb' },
     ];
+    function randomizeDef() {
+        return DEF_BASE.map(function(b) {
+            var sx = b.x + (Math.random() - 0.5) * 24;
+            var sy = b.y + (Math.random() - 0.5) * 18;
+            return { x: sx, y: sy, tx: sx, ty: sy, zone: b.zone };
+        });
+    }
+    var DEF = randomizeDef();
 
     var ATT_COLS = [EM, BL, AM, RE, VI];
 
@@ -304,23 +312,23 @@
         ctx.arc(PA_X + PA_W/2, PA_Y + PS_D, D_R, dInt, Math.PI - dInt, false);
         ctx.stroke();
 
-        // Corner arc (right)
+        // Corner arc (right corner, curves into field = down-left quadrant)
         ctx.beginPath();
-        ctx.arc(C_X, C_Y, CR, Math.PI, Math.PI * 1.5, false);
+        ctx.arc(C_X, C_Y, CR, Math.PI / 2, Math.PI, false);
         ctx.stroke();
 
-        // Corner flag pole + pennant
+        // Corner flag: base on goal line, pole goes down into field
         ctx.strokeStyle = AM;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(C_X, C_Y);
-        ctx.lineTo(C_X, C_Y - 18);
+        ctx.lineTo(C_X, C_Y + 18);
         ctx.stroke();
         ctx.fillStyle = AM;
         ctx.beginPath();
-        ctx.moveTo(C_X, C_Y - 18);
-        ctx.lineTo(C_X - 11, C_Y - 12);
-        ctx.lineTo(C_X, C_Y - 6);
+        ctx.moveTo(C_X, C_Y + 18);
+        ctx.lineTo(C_X - 11, C_Y + 12);
+        ctx.lineTo(C_X, C_Y + 6);
         ctx.closePath();
         ctx.fill();
         ctx.beginPath();
@@ -499,7 +507,7 @@
         ctx.textAlign = 'center';
         ctx.shadowColor = qualLabel.col;
         ctx.shadowBlur = 12;
-        ctx.fillText(qualLabel.text, C_X - 90, C_Y - 36);
+        ctx.fillText(qualLabel.text, C_X - 80, C_Y + 55);
         ctx.shadowBlur = 0;
         ctx.globalAlpha = 1;
     }
@@ -626,11 +634,34 @@
         driven:     { x: PA_X + PA_W/2,   y: PA_Y + PS_D },
     };
     var CTRL_PTS = {
-        inswinger:  { x: 190, y: 260 },
-        outswinger: { x: 842, y: 168 },
-        nearpost:   { x: 238, y: 126 },
-        driven:     { x: 604, y: 285 },
+        // Corner is now at (743, 44) — top-right on the goal line
+        inswinger:  { x: 340, y: 280 }, // arcs deep into box toward near post
+        outswinger: { x: 560, y: 50  }, // stays near goal-line level to back post
+        nearpost:   { x: 580, y: 44  }, // flat, direct to near post
+        driven:     { x: 560, y: 155 }, // diagonal to penalty spot
     };
+
+    function setDefenderTargets() {
+        var end = ball.p2;
+        // How far each zone moves toward the landing zone
+        var pull = { np: 0.10, bp: 0.10, '6y': 0.42, ps: 0.52, eb: 0.48 };
+        for (var i = 0; i < DEF.length; i++) {
+            var d = DEF[i];
+            var b = DEF_BASE[i];
+            var p = pull[d.zone] || 0.30;
+            d.tx = b.x + (end.x - b.x) * p + (Math.random() - 0.5) * 24;
+            d.ty = b.y + (end.y - b.y) * p + (Math.random() - 0.5) * 18;
+            d.tx = Math.max(PA_X + 5, Math.min(PA_X + PA_W - 5, d.tx));
+            d.ty = Math.max(PA_Y + 2, Math.min(PA_Y + PA_H - 5, d.ty));
+        }
+    }
+
+    function updateDefenderMovement() {
+        for (var i = 0; i < DEF.length; i++) {
+            DEF[i].x += (DEF[i].tx - DEF[i].x) * 0.07;
+            DEF[i].y += (DEF[i].ty - DEF[i].y) * 0.07;
+        }
+    }
 
     function startFlight() {
         var base  = TARGETS[ctype];
@@ -649,6 +680,7 @@
             dur: ctype === 'driven' ? 50 : 66,
         };
         phase = 'flight';
+        setDefenderTargets();
     }
 
     function updateFlight() {
@@ -661,6 +693,7 @@
         ball.trail.push({ x: ball.x, y: ball.y });
         if (ball.trail.length > 16) ball.trail.shift();
         ball.x = nx; ball.y = ny;
+        updateDefenderMovement();
         if (ball.t >= ball.dur) resolveResult();
     }
 
@@ -704,6 +737,7 @@
 
     function nextCorner() {
         ball = null; phase = 'setup';
+        DEF = randomizeDef();
         var btn = document.getElementById('action-btn');
         btn.textContent = 'Take Corner'; btn.disabled = false;
         var msg = document.getElementById('result-msg');
@@ -752,7 +786,7 @@
         if (!drag) return;
         var p = canvasXY(e);
         attackers[drag.idx].x = Math.max(12, Math.min(CW - 12, p.x - drag.ox));
-        attackers[drag.idx].y = Math.max(PA_Y - 20, Math.min(C_Y - 12, p.y - drag.oy));
+        attackers[drag.idx].y = Math.max(PA_Y, Math.min(PA_Y + PA_H, p.y - drag.oy));
     });
     window.addEventListener('mouseup', function () { drag = null; canvas.style.cursor = ''; });
 
@@ -774,7 +808,7 @@
         if (!drag) return;
         var p = canvasXY(e);
         attackers[drag.idx].x = Math.max(12, Math.min(CW - 12, p.x - drag.ox));
-        attackers[drag.idx].y = Math.max(PA_Y - 20, Math.min(C_Y - 12, p.y - drag.oy));
+        attackers[drag.idx].y = Math.max(PA_Y, Math.min(PA_Y + PA_H, p.y - drag.oy));
     }, { passive: false });
     canvas.addEventListener('touchend', function () { drag = null; });
 
