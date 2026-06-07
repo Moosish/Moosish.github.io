@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Corner Streak — Games — Thomas Pasley</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/fontawesome-all.min.css"/>
+    <link rel="stylesheet" href="../../assets/css/redesign.css"/>
+    <style>
+        .game-page { padding: 5rem 1rem 3rem; }
+        .game-wrap { max-width: 840px; margin: 0 auto; }
+
+        .game-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .game-breadcrumb { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+        .game-breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .game-breadcrumb a:hover { color: var(--primary-light); }
+        .game-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+
+        .streak-bar { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--text-muted); }
+        .streak-bar span { display: flex; align-items: center; gap: 0.35rem; }
+        .streak-bar b { font-size: 1.1rem; font-weight: 700; }
+        #streak-now { color: var(--primary-light); }
+        #streak-best-val { color: var(--accent); }
+
+        .canvas-wrap {
+            width: 100%; background: #0c2918;
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        #gc { display: block; width: 100%; height: auto; }
+
+        .controls { display: flex; gap: 0.75rem 1.25rem; flex-wrap: wrap; align-items: flex-start; margin-top: 0.875rem; }
+        .ctrl-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        .ctrl-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); }
+        .btn-row { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+        .ctrl-btn {
+            padding: 0.32rem 0.65rem;
+            border-radius: 6px;
+            border: 1px solid rgba(148,163,184,0.12);
+            background: rgba(26,26,26,0.9);
+            color: var(--text-secondary);
+            font-family: inherit; font-size: 0.78rem; font-weight: 500;
+            cursor: pointer; transition: all 0.15s; white-space: nowrap;
+        }
+        .ctrl-btn:hover { border-color: var(--primary); color: var(--primary-light); }
+        .ctrl-btn.active { background: rgba(16,185,129,0.15); border-color: var(--primary); color: var(--primary-light); }
+
+        .ctrl-action { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+        #action-btn {
+            padding: 0.5rem 1.4rem; border-radius: 8px; border: none;
+            background: var(--primary); color: #fff;
+            font-family: inherit; font-size: 0.875rem; font-weight: 600;
+            cursor: pointer; transition: background 0.15s; min-width: 130px;
+        }
+        #action-btn:hover:not(:disabled) { background: var(--primary-dark); }
+        #action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        #reset-btn {
+            background: none; border: none; font-family: inherit;
+            font-size: 0.72rem; color: var(--text-muted);
+            cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 2px;
+        }
+        #reset-btn:hover { color: var(--text-secondary); }
+
+        .result-msg { font-size: 0.78rem; min-height: 1.1em; text-align: right; color: transparent; }
+        .result-msg.goal { color: var(--primary-light); font-weight: 600; }
+        .result-msg.miss { color: #f87171; }
+
+        @media (max-width: 600px) {
+            .ctrl-action { margin-left: 0; align-items: flex-start; }
+            #action-btn { min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="main-nav">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <span class="brand-icon">TP</span>
+            <span class="brand-name">Thomas Pasley</span>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="/" class="nav-link">Portfolio</a>
+            <a href="/blog/" class="nav-link">Blog</a>
+            <a href="/games/" class="nav-link active">Games</a>
+        </div>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<main class="game-page">
+    <div class="game-wrap">
+        <header class="game-header">
+            <div>
+                <p class="game-breadcrumb"><a href="/games/">Games</a> / Corner Streak</p>
+                <h1 class="game-title">Corner Streak</h1>
+            </div>
+            <div class="streak-bar">
+                <span>Streak <b id="streak-now">0</b></span>
+                <span>Best <b id="streak-best-val">0</b></span>
+            </div>
+        </header>
+
+        <div class="canvas-wrap">
+            <canvas id="gc" width="800" height="500"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="ctrl-group">
+                <span class="ctrl-label">Corner Type</span>
+                <div class="btn-row" id="type-btns">
+                    <button class="ctrl-btn active" data-type="inswinger">Inswinger</button>
+                    <button class="ctrl-btn" data-type="outswinger">Outswinger</button>
+                    <button class="ctrl-btn" data-type="nearpost">Near Post</button>
+                    <button class="ctrl-btn" data-type="driven">Driven</button>
+                </div>
+            </div>
+            <div class="ctrl-group">
+                <span class="ctrl-label">Power</span>
+                <div class="btn-row" id="power-btns">
+                    <button class="ctrl-btn" data-power="low">Low</button>
+                    <button class="ctrl-btn active" data-power="medium">Medium</button>
+                    <button class="ctrl-btn" data-power="high">High</button>
+                </div>
+            </div>
+            <div class="ctrl-action">
+                <button id="action-btn">Take Corner</button>
+                <button id="reset-btn">Reset positions</button>
+                <p id="result-msg" class="result-msg">&nbsp;</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+(function () {
+    'use strict';
+
+    // ── Logical canvas size ────────────────────────────────────────────────────
+    var CW = 800, CH = 500;
+
+    // ── Pitch geometry (px, 1m ≈ 17px) ───────────────────────────────────────
+    var SCALE = 17;
+    var PA_W  = Math.round(40.32 * SCALE);   // 685  penalty area width
+    var PA_H  = Math.round(16.5  * SCALE);   // 281  penalty area depth
+    var PA_X  = Math.round((CW - PA_W) / 2); // 58   left edge
+    var PA_Y  = 44;                           //       goal line y
+    var SB_W  = Math.round(18.32 * SCALE);   // 312  6-yard box width
+    var SB_H  = Math.round(5.5   * SCALE);   // 94   6-yard box depth
+    var SB_X  = PA_X + Math.round((PA_W - SB_W) / 2); // 244
+    var GW    = Math.round(7.32  * SCALE);   // 124  goal width
+    var G_X   = PA_X + Math.round((PA_W - GW) / 2);   // 338  left post x
+    var PS_D  = Math.round(11    * SCALE);   // 187  penalty spot depth
+    var D_R   = Math.round(10    * SCALE);   // 170  penalty arc radius
+    var CR    = Math.round(1     * SCALE);   // 17   corner arc radius
+    var C_X   = PA_X + PA_W;                 // 743  corner flag x
+    var C_Y   = PA_Y + PA_H;                 // 325  corner flag y
+
+    // ── Colour helpers ─────────────────────────────────────────────────────────
+    function rgba(hex, a) {
+        var r = parseInt(hex.slice(1,3), 16);
+        var g = parseInt(hex.slice(3,5), 16);
+        var b = parseInt(hex.slice(5,7), 16);
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+    }
+
+    var EM = '#34d399', BL = '#60a5fa', AM = '#f59e0b', RE = '#f87171', VI = '#a78bfa';
+
+    // ── Zones ──────────────────────────────────────────────────────────────────
+    var ZONES = [
+        { id: 'np', name: 'Near Post',
+          x: G_X + 20,         y: PA_Y + 18,          r: 44,
+          w: { inswinger:0.58, outswinger:0.07, nearpost:0.65, driven:0.06 },
+          p: { low:1.12,        medium:1.0,             high:0.65 } },
+        { id: '6y', name: '6-Yard',
+          x: PA_X + PA_W/2,    y: PA_Y + SB_H * 0.55, r: 52,
+          w: { inswinger:0.42, outswinger:0.20, nearpost:0.30, driven:0.14 },
+          p: { low:1.0,         medium:1.05,            high:0.82 } },
+        { id: 'ps', name: 'Pen. Spot',
+          x: PA_X + PA_W/2,    y: PA_Y + PS_D,         r: 56,
+          w: { inswinger:0.18, outswinger:0.26, nearpost:0.10, driven:0.50 },
+          p: { low:0.55,        medium:1.0,             high:1.15 } },
+        { id: 'bp', name: 'Back Post',
+          x: G_X + GW - 20,    y: PA_Y + 18,           r: 44,
+          w: { inswinger:0.07, outswinger:0.58, nearpost:0.06, driven:0.14 },
+          p: { low:0.50,        medium:0.95,            high:1.20 } },
+        { id: 'eb', name: 'Edge',
+          x: PA_X + PA_W/2,    y: PA_Y + PA_H - 28,    r: 50,
+          w: { inswinger:0.06, outswinger:0.10, nearpost:0.04, driven:0.44 },
+          p: { low:0.30,        medium:0.85,            high:1.25 } },
+    ];
+
+    // ── Auto-placed zonal defenders ────────────────────────────────────────────
+    var DEF = [
+        { x: G_X + 8,          y: PA_Y + 5,            zone: 'np' },
+        { x: G_X + GW - 8,     y: PA_Y + 5,            zone: 'bp' },
+        { x: SB_X + 55,        y: PA_Y + SB_H * 0.6,   zone: '6y' },
+        { x: SB_X + SB_W - 55, y: PA_Y + SB_H * 0.6,   zone: '6y' },
+        { x: PA_X + PA_W/2,    y: PA_Y + PS_D,          zone: 'ps' },
+        { x: PA_X + PA_W/2,    y: PA_Y + PA_H - 28,     zone: 'eb' },
+    ];
+
+    var ATT_COLS = [EM, BL, AM, RE, VI];
+
+    function defaultAttackers() {
+        return [
+            { x: G_X + 20,        y: PA_Y + 18,          col: ATT_COLS[0] },
+            { x: PA_X + PA_W/2,   y: PA_Y + SB_H * 0.55, col: ATT_COLS[1] },
+            { x: PA_X + PA_W/2,   y: PA_Y + PS_D,         col: ATT_COLS[2] },
+            { x: G_X + GW - 20,   y: PA_Y + 18,           col: ATT_COLS[3] },
+            { x: PA_X + PA_W/2,   y: PA_Y + PA_H - 28,    col: ATT_COLS[4] },
+        ];
+    }
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    var phase    = 'setup'; // setup | timing | flight | goal_anim | miss_anim | done
+    var ctype    = 'inswinger';
+    var power    = 'medium';
+    var streak   = 0;
+    var best     = 0;
+    var attackers = defaultAttackers();
+    var drag     = null;   // { idx, ox, oy }
+    var meter    = { val: 0.5, dir: 1, spd: 0.012, locked: false, quality: 0 };
+    var ball     = null;   // { x, y, trail, p0, p1, p2, t, dur }
+    var animT    = 0;
+    var resultGoal = false;
+    var qualLabel  = { text: '', alpha: 0, col: EM };
+
+    // ── Canvas setup (DPR-aware) ───────────────────────────────────────────────
+    var canvas = document.getElementById('gc');
+    var ctx    = canvas.getContext('2d');
+    var dpr    = window.devicePixelRatio || 1;
+    canvas.width  = CW * dpr;
+    canvas.height = CH * dpr;
+    ctx.scale(dpr, dpr);
+
+    // ── Drawing ────────────────────────────────────────────────────────────────
+
+    function drawPitch() {
+        // Beyond-goal area
+        ctx.fillStyle = '#081a10';
+        ctx.fillRect(0, 0, CW, PA_Y);
+
+        // Pitch
+        ctx.fillStyle = '#0c2918';
+        ctx.fillRect(0, PA_Y, CW, CH - PA_Y);
+
+        // Mowing stripes
+        for (var s = 0; s < 6; s++) {
+            if (s % 2 === 0) {
+                ctx.fillStyle = 'rgba(255,255,255,0.016)';
+                ctx.fillRect(PA_X, PA_Y + (PA_H/6)*s, PA_W, PA_H/6);
+            }
+        }
+
+        // Net background
+        ctx.fillStyle = 'rgba(255,255,255,0.04)';
+        ctx.fillRect(G_X, PA_Y - 22, GW, 22);
+
+        // Net grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+        ctx.lineWidth = 0.5;
+        for (var nx = G_X + 10; nx < G_X + GW; nx += 10) {
+            ctx.beginPath(); ctx.moveTo(nx, PA_Y - 22); ctx.lineTo(nx, PA_Y); ctx.stroke();
+        }
+        for (var ny = PA_Y - 7; ny > PA_Y - 22; ny -= 7) {
+            ctx.beginPath(); ctx.moveTo(G_X, ny); ctx.lineTo(G_X + GW, ny); ctx.stroke();
+        }
+
+        // Goal posts
+        ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(G_X, PA_Y);
+        ctx.lineTo(G_X, PA_Y - 22);
+        ctx.lineTo(G_X + GW, PA_Y - 22);
+        ctx.lineTo(G_X + GW, PA_Y);
+        ctx.stroke();
+
+        // Pitch lines
+        ctx.strokeStyle = 'rgba(255,255,255,0.68)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(PA_X, PA_Y, PA_W, PA_H);
+        ctx.strokeRect(SB_X, PA_Y, SB_W, SB_H);
+
+        // Penalty spot
+        ctx.fillStyle = 'rgba(255,255,255,0.65)';
+        ctx.beginPath();
+        ctx.arc(PA_X + PA_W/2, PA_Y + PS_D, 3.5, 0, Math.PI*2);
+        ctx.fill();
+
+        // D arc (outside penalty area)
+        var dInt = Math.asin((PA_H - PS_D) / D_R);
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(PA_X + PA_W/2, PA_Y + PS_D, D_R, dInt, Math.PI - dInt, false);
+        ctx.stroke();
+
+        // Corner arc (right)
+        ctx.beginPath();
+        ctx.arc(C_X, C_Y, CR, Math.PI, Math.PI * 1.5, false);
+        ctx.stroke();
+
+        // Corner flag pole + pennant
+        ctx.strokeStyle = AM;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(C_X, C_Y);
+        ctx.lineTo(C_X, C_Y - 18);
+        ctx.stroke();
+        ctx.fillStyle = AM;
+        ctx.beginPath();
+        ctx.moveTo(C_X, C_Y - 18);
+        ctx.lineTo(C_X - 11, C_Y - 12);
+        ctx.lineTo(C_X, C_Y - 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(C_X, C_Y, 4, 0, Math.PI*2);
+        ctx.fill();
+    }
+
+    function zoneColour(z) {
+        var w = z.w[ctype];
+        if (w >= 0.35) return EM;
+        if (w >= 0.15) return AM;
+        return '#64748b';
+    }
+
+    function drawZones() {
+        ctx.save();
+        for (var i = 0; i < ZONES.length; i++) {
+            var z = ZONES[i];
+            var col = zoneColour(z);
+            var hasAtt = attackers.some(function(a) { return Math.hypot(a.x-z.x, a.y-z.y) < z.r+6; });
+            var alpha = hasAtt ? 0.20 : 0.08;
+
+            ctx.beginPath();
+            ctx.arc(z.x, z.y, z.r, 0, Math.PI*2);
+            ctx.fillStyle = rgba(col, alpha);
+            ctx.fill();
+            ctx.strokeStyle = rgba(col, hasAtt ? 0.40 : 0.18);
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.font = '9px Inter, sans-serif';
+            ctx.fillStyle = rgba(col, hasAtt ? 0.90 : 0.42);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(z.name, z.x, z.y);
+        }
+        ctx.textBaseline = 'alphabetic';
+        ctx.restore();
+    }
+
+    function drawDefenders() {
+        ctx.save();
+        for (var i = 0; i < DEF.length; i++) {
+            var d = DEF[i];
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, 11, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(248,113,113,0.14)';
+            ctx.fill();
+            ctx.strokeStyle = RE;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.font = 'bold 8px Inter, sans-serif';
+            ctx.fillStyle = RE;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('D', d.x, d.y);
+        }
+        ctx.textBaseline = 'alphabetic';
+        ctx.restore();
+    }
+
+    function drawAttackers() {
+        ctx.save();
+        for (var i = 0; i < attackers.length; i++) {
+            var a = attackers[i];
+            var isDrag = drag && drag.idx === i;
+            var r = isDrag ? 15 : 12;
+            if (isDrag) { ctx.shadowColor = a.col; ctx.shadowBlur = 14; }
+            ctx.beginPath();
+            ctx.arc(a.x, a.y, r, 0, Math.PI*2);
+            ctx.fillStyle = rgba(a.col, isDrag ? 0.25 : 0.18);
+            ctx.fill();
+            ctx.strokeStyle = a.col;
+            ctx.lineWidth = isDrag ? 2.5 : 2;
+            ctx.stroke();
+            ctx.font = 'bold ' + (isDrag ? 10 : 9) + 'px Inter, sans-serif';
+            ctx.fillStyle = a.col;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(String(i+1), a.x, a.y);
+            ctx.shadowBlur = 0;
+        }
+        ctx.textBaseline = 'alphabetic';
+        ctx.restore();
+    }
+
+    function drawBall() {
+        if (!ball) return;
+        var h = Math.sin((ball.t / ball.dur) * Math.PI); // 0→1→0
+
+        // Drop shadow
+        if (h > 0.05) {
+            ctx.beginPath();
+            ctx.ellipse(ball.x + h*4, ball.y + h*8, (5+h*3)*1.4, (5+h*3)*0.6, 0, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(0,0,0,' + (0.28*h) + ')';
+            ctx.fill();
+        }
+
+        // Trail
+        for (var t = 0; t < ball.trail.length; t++) {
+            var pt = ball.trail[t];
+            var ta = (t / ball.trail.length) * 0.30;
+            var tr = 2 + (t / ball.trail.length) * 3;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, tr, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(255,255,255,' + ta + ')';
+            ctx.fill();
+        }
+
+        // Ball
+        var br = 5 + h * 4;
+        ctx.shadowColor = 'rgba(255,255,255,0.45)';
+        ctx.shadowBlur = h * 10;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, br, 0, Math.PI*2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.28)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Seam
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, br * 0.44, 0, Math.PI*2);
+        ctx.stroke();
+    }
+
+    function drawMeter() {
+        if (phase !== 'timing') return;
+        var mx = 100, my = 415, mw = 600, mh = 36;
+
+        // Panel backdrop
+        ctx.fillStyle = 'rgba(12,12,12,0.97)';
+        ctx.fillRect(mx - 22, my - 20, mw + 44, mh + 52);
+
+        // Gradient bar
+        var gr = ctx.createLinearGradient(mx, 0, mx + mw, 0);
+        gr.addColorStop(0,    '#ef4444');
+        gr.addColorStop(0.22, '#f59e0b');
+        gr.addColorStop(0.38, '#a3e635');
+        gr.addColorStop(0.50, '#34d399');
+        gr.addColorStop(0.62, '#a3e635');
+        gr.addColorStop(0.78, '#f59e0b');
+        gr.addColorStop(1,    '#ef4444');
+        ctx.fillStyle = gr;
+        ctx.fillRect(mx, my, mw, mh);
+
+        // Sweet-spot highlight
+        ctx.fillStyle = 'rgba(255,255,255,0.10)';
+        ctx.fillRect(mx + mw*0.38, my, mw*0.24, mh);
+
+        // Needle
+        var nx = mx + meter.val * mw;
+        ctx.shadowColor = '#fff';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(nx - 2.5, my - 7, 5, mh + 14);
+        ctx.shadowBlur = 0;
+
+        // Hint text
+        ctx.font = '12px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(148,163,184,0.85)';
+        ctx.textAlign = 'center';
+        ctx.fillText('Click or press Space to take the corner', mx + mw/2, my + mh + 20);
+    }
+
+    function drawQualLabel() {
+        if (qualLabel.alpha <= 0) return;
+        qualLabel.alpha -= 0.020;
+        ctx.globalAlpha = Math.max(0, qualLabel.alpha);
+        ctx.font = 'bold 20px Inter, sans-serif';
+        ctx.fillStyle = qualLabel.col;
+        ctx.textAlign = 'center';
+        ctx.shadowColor = qualLabel.col;
+        ctx.shadowBlur = 12;
+        ctx.fillText(qualLabel.text, C_X - 90, C_Y - 36);
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+    }
+
+    function drawResult() {
+        if (phase !== 'goal_anim' && phase !== 'miss_anim') return;
+        animT++;
+        var t = Math.min(animT / 40, 1);
+
+        if (phase === 'goal_anim') {
+            // Goal flash
+            ctx.fillStyle = rgba(EM, 0.28 * Math.abs(Math.sin(animT * 0.22)));
+            ctx.fillRect(G_X - 8, PA_Y - 26, GW + 16, 30);
+
+            // GOAL! text
+            var sc = Math.min(t * 1.9, 1);
+            ctx.save();
+            ctx.translate(CW/2, CH/2 - 70);
+            ctx.scale(sc, sc);
+            ctx.font = 'bold 62px Inter, sans-serif';
+            ctx.fillStyle = rgba(EM, Math.min(t * 2.5, 1));
+            ctx.textAlign = 'center';
+            ctx.shadowColor = EM;
+            ctx.shadowBlur = 26;
+            ctx.fillText('GOAL!', 0, 0);
+            ctx.shadowBlur = 0;
+            ctx.font = '18px Inter, sans-serif';
+            ctx.fillStyle = rgba('#cbd5e1', Math.min(t * 2.5, 1));
+            ctx.fillText('Streak: ' + streak, 0, 36);
+            ctx.restore();
+        } else {
+            var fa = Math.max(0, Math.min(t * 3, 1) * (1 - Math.max(0, t - 0.65) * 2.9));
+            ctx.font = 'bold 46px Inter, sans-serif';
+            ctx.fillStyle = rgba(RE, fa);
+            ctx.textAlign = 'center';
+            ctx.shadowColor = RE;
+            ctx.shadowBlur = 16;
+            ctx.fillText('CLEARED!', CW/2, CH/2 - 40);
+            ctx.shadowBlur = 0;
+            ctx.font = '15px Inter, sans-serif';
+            ctx.fillStyle = rgba('#94a3b8', fa);
+            ctx.fillText('Streak reset', CW/2, CH/2 - 12);
+        }
+    }
+
+    function drawHints() {
+        if (phase !== 'setup') return;
+        ctx.font = '11px Inter, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = 'rgba(148,163,184,0.55)';
+        ctx.fillText('Drag players to position them', PA_X + 4, CH - 8);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = rgba(EM, 0.7); ctx.fillText('● Best zone', CW - 8, CH - 18);
+        ctx.fillStyle = rgba(AM, 0.7); ctx.fillText('● Good zone', CW - 8, CH - 6);
+    }
+
+    function render() {
+        ctx.clearRect(0, 0, CW, CH);
+        drawPitch();
+        drawZones();
+        drawDefenders();
+        if (ball) drawBall();
+        drawAttackers();
+        drawMeter();
+        drawQualLabel();
+        drawResult();
+        drawHints();
+    }
+
+    // ── Game logic ─────────────────────────────────────────────────────────────
+
+    function startTiming() {
+        phase = 'timing';
+        var speedBonus = power === 'high' ? 0.004 : power === 'low' ? -0.002 : 0;
+        meter = { val: 0.5, dir: 1, spd: 0.012 + speedBonus, locked: false, quality: 0 };
+        document.getElementById('action-btn').disabled = true;
+    }
+
+    function lockMeter() {
+        if (phase !== 'timing' || meter.locked) return;
+        meter.locked = true;
+        var dist = Math.abs(meter.val - 0.5) * 2;
+        meter.quality = Math.max(0, 1 - dist * 1.65);
+        if (meter.quality > 0.75)       { qualLabel = { text: 'PERFECT!', alpha: 1.5, col: EM }; }
+        else if (meter.quality > 0.44)  { qualLabel = { text: 'GOOD',     alpha: 1.5, col: AM }; }
+        else                            { qualLabel = { text: 'POOR',     alpha: 1.5, col: RE }; }
+        startFlight();
+    }
+
+    function calcGoalProb() {
+        var best = 0;
+        for (var ai = 0; ai < attackers.length; ai++) {
+            var a = attackers[ai];
+            for (var zi = 0; zi < ZONES.length; zi++) {
+                var z = ZONES[zi];
+                var dist = Math.hypot(a.x - z.x, a.y - z.y);
+                if (dist < z.r + 12) {
+                    var overlap = Math.max(0, 1 - dist / (z.r + 12));
+                    var zw = z.w[ctype] * overlap;
+                    var pw = z.p[power];
+
+                    var attInZone = attackers.filter(function(aa) {
+                        return Math.hypot(aa.x - z.x, aa.y - z.y) < z.r + 12;
+                    }).length;
+                    var defInZone = DEF.filter(function(d) { return d.zone === z.id; }).length;
+                    var netAdv = attInZone - defInZone;
+                    var defMult = defInZone > 0
+                        ? Math.max(0.30, Math.min(1.0, 0.50 + netAdv * 0.28))
+                        : 1.0;
+
+                    var candidate = zw * pw * defMult;
+                    if (candidate > best) best = candidate;
+                }
+            }
+        }
+        var qm = 0.08 + 0.92 * meter.quality;
+        return Math.min(best * qm, 0.65);
+    }
+
+    var TARGETS = {
+        inswinger:  { x: G_X + 20,       y: PA_Y + 18 },
+        outswinger: { x: G_X + GW - 20,  y: PA_Y + 18 },
+        nearpost:   { x: G_X + 5,         y: PA_Y + 5  },
+        driven:     { x: PA_X + PA_W/2,   y: PA_Y + PS_D },
+    };
+    var CTRL_PTS = {
+        inswinger:  { x: 190, y: 260 },
+        outswinger: { x: 842, y: 168 },
+        nearpost:   { x: 238, y: 126 },
+        driven:     { x: 604, y: 285 },
+    };
+
+    function startFlight() {
+        var base  = TARGETS[ctype];
+        var noise = (1 - meter.quality) * 54;
+        var end = {
+            x: base.x + (Math.random() - 0.5) * noise * 2,
+            y: base.y + (Math.random() - 0.5) * noise,
+        };
+        ball = {
+            x: C_X, y: C_Y,
+            trail: [],
+            p0: { x: C_X, y: C_Y },
+            p1: CTRL_PTS[ctype],
+            p2: end,
+            t: 0,
+            dur: ctype === 'driven' ? 50 : 66,
+        };
+        phase = 'flight';
+    }
+
+    function updateFlight() {
+        if (!ball) return;
+        ball.t = Math.min(ball.t + 1, ball.dur);
+        var t  = ball.t / ball.dur;
+        var mt = 1 - t;
+        var nx = mt*mt*ball.p0.x + 2*mt*t*ball.p1.x + t*t*ball.p2.x;
+        var ny = mt*mt*ball.p0.y + 2*mt*t*ball.p1.y + t*t*ball.p2.y;
+        ball.trail.push({ x: ball.x, y: ball.y });
+        if (ball.trail.length > 16) ball.trail.shift();
+        ball.x = nx; ball.y = ny;
+        if (ball.t >= ball.dur) resolveResult();
+    }
+
+    function resolveResult() {
+        var prob = calcGoalProb();
+        resultGoal = Math.random() < prob;
+        animT = 0;
+        if (resultGoal) {
+            streak++;
+            if (streak > best) best = streak;
+            phase = 'goal_anim';
+        } else {
+            streak = 0;
+            phase = 'miss_anim';
+            ball = null;
+        }
+        updateStreakUI();
+        document.getElementById('action-btn').disabled = true;
+        setTimeout(function () {
+            phase = 'done';
+            var btn = document.getElementById('action-btn');
+            btn.textContent = 'Next Corner';
+            btn.disabled = false;
+            var msg = document.getElementById('result-msg');
+            if (resultGoal) {
+                msg.textContent = 'Goal! Corner streak continues.';
+                msg.className = 'result-msg goal';
+            } else {
+                msg.textContent = 'Cleared. Streak reset.';
+                msg.className = 'result-msg miss';
+            }
+        }, 1900);
+    }
+
+    function updateGoalBall() {
+        if (!ball) return;
+        var gx = G_X + GW/2, gy = PA_Y - 8;
+        ball.x += (gx - ball.x) * 0.14;
+        ball.y += (gy - ball.y) * 0.14;
+    }
+
+    function nextCorner() {
+        ball = null; phase = 'setup';
+        var btn = document.getElementById('action-btn');
+        btn.textContent = 'Take Corner'; btn.disabled = false;
+        var msg = document.getElementById('result-msg');
+        msg.textContent = ' '; msg.className = 'result-msg';
+    }
+
+    function updateStreakUI() {
+        document.getElementById('streak-now').textContent     = streak;
+        document.getElementById('streak-best-val').textContent = best;
+    }
+
+    // ── Animation loop ─────────────────────────────────────────────────────────
+    function loop() {
+        if (phase === 'timing' && !meter.locked) {
+            meter.val += meter.spd * meter.dir;
+            if (meter.val >= 1) { meter.val = 1; meter.dir = -1; meter.spd = Math.min(meter.spd * 1.07, 0.048); }
+            if (meter.val <= 0) { meter.val = 0; meter.dir =  1; meter.spd = Math.min(meter.spd * 1.07, 0.048); }
+        }
+        if (phase === 'flight')    updateFlight();
+        if (phase === 'goal_anim') updateGoalBall();
+        render();
+        requestAnimationFrame(loop);
+    }
+
+    // ── Input helpers ──────────────────────────────────────────────────────────
+    function canvasXY(e) {
+        var r  = canvas.getBoundingClientRect();
+        var sx = CW / r.width, sy = CH / r.height;
+        var src = e.touches ? e.touches[0] : e;
+        return { x: (src.clientX - r.left) * sx, y: (src.clientY - r.top) * sy };
+    }
+
+    // Mouse drag
+    canvas.addEventListener('mousedown', function (e) {
+        if (phase !== 'setup') return;
+        var p = canvasXY(e);
+        for (var i = 0; i < attackers.length; i++) {
+            if (Math.hypot(p.x - attackers[i].x, p.y - attackers[i].y) < 18) {
+                drag = { idx: i, ox: p.x - attackers[i].x, oy: p.y - attackers[i].y };
+                canvas.style.cursor = 'grabbing';
+                break;
+            }
+        }
+    });
+    window.addEventListener('mousemove', function (e) {
+        if (!drag) return;
+        var p = canvasXY(e);
+        attackers[drag.idx].x = Math.max(12, Math.min(CW - 12, p.x - drag.ox));
+        attackers[drag.idx].y = Math.max(PA_Y - 20, Math.min(C_Y - 12, p.y - drag.oy));
+    });
+    window.addEventListener('mouseup', function () { drag = null; canvas.style.cursor = ''; });
+
+    // Touch drag
+    canvas.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        if (phase === 'timing') { lockMeter(); return; }
+        if (phase !== 'setup') return;
+        var p = canvasXY(e);
+        for (var i = 0; i < attackers.length; i++) {
+            if (Math.hypot(p.x - attackers[i].x, p.y - attackers[i].y) < 24) {
+                drag = { idx: i, ox: p.x - attackers[i].x, oy: p.y - attackers[i].y };
+                break;
+            }
+        }
+    }, { passive: false });
+    canvas.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+        if (!drag) return;
+        var p = canvasXY(e);
+        attackers[drag.idx].x = Math.max(12, Math.min(CW - 12, p.x - drag.ox));
+        attackers[drag.idx].y = Math.max(PA_Y - 20, Math.min(C_Y - 12, p.y - drag.oy));
+    }, { passive: false });
+    canvas.addEventListener('touchend', function () { drag = null; });
+
+    // Canvas click → lock during timing
+    canvas.addEventListener('click', function () { if (phase === 'timing') lockMeter(); });
+
+    // Space → lock
+    document.addEventListener('keydown', function (e) {
+        if (e.code === 'Space') { e.preventDefault(); if (phase === 'timing') lockMeter(); }
+    });
+
+    // Action button
+    document.getElementById('action-btn').addEventListener('click', function () {
+        if (phase === 'setup') startTiming();
+        else if (phase === 'done') nextCorner();
+    });
+
+    // Corner type
+    document.getElementById('type-btns').addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-type]');
+        if (!btn || phase !== 'setup') return;
+        ctype = btn.dataset.type;
+        document.querySelectorAll('#type-btns [data-type]').forEach(function (b) {
+            b.classList.toggle('active', b === btn);
+        });
+    });
+
+    // Power
+    document.getElementById('power-btns').addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-power]');
+        if (!btn || phase !== 'setup') return;
+        power = btn.dataset.power;
+        document.querySelectorAll('#power-btns [data-power]').forEach(function (b) {
+            b.classList.toggle('active', b === btn);
+        });
+    });
+
+    // Reset positions
+    document.getElementById('reset-btn').addEventListener('click', function () {
+        if (phase === 'setup') attackers = defaultAttackers();
+    });
+
+    // ── Start ──────────────────────────────────────────────────────────────────
+    loop();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Games — Thomas Pasley</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content="Mini arcade-style games by Thomas Pasley — data-driven mechanics, browser-native, no installs."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css"/>
+    <link rel="stylesheet" href="../assets/css/redesign.css"/>
+    <style>
+        .games-hero {
+            text-align: center;
+            padding: 6.5rem 1.5rem 3rem;
+            background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(16,185,129,0.14) 0%, transparent 70%);
+            border-bottom: 1px solid rgba(148,163,184,0.08);
+        }
+        .games-hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.6rem;
+        }
+        .games-hero p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.65;
+        }
+
+        .games-section { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16,185,129,0.35);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+        }
+
+        .game-card-pitch {
+            height: 160px;
+            background: #0c2918;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card-pitch::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(255,255,255,0.016) 0px,
+                rgba(255,255,255,0.016) 22px,
+                transparent 22px,
+                transparent 44px
+            );
+        }
+        .pitch-icon {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .pitch-icon svg { opacity: 0.85; }
+        .pitch-icon span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(52,211,153,0.75);
+        }
+        .game-card-body { padding: 1.25rem 1.25rem 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+        .game-card-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); }
+        .game-card-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; flex: 1; }
+        .game-card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
+        .game-tag {
+            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+            padding: 0.2rem 0.55rem; border-radius: 20px;
+            background: rgba(16,185,129,0.1); color: var(--primary-light);
+            border: 1px solid rgba(16,185,129,0.2);
+        }
+        .game-tag.tag-sport { background: rgba(245,158,11,0.1); color: #fbbf24; border-color: rgba(245,158,11,0.2); }
+        .game-tag.tag-canvas { background: rgba(96,165,250,0.1); color: #93c5fd; border-color: rgba(96,165,250,0.2); }
+    </style>
+</head>
+<body>
+
+<nav id="main-nav">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <span class="brand-icon">TP</span>
+            <span class="brand-name">Thomas Pasley</span>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <a href="/" class="nav-link">Portfolio</a>
+            <a href="/blog/" class="nav-link">Blog</a>
+            <a href="/games/" class="nav-link active">Games</a>
+        </div>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<header class="games-hero">
+    <h1>Games</h1>
+    <p>Browser-native, no installs. Small strategy and skill games built in Canvas.</p>
+</header>
+
+<section class="games-section">
+    <div class="games-grid">
+
+        <a href="./corners/" class="game-card">
+            <div class="game-card-pitch">
+                <!-- Mini top-down pitch SVG -->
+                <div class="pitch-icon">
+                    <svg width="110" height="76" viewBox="0 0 110 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Pitch outline / penalty area -->
+                        <rect x="5" y="5" width="100" height="66" rx="1" stroke="rgba(255,255,255,0.55)" stroke-width="1.2" fill="none"/>
+                        <!-- 6-yard box -->
+                        <rect x="33" y="5" width="44" height="14" stroke="rgba(255,255,255,0.45)" stroke-width="1" fill="none"/>
+                        <!-- Goal -->
+                        <rect x="41" y="2" width="28" height="6" stroke="rgba(255,255,255,0.7)" stroke-width="1.4" fill="rgba(255,255,255,0.07)"/>
+                        <!-- Penalty spot -->
+                        <circle cx="55" cy="34" r="1.8" fill="rgba(255,255,255,0.6)"/>
+                        <!-- Corner flag -->
+                        <circle cx="105" cy="71" r="2.5" fill="#f59e0b"/>
+                        <!-- Ball at corner -->
+                        <circle cx="88" cy="58" r="4" fill="white" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/>
+                        <!-- Attacker dots -->
+                        <circle cx="47" cy="11" r="4.5" fill="none" stroke="#34d399" stroke-width="1.5"/>
+                        <circle cx="55" cy="21" r="4.5" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+                        <circle cx="55" cy="34" r="4.5" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+                        <circle cx="63" cy="11" r="4.5" fill="none" stroke="#f87171" stroke-width="1.5"/>
+                        <!-- Defender dots -->
+                        <circle cx="47" cy="9" r="3"   fill="none" stroke="#f87171" stroke-width="1" opacity="0.5"/>
+                        <circle cx="63" cy="9" r="3"   fill="none" stroke="#f87171" stroke-width="1" opacity="0.5"/>
+                        <!-- Ball arc (inswinger) -->
+                        <path d="M 105 71 Q 40 55 47 11" stroke="rgba(255,255,255,0.3)" stroke-width="1" fill="none" stroke-dasharray="3 2"/>
+                    </svg>
+                    <span>Canvas · Skill</span>
+                </div>
+            </div>
+            <div class="game-card-body">
+                <div class="game-card-title">Corner Streak</div>
+                <div class="game-card-desc">Position your five attackers, pick your delivery type, then time the swing. Outsmart the zonal defence and keep the streak alive.</div>
+                <div class="game-card-tags">
+                    <span class="game-tag tag-sport">Football</span>
+                    <span class="game-tag tag-canvas">Canvas</span>
+                    <span class="game-tag">Strategy</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+</body>
+</html>
