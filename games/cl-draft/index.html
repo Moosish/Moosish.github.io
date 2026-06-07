@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CL Draft — Thomas Pasley</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/redesign.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0e14;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh}
+#app{max-width:920px;margin:0 auto;padding:4.5rem 1rem 4rem}
+
+.phase{display:none}.phase.active{display:block}
+
+/* ── INTRO ── */
+.intro-card{background:#111827;border:1px solid #1e293b;border-radius:16px;padding:2rem;max-width:520px;margin:0 auto 2rem;text-align:left}
+.intro-card-title{color:#e2e8f0;font-weight:700;margin-bottom:.75rem;font-size:.9rem}
+.intro-row{font-size:.78rem;color:#64748b;line-height:1.9}
+.intro-note{margin-top:.75rem;color:#475569;font-size:.72rem}
+.page-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:.4rem;text-align:center;padding-top:2rem}
+.page-sub{color:#64748b;font-size:.9rem;text-align:center;margin-bottom:2rem}
+
+/* ── FORMATION SELECT ── */
+.formation-phase-title{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:.3rem;padding-top:1.5rem}
+.formation-phase-sub{font-size:.82rem;color:#64748b;margin-bottom:1.75rem}
+.formation-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:640px){.formation-grid{grid-template-columns:repeat(2,1fr)}}
+.formation-card{
+  background:#111827;border:2px solid #1e293b;border-radius:12px;
+  cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;
+}
+.formation-card:hover{border-color:#334155}
+.formation-card.selected{border-color:#10b981;box-shadow:0 0 0 1px #10b981}
+.formation-pitch{display:flex;justify-content:center;padding:.75rem .75rem .4rem;background:#060f0a}
+.formation-body{padding:.7rem .85rem .9rem}
+.formation-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:.1rem}
+.formation-style{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#10b981;margin-bottom:.3rem}
+.formation-desc{font-size:.72rem;color:#64748b;line-height:1.45}
+
+/* ── SLOT INDICATOR ── */
+.slot-indicator{
+  display:flex;align-items:center;gap:1rem;
+  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);
+  border-radius:10px;padding:.75rem 1.25rem;margin-bottom:1.25rem;
+}
+.slot-ind-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#475569}
+.slot-ind-pos{font-size:1.4rem;font-weight:800;color:#10b981;min-width:52px}
+.slot-ind-progress{font-size:.8rem;color:#64748b;margin-left:auto}
+
+/* ── SPIN ── */
+.spin-card{
+  background:#111827;border:1px solid #1e293b;border-radius:16px;
+  padding:2rem 1.5rem;margin-bottom:1.25rem;
+  min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.spin-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(250,204,21,.05) 0%,transparent 70%)}
+.spin-season{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#facc15;margin-bottom:.35rem}
+.spin-club{font-size:1.6rem;font-weight:800;color:#fff;line-height:1.1;margin-bottom:.25rem}
+.spin-info{font-size:.75rem;color:#64748b}
+.spin-blank{font-size:.9rem;color:#334155}
+
+/* ── DRAFT LAYOUT ── */
+.draft-layout{display:grid;grid-template-columns:1fr 268px;gap:1.25rem}
+@media(max-width:680px){.draft-layout{grid-template-columns:1fr}}
+.draft-pick-area{background:#111827;border:1px solid #1e293b;border-radius:14px;padding:1.35rem}
+.draft-squad-name{font-size:1rem;font-weight:800;color:#fff;margin-bottom:.15rem}
+.draft-squad-sub{font-size:.75rem;color:#64748b;margin-bottom:1rem}
+.player-list{display:flex;flex-direction:column;gap:.35rem;max-height:400px;overflow-y:auto}
+
+/* eligible player rows */
+.player-row{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.55rem .75rem;border-radius:8px;border:1px solid #1e293b;
+  background:#0f172a;cursor:pointer;transition:border-color .15s,background .15s;
+}
+.player-row:hover{border-color:#10b981;background:#0d1f18}
+.player-row.selected{border-color:#10b981;background:#0d2418}
+/* out-of-position rows */
+.player-row-oop{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.55rem .75rem;border-radius:8px;border:1px solid #141d2b;
+  background:#0a1020;opacity:.45;
+}
+.oop-divider{
+  font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:#334155;padding:.5rem 0 .25rem;border-top:1px solid #1e293b;margin-top:.35rem;
+}
+/* alt-position badge */
+.alt-badge{
+  font-size:.58rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:.1rem .35rem;border-radius:3px;
+  background:rgba(148,163,184,.12);color:#64748b;margin-left:.4rem;flex-shrink:0;
+}
+
+.player-pos{
+  font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  width:28px;text-align:center;padding:.18rem 0;border-radius:4px;
+  background:rgba(100,116,139,.14);color:#94a3b8;flex-shrink:0;
+}
+.player-name{font-size:.86rem;font-weight:600;color:#e2e8f0;flex:1;display:flex;align-items:center}
+.player-rating{font-size:.88rem;font-weight:800;width:30px;text-align:center}
+.rating-elite{color:#facc15}
+.rating-world{color:#10b981}
+.rating-good{color:#60a5fa}
+.rating-avg{color:#94a3b8}
+
+/* ── XI SIDEBAR ── */
+.xi-panel{background:#111827;border:1px solid #1e293b;border-radius:14px;padding:1.1rem}
+.xi-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.1rem}
+.xi-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569}
+.xi-formation-label{font-size:.75rem;font-weight:700;color:#10b981}
+.xi-slots{margin-top:.75rem}
+.xi-slot{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.38rem .55rem;border-radius:6px;margin-bottom:.28rem;
+  background:#0f172a;border:1px solid #1e293b;min-height:36px;
+}
+.xi-slot.filled{border-color:#1a3028}
+.xi-slot.current-slot{border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.06)}
+.xi-slot-num{font-size:.62rem;color:#334155;width:14px;flex-shrink:0;text-align:right}
+.xi-slot-pos{font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;width:26px;text-align:center;color:#334155}
+.xi-slot.current-slot .xi-slot-pos{color:#10b981}
+.xi-slot.filled .xi-slot-pos{color:#1e4434}
+.xi-slot-name{font-size:.75rem;font-weight:600;flex:1}
+.xi-slot.filled .xi-slot-name{color:#cbd5e1}
+.xi-slot.current-slot .xi-slot-name{color:#34d399;font-size:.7rem}
+.xi-slot-rating{font-size:.75rem;font-weight:700;color:#10b981}
+.xi-avg{
+  margin-top:.65rem;padding:.45rem .55rem;border-radius:6px;
+  background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.12);
+  font-size:.75rem;color:#475569;display:flex;justify-content:space-between;
+}
+.xi-avg-val{font-weight:700;color:#10b981}
+
+/* ── BUTTONS ── */
+.btn{display:inline-block;cursor:pointer;border:none;border-radius:8px;font-family:inherit;font-weight:700;transition:background .15s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:#10b981;color:#fff;padding:.7rem 1.5rem;font-size:.9rem}
+.btn-primary:hover{background:#059669}
+.btn-primary:disabled{background:#1e293b;color:#475569;cursor:not-allowed;transform:none}
+.btn-secondary{background:#1e293b;color:#94a3b8;padding:.65rem 1.2rem;font-size:.85rem;border:1px solid #334155}
+.btn-secondary:hover{background:#263348;color:#e2e8f0}
+.btn-lg{padding:.85rem 2rem;font-size:1rem}
+.btn-row{display:flex;gap:.75rem;margin-top:1.1rem;flex-wrap:wrap;align-items:center}
+
+/* ── TOURNAMENT ── */
+.tournament-header{text-align:center;margin-bottom:2rem}
+.tournament-title{font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:.3rem}
+.tournament-sub{font-size:.85rem;color:#64748b}
+.bracket-stage{margin-bottom:2.5rem}
+.stage-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#facc15;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+.stage-label::after{content:'';flex:1;height:1px;background:rgba(250,204,21,.15)}
+.match-card{background:#111827;border:1px solid #1e293b;border-radius:12px;padding:1rem 1.25rem;margin-bottom:.75rem;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.75rem}
+.match-team{font-size:.9rem;font-weight:700}
+.match-team.player-team{color:#10b981}
+.match-team.opp-team{color:#e2e8f0}
+.match-team-rating{font-size:.72rem;color:#475569;margin-top:.15rem}
+.match-score{font-size:1.3rem;font-weight:800;text-align:center;letter-spacing:.05em}
+.match-score.win{color:#10b981}.match-score.loss{color:#ef4444}.match-score.draw{color:#facc15}
+.match-result-label{font-size:.7rem;text-align:center;margin-top:.15rem}
+.match-result-label.win{color:#10b981}.match-result-label.loss{color:#ef4444}.match-result-label.draw{color:#facc15}
+
+/* ── RESULT ── */
+.final-container{text-align:center;padding:2.5rem 1rem}
+.final-trophy{font-size:4rem;margin-bottom:1rem}
+.final-title{font-size:2rem;font-weight:800;color:#fff;margin-bottom:.4rem}
+.final-sub{font-size:.95rem;color:#64748b;margin-bottom:2rem}
+.final-xi{background:#111827;border:1px solid #1e293b;border-radius:14px;padding:1.25rem;max-width:420px;margin:0 auto 2rem;text-align:left}
+.final-xi-title{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:.75rem}
+.final-player{display:flex;gap:.6rem;align-items:center;padding:.3rem 0;border-bottom:1px solid #1e293b;font-size:.82rem}
+.final-player:last-child{border:none}
+.final-player-pos{font-size:.6rem;font-weight:700;color:#475569;width:28px;text-align:center}
+.final-player-name{flex:1;color:#e2e8f0;font-weight:500}
+.final-player-club{font-size:.68rem;color:#334155;margin-left:.3rem}
+.final-player-rating{font-weight:700;color:#10b981;font-size:.82rem}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <span class="brand-icon">TP</span>
+      <span class="brand-name">Thomas Pasley</span>
+    </div>
+    <div class="nav-menu">
+      <a href="/" class="nav-link">Portfolio</a>
+      <a href="/blog/" class="nav-link">Blog</a>
+      <a href="/games/" class="nav-link active">Games</a>
+    </div>
+  </div>
+</nav>
+
+<div id="app">
+
+  <!-- ══ PHASE 0 — INTRO ══ -->
+  <div id="phase-intro" class="phase active">
+    <div class="page-title">CL Draft</div>
+    <div class="page-sub">Spin for a squad. Draft your XI. Win the Champions League.</div>
+    <div class="intro-card">
+      <div class="intro-card-title">How it works</div>
+      <div class="intro-row">🏟 &nbsp;Choose your formation — it defines the 11 positions you need to fill</div>
+      <div class="intro-row">🎰 &nbsp;Spin to get a random club from CL history (1992–2024)</div>
+      <div class="intro-row">🤝 &nbsp;Pick one eligible player for the current slot</div>
+      <div class="intro-row">🔁 &nbsp;Repeat until your XI is complete</div>
+      <div class="intro-row">⚽ &nbsp;Simulate the tournament — Groups → R16 → QF → SF → Final</div>
+      <div class="intro-note">Players can cover multiple positions based on historical versatility. The same player can be drafted twice.</div>
+    </div>
+    <div style="text-align:center">
+      <button class="btn btn-primary btn-lg" onclick="goToFormation()">Pick Formation</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 1 — FORMATION SELECT ══ -->
+  <div id="phase-formation" class="phase">
+    <div class="formation-phase-title">Choose your formation</div>
+    <div class="formation-phase-sub">This defines the 11 positions you'll fill during the draft.</div>
+    <div class="formation-grid" id="formation-grid"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="btn-confirm-formation" onclick="confirmFormation()" disabled>
+        <span id="formation-btn-label">Select a formation</span>
+      </button>
+      <button class="btn btn-secondary" onclick="showPhase('phase-intro')">Back</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 2 — DRAFT ══ -->
+  <div id="phase-draft" class="phase">
+    <div class="slot-indicator">
+      <div>
+        <div class="slot-ind-label">Now picking</div>
+        <div class="slot-ind-pos" id="slot-pos-label">GK</div>
+      </div>
+      <div>
+        <div class="slot-ind-label">Slot</div>
+        <div style="font-size:.95rem;font-weight:700;color:#e2e8f0"><span id="pick-num">1</span> of 11</div>
+      </div>
+      <div class="slot-ind-progress" id="slot-formation-label"></div>
+    </div>
+
+    <div class="spin-card" id="spin-card">
+      <div class="spin-blank">Press spin to get a squad</div>
+    </div>
+    <div class="btn-row" style="margin-top:0;margin-bottom:1.25rem">
+      <button class="btn btn-primary" id="btn-spin" onclick="doSpin()">Spin</button>
+      <button class="btn btn-secondary" id="btn-respin" onclick="doSpin()" style="display:none">Respin squad</button>
+    </div>
+
+    <div class="draft-layout" id="draft-layout" style="display:none">
+      <div class="draft-pick-area">
+        <div class="draft-squad-name" id="draft-club-name"></div>
+        <div class="draft-squad-sub" id="draft-season-label"></div>
+        <div class="player-list" id="player-list"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-confirm-pick" onclick="confirmPick()" disabled>Confirm pick</button>
+        </div>
+      </div>
+      <div class="xi-panel">
+        <div class="xi-header">
+          <span class="xi-title">Your XI</span>
+          <span class="xi-formation-label" id="xi-form-label"></span>
+        </div>
+        <div class="xi-slots" id="xi-slots"></div>
+        <div class="xi-avg">Avg rating <span class="xi-avg-val" id="xi-avg-val">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 3 — TOURNAMENT ══ -->
+  <div id="phase-tournament" class="phase">
+    <div class="tournament-header">
+      <div class="tournament-title">Champions League</div>
+      <div class="tournament-sub" id="tourn-sub">Your squad is ready. Good luck.</div>
+    </div>
+    <div id="bracket"></div>
+    <div class="btn-row" style="justify-content:center;margin-top:1.5rem">
+      <button class="btn btn-primary btn-lg" id="btn-play-stage" onclick="playNextStage()">Play Group Stage</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 4 — RESULT ══ -->
+  <div id="phase-result" class="phase">
+    <div class="final-container">
+      <div class="final-trophy" id="result-trophy">🏆</div>
+      <div class="final-title" id="result-title">Champions!</div>
+      <div class="final-sub" id="result-sub"></div>
+      <div class="final-xi" id="result-xi"></div>
+      <button class="btn btn-primary btn-lg" onclick="restartGame()">Play again</button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// SQUAD DATA  —  ~120 club-seasons, ~15 players each
+// Positions: GK CB RB LB CM CDM CAM RM LM RW LW CF ST
+// Ratings: rough FIFA equivalent (60-99)
+// ═══════════════════════════════════════════════════════════════════════════
+var SQUADS = [
+  // ── 1992/93 ──────────────────────────────────────────────────────────────
+  { club:"Marseille", season:"1992/93", country:"FRA", note:"First CL winners",
+    players:[
+      {name:"Fabien Barthez",      pos:"GK",  r:85},
+      {name:"Basile Boli",         pos:"CB",  r:81},
+      {name:"Marcel Desailly",     pos:"CB",  r:84},
+      {name:"Eric Di Meco",        pos:"LB",  r:79},
+      {name:"Jean-Jacques Eydelie",pos:"CM",  r:74},
+      {name:"Didier Deschamps",    pos:"CDM", r:83},
+      {name:"Rudi Völler",         pos:"CF",  r:84},
+      {name:"Abedi Pelé",          pos:"CAM", r:87},
+      {name:"Chris Waddle",        pos:"RW",  r:83},
+      {name:"Alen Bokšić",         pos:"ST",  r:82},
+      {name:"Jean-Pierre Papin",   pos:"ST",  r:85},
+      {name:"Samir Nasri Sr",      pos:"CM",  r:68},
+      {name:"Franck Sauzée",       pos:"CM",  r:79},
+      {name:"Carlos Mozer",        pos:"CB",  r:76},
+      {name:"Roch Battiston",      pos:"GK",  r:72}
+    ]
+  },
+  { club:"AC Milan", season:"1992/93", country:"ITA", note:"Finalist",
+    players:[
+      {name:"Sebastiano Rossi",    pos:"GK",  r:83},
+      {name:"Paolo Maldini",       pos:"LB",  r:93},
+      {name:"Franco Baresi",       pos:"CB",  r:91},
+      {name:"Alessandro Costacurta",pos:"CB", r:87},
+      {name:"Mauro Tassotti",      pos:"RB",  r:82},
+      {name:"Demetrio Albertini",  pos:"CM",  r:83},
+      {name:"Carlo Ancelotti",     pos:"CM",  r:80},
+      {name:"Zvonimir Boban",      pos:"CM",  r:86},
+      {name:"Daniele Massaro",     pos:"CF",  r:81},
+      {name:"Marco van Basten",    pos:"ST",  r:93},
+      {name:"Ruud Gullit",         pos:"CAM", r:91},
+      {name:"Dejan Savićević",     pos:"CAM", r:88},
+      {name:"Marcel Desailly",     pos:"CM",  r:84},
+      {name:"Brian Laudrup",       pos:"LW",  r:84},
+      {name:"Jean-Pierre Papin",   pos:"ST",  r:85}
+    ]
+  },
+  // ── 1993/94 ──────────────────────────────────────────────────────────────
+  { club:"AC Milan", season:"1993/94", country:"ITA", note:"Champions",
+    players:[
+      {name:"Sebastiano Rossi",    pos:"GK",  r:83},
+      {name:"Paolo Maldini",       pos:"LB",  r:94},
+      {name:"Franco Baresi",       pos:"CB",  r:90},
+      {name:"Alessandro Costacurta",pos:"CB", r:88},
+      {name:"Mauro Tassotti",      pos:"RB",  r:82},
+      {name:"Demetrio Albertini",  pos:"CM",  r:84},
+      {name:"Zvonimir Boban",      pos:"CM",  r:87},
+      {name:"Marcel Desailly",     pos:"CDM", r:86},
+      {name:"Daniele Massaro",     pos:"CF",  r:82},
+      {name:"Dejan Savićević",     pos:"CAM", r:89},
+      {name:"Brian Laudrup",       pos:"LW",  r:85},
+      {name:"Savare",              pos:"CM",  r:74},
+      {name:"Marco Simone",        pos:"ST",  r:79},
+      {name:"Roberto Donadoni",    pos:"RM",  r:80},
+      {name:"Gianluigi Lentini",   pos:"LM",  r:78}
+    ]
+  },
+  { club:"FC Barcelona", season:"1993/94", country:"ESP", note:"Dream Team era, finalist",
+    players:[
+      {name:"Andoni Zubizarreta",  pos:"GK",  r:84},
+      {name:"Romário",             pos:"ST",  r:93},
+      {name:"Hristo Stoichkov",    pos:"LW",  r:90},
+      {name:"Pep Guardiola",       pos:"CDM", r:83},
+      {name:"Michael Laudrup",     pos:"CAM", r:89},
+      {name:"Ronald Koeman",       pos:"CB",  r:87},
+      {name:"José Maria Bakero",   pos:"CM",  r:80},
+      {name:"Guillermo Amor",      pos:"CM",  r:78},
+      {name:"Juan Carlos",         pos:"RW",  r:76},
+      {name:"Sergi Barjuán",       pos:"LB",  r:78},
+      {name:"Albert Ferrer",       pos:"RB",  r:78},
+      {name:"Miguel Ángel Nadal",  pos:"CB",  r:82},
+      {name:"Eusebio Sacristán",   pos:"CM",  r:79},
+      {name:"Jordi Cruyff",        pos:"LW",  r:76},
+      {name:"Txiki Begiristain",   pos:"LW",  r:79}
+    ]
+  },
+  // ── 1994/95 ──────────────────────────────────────────────────────────────
+  { club:"Ajax", season:"1994/95", country:"NED", note:"Champions",
+    players:[
+      {name:"Edwin van der Sar",   pos:"GK",  r:85},
+      {name:"Michael Reiziger",    pos:"RB",  r:82},
+      {name:"Frank Rijkaard",      pos:"CDM", r:85},
+      {name:"Ronald de Boer",      pos:"CM",  r:84},
+      {name:"Frank de Boer",       pos:"CB",  r:87},
+      {name:"Clarence Seedorf",    pos:"CM",  r:86},
+      {name:"Edgar Davids",        pos:"CDM", r:85},
+      {name:"Marc Overmars",       pos:"LW",  r:87},
+      {name:"Patrick Kluivert",    pos:"ST",  r:85},
+      {name:"Jari Litmanen",       pos:"CAM", r:87},
+      {name:"Finidi George",       pos:"RW",  r:81},
+      {name:"Danny Blind",         pos:"CB",  r:80},
+      {name:"Nordin Wooter",       pos:"RW",  r:72},
+      {name:"Winston Bogarde",     pos:"CB",  r:74},
+      {name:"Nwankwo Kanu",        pos:"CF",  r:82}
+    ]
+  },
+  // ── 1995/96 ──────────────────────────────────────────────────────────────
+  { club:"Juventus", season:"1995/96", country:"ITA", note:"Champions",
+    players:[
+      {name:"Angelo Peruzzi",      pos:"GK",  r:84},
+      {name:"Ciro Ferrara",        pos:"CB",  r:83},
+      {name:"Mark Iuliano",        pos:"CB",  r:78},
+      {name:"Moreno Torricelli",   pos:"RB",  r:78},
+      {name:"Gianluca Pessotto",   pos:"LB",  r:78},
+      {name:"Didier Deschamps",    pos:"CDM", r:85},
+      {name:"Paulo Sousa",         pos:"CM",  r:79},
+      {name:"Alessio Tacchinardi", pos:"CM",  r:79},
+      {name:"Antonio Conte",       pos:"CM",  r:80},
+      {name:"Alessandro Del Piero",pos:"CAM", r:89},
+      {name:"Fabrizio Ravanelli",  pos:"CF",  r:83},
+      {name:"Gianluca Vialli",     pos:"ST",  r:86},
+      {name:"Zinedine Zidane",     pos:"CAM", r:90},
+      {name:"Dino Baggio",         pos:"CM",  r:80},
+      {name:"Marcello Lippi",      pos:"CM",  r:68}
+    ]
+  },
+  { club:"Ajax", season:"1995/96", country:"NED", note:"Finalist",
+    players:[
+      {name:"Edwin van der Sar",   pos:"GK",  r:86},
+      {name:"Michael Reiziger",    pos:"RB",  r:83},
+      {name:"Frank de Boer",       pos:"CB",  r:88},
+      {name:"Edgar Davids",        pos:"CDM", r:86},
+      {name:"Ronald de Boer",      pos:"CM",  r:85},
+      {name:"Clarence Seedorf",    pos:"CM",  r:87},
+      {name:"Marc Overmars",       pos:"LW",  r:88},
+      {name:"Patrick Kluivert",    pos:"ST",  r:86},
+      {name:"Jari Litmanen",       pos:"CAM", r:88},
+      {name:"Finidi George",       pos:"RW",  r:82},
+      {name:"Nwankwo Kanu",        pos:"CF",  r:83},
+      {name:"Winston Bogarde",     pos:"CB",  r:74},
+      {name:"Peter Hoekstra",      pos:"RW",  r:76},
+      {name:"Danny Blind",         pos:"CB",  r:80},
+      {name:"Nordin Wooter",       pos:"RW",  r:73}
+    ]
+  },
+  // ── 1996/97 ──────────────────────────────────────────────────────────────
+  { club:"Borussia Dortmund", season:"1996/97", country:"GER", note:"Champions",
+    players:[
+      {name:"Stefan Klos",         pos:"GK",  r:82},
+      {name:"Jürgen Kohler",       pos:"CB",  r:86},
+      {name:"Matthias Sammer",     pos:"CB",  r:87},
+      {name:"Stefan Reuter",       pos:"RB",  r:82},
+      {name:"Christian Wörns",     pos:"CB",  r:80},
+      {name:"Andreas Möller",      pos:"CAM", r:85},
+      {name:"Stéphane Chapuisat",  pos:"ST",  r:84},
+      {name:"Karl-Heinz Riedle",   pos:"CF",  r:80},
+      {name:"Lars Ricken",         pos:"CM",  r:78},
+      {name:"Paulo Sousa",         pos:"CM",  r:79},
+      {name:"René Tretschok",      pos:"CM",  r:75},
+      {name:"Michael Zorc",        pos:"CM",  r:78},
+      {name:"Heiko Herrlich",      pos:"CF",  r:79},
+      {name:"Julio César",         pos:"CM",  r:76},
+      {name:"Flemming Povlsen",    pos:"ST",  r:74}
+    ]
+  },
+  { club:"Juventus", season:"1996/97", country:"ITA", note:"Finalist",
+    players:[
+      {name:"Angelo Peruzzi",      pos:"GK",  r:84},
+      {name:"Ciro Ferrara",        pos:"CB",  r:83},
+      {name:"Didier Deschamps",    pos:"CDM", r:86},
+      {name:"Zinedine Zidane",     pos:"CAM", r:92},
+      {name:"Alessandro Del Piero",pos:"ST",  r:90},
+      {name:"Marcello Lippi",      pos:"CM",  r:68},
+      {name:"Antonio Conte",       pos:"CM",  r:81},
+      {name:"Alen Bokšić",         pos:"CF",  r:82},
+      {name:"Nicola Amoruso",      pos:"ST",  r:77},
+      {name:"Gianluca Pessotto",   pos:"LB",  r:79},
+      {name:"Sergio Porrini",      pos:"RB",  r:77},
+      {name:"Paulo Sousa",         pos:"CM",  r:79},
+      {name:"Mark Iuliano",        pos:"CB",  r:78},
+      {name:"Moreno Torricelli",   pos:"RB",  r:78},
+      {name:"David Trezeguet",     pos:"ST",  r:84}
+    ]
+  },
+  // ── 1997/98 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"1997/98", country:"ESP", note:"Champions — La Séptima",
+    players:[
+      {name:"Bodo Illgner",        pos:"GK",  r:82},
+      {name:"Fernando Hierro",     pos:"CB",  r:87},
+      {name:"Roberto Carlos",      pos:"LB",  r:90},
+      {name:"Fernando Morientes",  pos:"ST",  r:83},
+      {name:"Davor Šuker",         pos:"ST",  r:86},
+      {name:"Predrag Mijatović",   pos:"CF",  r:83},
+      {name:"Christian Panucci",   pos:"RB",  r:79},
+      {name:"Clarence Seedorf",    pos:"CM",  r:86},
+      {name:"Fernando Redondo",    pos:"CDM", r:88},
+      {name:"Míchel Salgado",      pos:"RB",  r:81},
+      {name:"Raúl González",       pos:"ST",  r:87},
+      {name:"Iván Zamorano",       pos:"CF",  r:83},
+      {name:"Pep Guardiola",       pos:"CDM", r:81},
+      {name:"Secretario",          pos:"CB",  r:74},
+      {name:"Karembeu",            pos:"CM",  r:78}
+    ]
+  },
+  // ── 1998/99 ──────────────────────────────────────────────────────────────
+  { club:"Manchester United", season:"1998/99", country:"ENG", note:"Treble winners",
+    players:[
+      {name:"Peter Schmeichel",    pos:"GK",  r:92},
+      {name:"Gary Neville",        pos:"RB",  r:84},
+      {name:"Denis Irwin",         pos:"LB",  r:83},
+      {name:"Ronny Johnsen",       pos:"CB",  r:79},
+      {name:"Jaap Stam",           pos:"CB",  r:88},
+      {name:"David Beckham",       pos:"RM",  r:88},
+      {name:"Paul Scholes",        pos:"CM",  r:88},
+      {name:"Roy Keane",           pos:"CDM", r:90},
+      {name:"Nicky Butt",          pos:"CM",  r:81},
+      {name:"Ryan Giggs",          pos:"LW",  r:89},
+      {name:"Andy Cole",           pos:"ST",  r:83},
+      {name:"Dwight Yorke",        pos:"ST",  r:85},
+      {name:"Teddy Sheringham",    pos:"CF",  r:82},
+      {name:"Ole Gunnar Solskjær", pos:"ST",  r:82},
+      {name:"Jesper Blomqvist",    pos:"LM",  r:74}
+    ]
+  },
+  { club:"Bayern Munich", season:"1998/99", country:"GER", note:"Finalist",
+    players:[
+      {name:"Oliver Kahn",         pos:"GK",  r:91},
+      {name:"Markus Babbel",       pos:"RB",  r:82},
+      {name:"Thomas Linke",        pos:"CB",  r:79},
+      {name:"Samuel Kuffour",      pos:"CB",  r:80},
+      {name:"Bixente Lizarazu",    pos:"LB",  r:85},
+      {name:"Stefan Effenberg",    pos:"CM",  r:86},
+      {name:"Lothar Matthäus",     pos:"CDM", r:87},
+      {name:"Michael Tarnat",      pos:"LB",  r:78},
+      {name:"Carsten Jancker",     pos:"ST",  r:77},
+      {name:"Giovane Élber",       pos:"ST",  r:83},
+      {name:"Mario Basler",        pos:"CM",  r:81},
+      {name:"Mehmet Scholl",       pos:"CAM", r:82},
+      {name:"Alexander Zickler",   pos:"CF",  r:75},
+      {name:"Thorsten Fink",       pos:"CM",  r:74},
+      {name:"Hasan Salihamidžić",  pos:"RM",  r:78}
+    ]
+  },
+  // ── 1999/00 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"1999/00", country:"ESP", note:"Champions — La Octava",
+    players:[
+      {name:"Iker Casillas",       pos:"GK",  r:84},
+      {name:"Fernando Hierro",     pos:"CB",  r:86},
+      {name:"Roberto Carlos",      pos:"LB",  r:91},
+      {name:"Iván Helguera",       pos:"CB",  r:82},
+      {name:"Fernando Sanz",       pos:"CB",  r:75},
+      {name:"Luís Figo",           pos:"RW",  r:91},
+      {name:"Raúl González",       pos:"ST",  r:89},
+      {name:"Fernando Morientes",  pos:"ST",  r:84},
+      {name:"Fernando Redondo",    pos:"CDM", r:88},
+      {name:"Steve McManaman",     pos:"CM",  r:82},
+      {name:"Michel Salgado",      pos:"RB",  r:81},
+      {name:"Clarence Seedorf",    pos:"CM",  r:85},
+      {name:"Nicolás Anelka",      pos:"ST",  r:83},
+      {name:"Karembeu",            pos:"CM",  r:77},
+      {name:"Geremi",              pos:"RM",  r:78}
+    ]
+  },
+  // ── 2000/01 ──────────────────────────────────────────────────────────────
+  { club:"Bayern Munich", season:"2000/01", country:"GER", note:"Champions",
+    players:[
+      {name:"Oliver Kahn",         pos:"GK",  r:93},
+      {name:"Markus Babbel",       pos:"RB",  r:82},
+      {name:"Thomas Linke",        pos:"CB",  r:79},
+      {name:"Samuel Kuffour",      pos:"CB",  r:81},
+      {name:"Bixente Lizarazu",    pos:"LB",  r:85},
+      {name:"Stefan Effenberg",    pos:"CM",  r:87},
+      {name:"Mehmet Scholl",       pos:"CAM", r:83},
+      {name:"Michael Ballack",     pos:"CM",  r:87},
+      {name:"Carsten Jancker",     pos:"ST",  r:78},
+      {name:"Giovane Élber",       pos:"ST",  r:83},
+      {name:"Paulo Sérgio",        pos:"LW",  r:79},
+      {name:"Hasan Salihamidžić",  pos:"RM",  r:79},
+      {name:"Elber",               pos:"ST",  r:83},
+      {name:"Thorsten Fink",       pos:"CM",  r:74},
+      {name:"Patrick Andersson",   pos:"CB",  r:78}
+    ]
+  },
+  { club:"Valencia", season:"2000/01", country:"ESP", note:"Finalist",
+    players:[
+      {name:"Santiago Cañizares",  pos:"GK",  r:85},
+      {name:"Mauricio Pellegrino", pos:"CB",  r:80},
+      {name:"Roberto Ayala",       pos:"CB",  r:86},
+      {name:"Gerardo López",       pos:"LB",  r:74},
+      {name:"Curro Torres",        pos:"RB",  r:75},
+      {name:"Gaizka Mendieta",     pos:"CM",  r:86},
+      {name:"Gerard",              pos:"CM",  r:76},
+      {name:"Claudio López",       pos:"LW",  r:80},
+      {name:"Kily González",       pos:"RM",  r:80},
+      {name:"Zlatko Zahovič",      pos:"CAM", r:83},
+      {name:"John Carew",          pos:"ST",  r:78},
+      {name:"Mista",               pos:"CF",  r:77},
+      {name:"Amedeo Carboni",      pos:"LB",  r:78},
+      {name:"Rubén Baraja",        pos:"CDM", r:80},
+      {name:"Pablo Aimar",         pos:"CAM", r:84}
+    ]
+  },
+  // ── 2001/02 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2001/02", country:"ESP", note:"Champions — La Novena",
+    players:[
+      {name:"César Sánchez",       pos:"GK",  r:81},
+      {name:"Fernando Hierro",     pos:"CB",  r:85},
+      {name:"Roberto Carlos",      pos:"LB",  r:91},
+      {name:"Claude Makélélé",     pos:"CDM", r:89},
+      {name:"Iván Helguera",       pos:"CB",  r:82},
+      {name:"Luís Figo",           pos:"RW",  r:92},
+      {name:"Zinedine Zidane",     pos:"CAM", r:94},
+      {name:"Raúl González",       pos:"ST",  r:90},
+      {name:"Fernando Morientes",  pos:"ST",  r:84},
+      {name:"Steve McManaman",     pos:"CM",  r:81},
+      {name:"Michel Salgado",      pos:"RB",  r:81},
+      {name:"Flávio Conceição",    pos:"CM",  r:78},
+      {name:"Ronaldo",             pos:"ST",  r:94},
+      {name:"Santiago Solari",     pos:"LM",  r:77},
+      {name:"Savio",               pos:"RM",  r:78}
+    ]
+  },
+  { club:"Bayer Leverkusen", season:"2001/02", country:"GER", note:"Finalist",
+    players:[
+      {name:"Hans-Jörg Butt",      pos:"GK",  r:80},
+      {name:"Carsten Ramelow",     pos:"CDM", r:81},
+      {name:"Zé Roberto",          pos:"LM",  r:83},
+      {name:"Michael Ballack",     pos:"CM",  r:89},
+      {name:"Dimitar Berbatov",    pos:"ST",  r:83},
+      {name:"Oliver Neuville",     pos:"CF",  r:79},
+      {name:"Bernd Schneider",     pos:"RM",  r:80},
+      {name:"Lucio",               pos:"CB",  r:88},
+      {name:"Jens Nowotny",        pos:"CB",  r:80},
+      {name:"Ulf Kirsten",         pos:"CF",  r:77},
+      {name:"Thomas Brdarić",      pos:"ST",  r:75},
+      {name:"Boris Živković",      pos:"RB",  r:76},
+      {name:"Yildiray Basturk",    pos:"CAM", r:78},
+      {name:"Pablo",               pos:"LB",  r:75},
+      {name:"Andriy Voronin",      pos:"ST",  r:74}
+    ]
+  },
+  // ── 2002/03 ──────────────────────────────────────────────────────────────
+  { club:"AC Milan", season:"2002/03", country:"ITA", note:"Champions",
+    players:[
+      {name:"Dida",                pos:"GK",  r:87},
+      {name:"Paolo Maldini",       pos:"LB",  r:90},
+      {name:"Alessandro Costacurta",pos:"CB", r:84},
+      {name:"Alessandro Nesta",    pos:"CB",  r:91},
+      {name:"Cafu",                pos:"RB",  r:89},
+      {name:"Clarence Seedorf",    pos:"CM",  r:86},
+      {name:"Andrea Pirlo",        pos:"CDM", r:88},
+      {name:"Gennaro Gattuso",     pos:"CDM", r:84},
+      {name:"Rivaldo",             pos:"CAM", r:89},
+      {name:"Andriy Shevchenko",   pos:"ST",  r:93},
+      {name:"Filippo Inzaghi",     pos:"ST",  r:84},
+      {name:"Kakà",                pos:"CAM", r:87},
+      {name:"Rui Costa",           pos:"CAM", r:86},
+      {name:"Massimo Ambrosini",   pos:"CM",  r:81},
+      {name:"Serginho",            pos:"LM",  r:79}
+    ]
+  },
+  { club:"Juventus", season:"2002/03", country:"ITA", note:"Finalist",
+    players:[
+      {name:"Gianluigi Buffon",    pos:"GK",  r:92},
+      {name:"Lilian Thuram",       pos:"CB",  r:87},
+      {name:"Ciro Ferrara",        pos:"CB",  r:81},
+      {name:"Paolo Montero",       pos:"CB",  r:82},
+      {name:"Igor Tudor",          pos:"RB",  r:78},
+      {name:"Edgar Davids",        pos:"CDM", r:85},
+      {name:"Pavel Nedvěd",        pos:"CM",  r:90},
+      {name:"Zinedine Zidane",     pos:"CAM", r:93},
+      {name:"Alessandro Del Piero",pos:"ST",  r:87},
+      {name:"David Trezeguet",     pos:"ST",  r:88},
+      {name:"Marcelo Salas",       pos:"CF",  r:81},
+      {name:"Mauro Camoranesi",    pos:"RM",  r:82},
+      {name:"Emerson",             pos:"CDM", r:85},
+      {name:"Gianluca Zambrotta",  pos:"RB",  r:85},
+      {name:"Claudio Marchisio",   pos:"CM",  r:74}
+    ]
+  },
+  // ── 2003/04 ──────────────────────────────────────────────────────────────
+  { club:"FC Porto", season:"2003/04", country:"POR", note:"Champions — Mourinho",
+    players:[
+      {name:"Vítor Baía",          pos:"GK",  r:83},
+      {name:"Paulo Ferreira",      pos:"RB",  r:80},
+      {name:"Jorge Costa",         pos:"CB",  r:79},
+      {name:"Ricardo Carvalho",    pos:"CB",  r:85},
+      {name:"Nuno Valente",        pos:"LB",  r:78},
+      {name:"Costinha",            pos:"CDM", r:79},
+      {name:"Deco",                pos:"CAM", r:88},
+      {name:"Maniche",             pos:"CM",  r:82},
+      {name:"Dimitri Alenichev",   pos:"CM",  r:79},
+      {name:"Carlos Alberto",      pos:"CF",  r:76},
+      {name:"Derlei",              pos:"ST",  r:77},
+      {name:"Benni McCarthy",      pos:"ST",  r:80},
+      {name:"Pedro Mendes",        pos:"CM",  r:78},
+      {name:"Diego",               pos:"CM",  r:78},
+      {name:"Edgaras Jankauskas",  pos:"ST",  r:75}
+    ]
+  },
+  // ── 2004/05 ──────────────────────────────────────────────────────────────
+  { club:"Liverpool", season:"2004/05", country:"ENG", note:"Champions — Istanbul miracle",
+    players:[
+      {name:"Jerzy Dudek",         pos:"GK",  r:80},
+      {name:"Jamie Carragher",     pos:"CB",  r:83},
+      {name:"Sami Hyypiä",         pos:"CB",  r:81},
+      {name:"Stéphane Henchoz",    pos:"CB",  r:77},
+      {name:"Djimi Traoré",        pos:"LB",  r:71},
+      {name:"Steven Gerrard",      pos:"CM",  r:89},
+      {name:"Didi Hamann",         pos:"CDM", r:83},
+      {name:"Luis García",         pos:"CAM", r:80},
+      {name:"Vladimír Šmicer",     pos:"CM",  r:78},
+      {name:"Harry Kewell",        pos:"LW",  r:81},
+      {name:"Milan Baroš",         pos:"ST",  r:78},
+      {name:"Emile Heskey",        pos:"CF",  r:79},
+      {name:"Xabi Alonso",         pos:"CM",  r:86},
+      {name:"Luis García",         pos:"CAM", r:80},
+      {name:"John Arne Riise",     pos:"LB",  r:80}
+    ]
+  },
+  { club:"AC Milan", season:"2004/05", country:"ITA", note:"Finalist",
+    players:[
+      {name:"Dida",                pos:"GK",  r:87},
+      {name:"Paolo Maldini",       pos:"LB",  r:88},
+      {name:"Alessandro Nesta",    pos:"CB",  r:91},
+      {name:"Cafu",                pos:"RB",  r:87},
+      {name:"Alessandro Costacurta",pos:"CB", r:82},
+      {name:"Clarence Seedorf",    pos:"CM",  r:85},
+      {name:"Andrea Pirlo",        pos:"CDM", r:90},
+      {name:"Gennaro Gattuso",     pos:"CDM", r:84},
+      {name:"Kakà",                pos:"CAM", r:90},
+      {name:"Andriy Shevchenko",   pos:"ST",  r:92},
+      {name:"Filippo Inzaghi",     pos:"ST",  r:83},
+      {name:"Hernán Crespo",       pos:"ST",  r:85},
+      {name:"Massimo Ambrosini",   pos:"CM",  r:81},
+      {name:"Serginho",            pos:"LM",  r:78},
+      {name:"Jon Dahl Tomasson",   pos:"CF",  r:77}
+    ]
+  },
+  // ── 2005/06 ──────────────────────────────────────────────────────────────
+  { club:"FC Barcelona", season:"2005/06", country:"ESP", note:"Champions",
+    players:[
+      {name:"Víctor Valdés",       pos:"GK",  r:83},
+      {name:"Carles Puyol",        pos:"CB",  r:87},
+      {name:"Rafael Márquez",      pos:"CB",  r:83},
+      {name:"Oleguer",             pos:"RB",  r:74},
+      {name:"Sylvinho",            pos:"LB",  r:78},
+      {name:"Xavi Hernández",      pos:"CM",  r:89},
+      {name:"Deco",                pos:"CAM", r:88},
+      {name:"Andrés Iniesta",      pos:"CM",  r:86},
+      {name:"Ludovic Giuly",       pos:"RW",  r:80},
+      {name:"Ronaldinho",          pos:"CAM", r:95},
+      {name:"Samuel Eto'o",        pos:"ST",  r:90},
+      {name:"Mark van Bommel",     pos:"CDM", r:83},
+      {name:"Giovanni van Bronckhorst",pos:"LB",r:80},
+      {name:"Lilian Thuram",       pos:"CB",  r:84},
+      {name:"Henrik Larsson",      pos:"CF",  r:82}
+    ]
+  },
+  { club:"Arsenal", season:"2005/06", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Jens Lehmann",        pos:"GK",  r:83},
+      {name:"Lauren",              pos:"RB",  r:79},
+      {name:"Ashley Cole",         pos:"LB",  r:85},
+      {name:"Sol Campbell",        pos:"CB",  r:85},
+      {name:"Philippe Senderos",   pos:"CB",  r:77},
+      {name:"Freddie Ljungberg",   pos:"RM",  r:83},
+      {name:"Gilberto Silva",      pos:"CDM", r:82},
+      {name:"Cesc Fàbregas",       pos:"CM",  r:83},
+      {name:"Robert Pires",        pos:"LM",  r:84},
+      {name:"Thierry Henry",       pos:"ST",  r:92},
+      {name:"José Antonio Reyes",  pos:"LW",  r:79},
+      {name:"Aleksandr Hleb",      pos:"CM",  r:79},
+      {name:"Robin van Persie",    pos:"LW",  r:83},
+      {name:"Mathieu Flamini",     pos:"CM",  r:76},
+      {name:"Emmanuel Adebayor",   pos:"ST",  r:80}
+    ]
+  },
+  // ── 2006/07 ──────────────────────────────────────────────────────────────
+  { club:"AC Milan", season:"2006/07", country:"ITA", note:"Champions",
+    players:[
+      {name:"Dida",                pos:"GK",  r:85},
+      {name:"Paolo Maldini",       pos:"LB",  r:85},
+      {name:"Alessandro Nesta",    pos:"CB",  r:89},
+      {name:"Cafu",                pos:"RB",  r:84},
+      {name:"Marek Jankulovski",   pos:"LB",  r:79},
+      {name:"Clarence Seedorf",    pos:"CM",  r:84},
+      {name:"Andrea Pirlo",        pos:"CDM", r:90},
+      {name:"Gennaro Gattuso",     pos:"CDM", r:84},
+      {name:"Kakà",                pos:"CAM", r:93},
+      {name:"Filippo Inzaghi",     pos:"ST",  r:82},
+      {name:"Alberto Gilardino",   pos:"ST",  r:83},
+      {name:"Massimo Ambrosini",   pos:"CM",  r:80},
+      {name:"Serginho",            pos:"LM",  r:77},
+      {name:"Alessandro Diamanti", pos:"CAM", r:75},
+      {name:"Ronaldo",             pos:"ST",  r:88}
+    ]
+  },
+  { club:"Liverpool", season:"2006/07", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Pepe Reina",          pos:"GK",  r:85},
+      {name:"Jamie Carragher",     pos:"CB",  r:83},
+      {name:"Daniel Agger",        pos:"CB",  r:81},
+      {name:"Alvaro Arbeloa",      pos:"RB",  r:76},
+      {name:"John Arne Riise",     pos:"LB",  r:80},
+      {name:"Steven Gerrard",      pos:"CM",  r:89},
+      {name:"Xabi Alonso",         pos:"CM",  r:87},
+      {name:"Jermaine Pennant",    pos:"RM",  r:78},
+      {name:"Dirk Kuyt",           pos:"RW",  r:80},
+      {name:"Peter Crouch",        pos:"ST",  r:79},
+      {name:"Fernando Torres",     pos:"ST",  r:86},
+      {name:"Boudewijn Zenden",    pos:"LM",  r:76},
+      {name:"Mark González",       pos:"LW",  r:74},
+      {name:"Craig Bellamy",       pos:"LW",  r:80},
+      {name:"Robbie Fowler",       pos:"ST",  r:78}
+    ]
+  },
+  // ── 2007/08 ──────────────────────────────────────────────────────────────
+  { club:"Manchester United", season:"2007/08", country:"ENG", note:"Champions",
+    players:[
+      {name:"Edwin van der Sar",   pos:"GK",  r:88},
+      {name:"Gary Neville",        pos:"RB",  r:82},
+      {name:"Rio Ferdinand",       pos:"CB",  r:90},
+      {name:"Nemanja Vidić",       pos:"CB",  r:89},
+      {name:"Patrice Evra",        pos:"LB",  r:85},
+      {name:"Cristiano Ronaldo",   pos:"RW",  r:93},
+      {name:"Michael Carrick",     pos:"CDM", r:83},
+      {name:"Paul Scholes",        pos:"CM",  r:86},
+      {name:"Owen Hargreaves",     pos:"CDM", r:81},
+      {name:"Wayne Rooney",        pos:"ST",  r:88},
+      {name:"Carlos Tévez",        pos:"CF",  r:87},
+      {name:"Nani",                pos:"LW",  r:82},
+      {name:"Anderson",            pos:"CM",  r:80},
+      {name:"Rooney",              pos:"ST",  r:88},
+      {name:"Park Ji-sung",        pos:"RM",  r:80}
+    ]
+  },
+  { club:"Chelsea", season:"2007/08", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Petr Čech",           pos:"GK",  r:90},
+      {name:"Michael Essien",      pos:"CDM", r:87},
+      {name:"John Terry",          pos:"CB",  r:89},
+      {name:"Ricardo Carvalho",    pos:"CB",  r:86},
+      {name:"Ashley Cole",         pos:"LB",  r:87},
+      {name:"Mikel",               pos:"CDM", r:78},
+      {name:"Frank Lampard",       pos:"CM",  r:90},
+      {name:"Joe Cole",            pos:"CM",  r:82},
+      {name:"Salomon Kalou",       pos:"RW",  r:78},
+      {name:"Didier Drogba",       pos:"ST",  r:90},
+      {name:"Nicolas Anelka",      pos:"CF",  r:83},
+      {name:"Florent Malouda",     pos:"LW",  r:81},
+      {name:"Shaun Wright-Phillips",pos:"RM", r:77},
+      {name:"Wayne Bridge",        pos:"LB",  r:78},
+      {name:"Claudio Pizarro",     pos:"ST",  r:79}
+    ]
+  },
+  // ── 2008/09 ──────────────────────────────────────────────────────────────
+  { club:"FC Barcelona", season:"2008/09", country:"ESP", note:"Treble — Pep's first",
+    players:[
+      {name:"Víctor Valdés",       pos:"GK",  r:85},
+      {name:"Carles Puyol",        pos:"CB",  r:88},
+      {name:"Gerard Piqué",        pos:"CB",  r:85},
+      {name:"Dani Alves",          pos:"RB",  r:89},
+      {name:"Eric Abidal",         pos:"LB",  r:83},
+      {name:"Xavi Hernández",      pos:"CM",  r:93},
+      {name:"Andrés Iniesta",      pos:"CM",  r:91},
+      {name:"Sergio Busquets",     pos:"CDM", r:85},
+      {name:"Pedro",               pos:"RW",  r:80},
+      {name:"Lionel Messi",        pos:"RW",  r:94},
+      {name:"Samuel Eto'o",        pos:"ST",  r:88},
+      {name:"Thierry Henry",       pos:"LW",  r:86},
+      {name:"Yaya Touré",          pos:"CDM", r:85},
+      {name:"Seydou Keita",        pos:"CM",  r:81},
+      {name:"Bojan Krkić",         pos:"CF",  r:78}
+    ]
+  },
+  { club:"Manchester United", season:"2008/09", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Edwin van der Sar",   pos:"GK",  r:87},
+      {name:"Gary Neville",        pos:"RB",  r:80},
+      {name:"Rio Ferdinand",       pos:"CB",  r:89},
+      {name:"Nemanja Vidić",       pos:"CB",  r:90},
+      {name:"Patrice Evra",        pos:"LB",  r:86},
+      {name:"Cristiano Ronaldo",   pos:"RW",  r:95},
+      {name:"Michael Carrick",     pos:"CDM", r:83},
+      {name:"Paul Scholes",        pos:"CM",  r:86},
+      {name:"Wayne Rooney",        pos:"ST",  r:89},
+      {name:"Carlos Tévez",        pos:"CF",  r:87},
+      {name:"Dimitar Berbatov",    pos:"ST",  r:84},
+      {name:"Nani",                pos:"LW",  r:83},
+      {name:"Anderson",            pos:"CM",  r:79},
+      {name:"Park Ji-sung",        pos:"RM",  r:80},
+      {name:"Ryan Giggs",          pos:"LW",  r:82}
+    ]
+  },
+  // ── 2009/10 ──────────────────────────────────────────────────────────────
+  { club:"Inter Milan", season:"2009/10", country:"ITA", note:"Treble — Mourinho",
+    players:[
+      {name:"Júlio César",         pos:"GK",  r:87},
+      {name:"Maicon",              pos:"RB",  r:89},
+      {name:"Lúcio",               pos:"CB",  r:85},
+      {name:"Walter Samuel",       pos:"CB",  r:83},
+      {name:"Cristian Chivu",      pos:"LB",  r:80},
+      {name:"Wesley Sneijder",     pos:"CAM", r:91},
+      {name:"Thiago Motta",        pos:"CDM", r:80},
+      {name:"Esteban Cambiasso",   pos:"CDM", r:86},
+      {name:"Goran Pandev",        pos:"LW",  r:81},
+      {name:"Diego Milito",        pos:"ST",  r:87},
+      {name:"Samuel Eto'o",        pos:"ST",  r:89},
+      {name:"Dejan Stanković",     pos:"CM",  r:83},
+      {name:"Zanetti",             pos:"RB",  r:85},
+      {name:"Ivan Córdoba",        pos:"CB",  r:80},
+      {name:"Sulley Muntari",      pos:"CM",  r:79}
+    ]
+  },
+  { club:"Bayern Munich", season:"2009/10", country:"GER", note:"Finalist",
+    players:[
+      {name:"Hans-Jörg Butt",      pos:"GK",  r:80},
+      {name:"Philipp Lahm",        pos:"RB",  r:89},
+      {name:"Daniel van Buyten",   pos:"CB",  r:81},
+      {name:"Martin Demichelis",   pos:"CB",  r:79},
+      {name:"Holger Badstuber",    pos:"CB",  r:80},
+      {name:"Franck Ribéry",       pos:"LW",  r:91},
+      {name:"Arjen Robben",        pos:"RW",  r:90},
+      {name:"Thomas Müller",       pos:"CF",  r:83},
+      {name:"Bastian Schweinsteiger",pos:"CM",r:87},
+      {name:"Hamit Altıntop",      pos:"RM",  r:79},
+      {name:"Mario Gómez",         pos:"ST",  r:83},
+      {name:"Miroslav Klose",      pos:"ST",  r:85},
+      {name:"Mark van Bommel",     pos:"CDM", r:83},
+      {name:"Luca Toni",           pos:"ST",  r:82},
+      {name:"Ivica Olić",          pos:"CF",  r:79}
+    ]
+  },
+  // ── 2010/11 ──────────────────────────────────────────────────────────────
+  { club:"FC Barcelona", season:"2010/11", country:"ESP", note:"Champions",
+    players:[
+      {name:"Víctor Valdés",       pos:"GK",  r:85},
+      {name:"Carles Puyol",        pos:"CB",  r:87},
+      {name:"Gerard Piqué",        pos:"CB",  r:88},
+      {name:"Dani Alves",          pos:"RB",  r:89},
+      {name:"Adriano",             pos:"LB",  r:81},
+      {name:"Xavi Hernández",      pos:"CM",  r:94},
+      {name:"Andrés Iniesta",      pos:"CM",  r:93},
+      {name:"Sergio Busquets",     pos:"CDM", r:88},
+      {name:"David Villa",         pos:"LW",  r:89},
+      {name:"Lionel Messi",        pos:"RW",  r:97},
+      {name:"Pedro",               pos:"RW",  r:82},
+      {name:"Éric Abidal",         pos:"LB",  r:82},
+      {name:"Seydou Keita",        pos:"CM",  r:80},
+      {name:"Ibrahim Afellay",     pos:"LW",  r:77},
+      {name:"Javier Mascherano",   pos:"CDM", r:85}
+    ]
+  },
+  { club:"Manchester United", season:"2010/11", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Edwin van der Sar",   pos:"GK",  r:86},
+      {name:"Rafael da Silva",     pos:"RB",  r:81},
+      {name:"Rio Ferdinand",       pos:"CB",  r:87},
+      {name:"Nemanja Vidić",       pos:"CB",  r:89},
+      {name:"Patrice Evra",        pos:"LB",  r:85},
+      {name:"Antonio Valencia",    pos:"RM",  r:83},
+      {name:"Michael Carrick",     pos:"CDM", r:83},
+      {name:"Wayne Rooney",        pos:"ST",  r:90},
+      {name:"Park Ji-sung",        pos:"CM",  r:79},
+      {name:"Javier Hernández",    pos:"ST",  r:81},
+      {name:"Dimitar Berbatov",    pos:"ST",  r:84},
+      {name:"Nani",                pos:"LW",  r:84},
+      {name:"Ryan Giggs",          pos:"LW",  r:81},
+      {name:"Paul Scholes",        pos:"CM",  r:83},
+      {name:"Ji-sung Park",        pos:"RM",  r:79}
+    ]
+  },
+  // ── 2011/12 ──────────────────────────────────────────────────────────────
+  { club:"Chelsea", season:"2011/12", country:"ENG", note:"Champions",
+    players:[
+      {name:"Petr Čech",           pos:"GK",  r:89},
+      {name:"Jose Bosingwa",       pos:"RB",  r:77},
+      {name:"John Terry",          pos:"CB",  r:86},
+      {name:"Gary Cahill",         pos:"CB",  r:82},
+      {name:"Ashley Cole",         pos:"LB",  r:86},
+      {name:"Ramires",             pos:"CM",  r:82},
+      {name:"Frank Lampard",       pos:"CM",  r:87},
+      {name:"Michael Essien",      pos:"CDM", r:83},
+      {name:"Juan Mata",           pos:"CAM", r:86},
+      {name:"Didier Drogba",       pos:"ST",  r:87},
+      {name:"Fernando Torres",     pos:"ST",  r:83},
+      {name:"Florent Malouda",     pos:"LW",  r:79},
+      {name:"Salomon Kalou",       pos:"RW",  r:77},
+      {name:"Daniel Sturridge",    pos:"ST",  r:79},
+      {name:"Branislav Ivanović",  pos:"RB",  r:83}
+    ]
+  },
+  { club:"Bayern Munich", season:"2011/12", country:"GER", note:"Finalist",
+    players:[
+      {name:"Manuel Neuer",        pos:"GK",  r:89},
+      {name:"Philipp Lahm",        pos:"RB",  r:90},
+      {name:"Jérôme Boateng",      pos:"CB",  r:86},
+      {name:"Daniel van Buyten",   pos:"CB",  r:80},
+      {name:"David Alaba",         pos:"LB",  r:83},
+      {name:"Franck Ribéry",       pos:"LW",  r:90},
+      {name:"Arjen Robben",        pos:"RW",  r:90},
+      {name:"Thomas Müller",       pos:"CF",  r:85},
+      {name:"Bastian Schweinsteiger",pos:"CM",r:87},
+      {name:"Toni Kroos",          pos:"CM",  r:86},
+      {name:"Mario Gómez",         pos:"ST",  r:85},
+      {name:"Ivica Olić",          pos:"CF",  r:79},
+      {name:"Luiz Gustavo",        pos:"CDM", r:80},
+      {name:"Diego Contento",      pos:"LB",  r:72},
+      {name:"Xherdan Shaqiri",     pos:"RW",  r:79}
+    ]
+  },
+  // ── 2012/13 ──────────────────────────────────────────────────────────────
+  { club:"Bayern Munich", season:"2012/13", country:"GER", note:"Champions — Jupp's Bayern",
+    players:[
+      {name:"Manuel Neuer",        pos:"GK",  r:91},
+      {name:"Philipp Lahm",        pos:"RB",  r:90},
+      {name:"Jérôme Boateng",      pos:"CB",  r:87},
+      {name:"Dante",               pos:"CB",  r:82},
+      {name:"David Alaba",         pos:"LB",  r:85},
+      {name:"Franck Ribéry",       pos:"LW",  r:91},
+      {name:"Arjen Robben",        pos:"RW",  r:91},
+      {name:"Thomas Müller",       pos:"CF",  r:86},
+      {name:"Bastian Schweinsteiger",pos:"CM",r:88},
+      {name:"Toni Kroos",          pos:"CM",  r:87},
+      {name:"Mario Gómez",         pos:"ST",  r:85},
+      {name:"Luiz Gustavo",        pos:"CDM", r:81},
+      {name:"Xherdan Shaqiri",     pos:"RW",  r:80},
+      {name:"Mario Mandžukić",     pos:"ST",  r:83},
+      {name:"Claudio Pizarro",     pos:"ST",  r:79}
+    ]
+  },
+  { club:"Borussia Dortmund", season:"2012/13", country:"GER", note:"Finalist",
+    players:[
+      {name:"Roman Weidenfeller",  pos:"GK",  r:83},
+      {name:"Łukasz Piszczek",     pos:"RB",  r:84},
+      {name:"Mats Hummels",        pos:"CB",  r:87},
+      {name:"Neven Subotić",       pos:"CB",  r:83},
+      {name:"Marcel Schmelzer",    pos:"LB",  r:81},
+      {name:"Marco Reus",          pos:"CAM", r:89},
+      {name:"Mario Götze",         pos:"CAM", r:88},
+      {name:"İlkay Gündoğan",      pos:"CM",  r:84},
+      {name:"Jakub Błaszczykowski",pos:"RM",  r:80},
+      {name:"Robert Lewandowski",  pos:"ST",  r:87},
+      {name:"Kevin Großkreutz",    pos:"RM",  r:77},
+      {name:"Sven Bender",         pos:"CDM", r:81},
+      {name:"Julien Schieber",     pos:"CF",  r:72},
+      {name:"Felipe Santana",      pos:"CB",  r:75},
+      {name:"Henrikh Mkhitaryan",  pos:"CAM", r:82}
+    ]
+  },
+  // ── 2013/14 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2013/14", country:"ESP", note:"Champions — La Décima",
+    players:[
+      {name:"Iker Casillas",       pos:"GK",  r:88},
+      {name:"Dani Carvajal",       pos:"RB",  r:82},
+      {name:"Pepe",                pos:"CB",  r:86},
+      {name:"Raphaël Varane",      pos:"CB",  r:86},
+      {name:"Marcelo",             pos:"LB",  r:88},
+      {name:"Ángel Di María",      pos:"LW",  r:88},
+      {name:"Luka Modrić",         pos:"CM",  r:89},
+      {name:"Sami Khedira",        pos:"CDM", r:86},
+      {name:"Karim Benzema",       pos:"ST",  r:88},
+      {name:"Cristiano Ronaldo",   pos:"LW",  r:97},
+      {name:"Gareth Bale",         pos:"RW",  r:91},
+      {name:"Toni Kroos",          pos:"CM",  r:88},
+      {name:"Xabi Alonso",         pos:"CM",  r:87},
+      {name:"Mesut Özil",          pos:"CAM", r:88},
+      {name:"Álvaro Morata",       pos:"ST",  r:77}
+    ]
+  },
+  { club:"Atlético Madrid", season:"2013/14", country:"ESP", note:"Finalist",
+    players:[
+      {name:"Thibaut Courtois",    pos:"GK",  r:88},
+      {name:"Juanfran",            pos:"RB",  r:82},
+      {name:"Diego Godín",         pos:"CB",  r:89},
+      {name:"Miranda",             pos:"CB",  r:82},
+      {name:"Filipe Luís",         pos:"LB",  r:83},
+      {name:"Raúl García",         pos:"CM",  r:81},
+      {name:"Gabi",                pos:"CDM", r:83},
+      {name:"Mario Suárez",        pos:"CM",  r:77},
+      {name:"Koke",                pos:"CAM", r:84},
+      {name:"Diego Costa",         pos:"ST",  r:88},
+      {name:"David Villa",         pos:"CF",  r:86},
+      {name:"Arda Turan",          pos:"LW",  r:83},
+      {name:"Adrián",              pos:"LW",  r:75},
+      {name:"Toby Alderweireld",   pos:"CB",  r:82},
+      {name:"Tiago",               pos:"CDM", r:81}
+    ]
+  },
+  // ── 2014/15 ──────────────────────────────────────────────────────────────
+  { club:"FC Barcelona", season:"2014/15", country:"ESP", note:"Champions — MSN era",
+    players:[
+      {name:"Marc-André ter Stegen",pos:"GK", r:86},
+      {name:"Dani Alves",          pos:"RB",  r:86},
+      {name:"Gerard Piqué",        pos:"CB",  r:88},
+      {name:"Javier Mascherano",   pos:"CB",  r:85},
+      {name:"Jordi Alba",          pos:"LB",  r:86},
+      {name:"Sergio Busquets",     pos:"CDM", r:90},
+      {name:"Ivan Rakitić",        pos:"CM",  r:87},
+      {name:"Xavi Hernández",      pos:"CM",  r:88},
+      {name:"Lionel Messi",        pos:"RW",  r:97},
+      {name:"Luis Suárez",         pos:"ST",  r:94},
+      {name:"Neymar Jr",           pos:"LW",  r:92},
+      {name:"Pedro",               pos:"RW",  r:82},
+      {name:"Andrés Iniesta",      pos:"CM",  r:89},
+      {name:"Munir El Haddadi",    pos:"ST",  r:74},
+      {name:"Rafinha",             pos:"CM",  r:79}
+    ]
+  },
+  { club:"Juventus", season:"2014/15", country:"ITA", note:"Finalist",
+    players:[
+      {name:"Gianluigi Buffon",    pos:"GK",  r:91},
+      {name:"Andrea Barzagli",     pos:"CB",  r:84},
+      {name:"Giorgio Chiellini",   pos:"CB",  r:89},
+      {name:"Leonardo Bonucci",    pos:"CB",  r:89},
+      {name:"Stephan Lichtsteiner",pos:"RB",  r:82},
+      {name:"Claudio Marchisio",   pos:"CM",  r:84},
+      {name:"Andrea Pirlo",        pos:"CDM", r:87},
+      {name:"Arturo Vidal",        pos:"CM",  r:87},
+      {name:"Paul Pogba",          pos:"CM",  r:86},
+      {name:"Carlos Tévez",        pos:"CF",  r:84},
+      {name:"Álvaro Morata",       pos:"ST",  r:80},
+      {name:"Patrice Evra",        pos:"LB",  r:81},
+      {name:"Roberto Pereyra",     pos:"LW",  r:77},
+      {name:"Fernando Llorente",   pos:"ST",  r:80},
+      {name:"Mario Mandžukić",     pos:"ST",  r:83}
+    ]
+  },
+  // ── 2015/16 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2015/16", country:"ESP", note:"Champions — 11th",
+    players:[
+      {name:"Keylor Navas",        pos:"GK",  r:84},
+      {name:"Dani Carvajal",       pos:"RB",  r:84},
+      {name:"Raphaël Varane",      pos:"CB",  r:87},
+      {name:"Pepe",                pos:"CB",  r:84},
+      {name:"Marcelo",             pos:"LB",  r:87},
+      {name:"Toni Kroos",          pos:"CM",  r:90},
+      {name:"Luka Modrić",         pos:"CM",  r:90},
+      {name:"Casemiro",            pos:"CDM", r:84},
+      {name:"Cristiano Ronaldo",   pos:"LW",  r:96},
+      {name:"Karim Benzema",       pos:"ST",  r:88},
+      {name:"Gareth Bale",         pos:"RW",  r:90},
+      {name:"James Rodríguez",     pos:"CAM", r:85},
+      {name:"Isco",                pos:"CAM", r:84},
+      {name:"Sergio Ramos",        pos:"CB",  r:89},
+      {name:"Lucas Vázquez",       pos:"RM",  r:79}
+    ]
+  },
+  { club:"Atlético Madrid", season:"2015/16", country:"ESP", note:"Finalist",
+    players:[
+      {name:"Jan Oblak",           pos:"GK",  r:89},
+      {name:"Juanfran",            pos:"RB",  r:80},
+      {name:"Diego Godín",         pos:"CB",  r:90},
+      {name:"José Giménez",        pos:"CB",  r:83},
+      {name:"Filipe Luís",         pos:"LB",  r:83},
+      {name:"Koke",                pos:"CM",  r:85},
+      {name:"Gabi",                pos:"CDM", r:82},
+      {name:"Tiago",               pos:"CDM", r:79},
+      {name:"Antoine Griezmann",   pos:"CAM", r:88},
+      {name:"Fernando Torres",     pos:"ST",  r:80},
+      {name:"Kevin Gameiro",       pos:"ST",  r:79},
+      {name:"Yannick Carrasco",    pos:"LW",  r:81},
+      {name:"Ángel Correa",        pos:"CF",  r:77},
+      {name:"Saúl Ñíguez",         pos:"CM",  r:83},
+      {name:"Stefan Savić",        pos:"CB",  r:82}
+    ]
+  },
+  // ── 2016/17 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2016/17", country:"ESP", note:"Champions — 12th",
+    players:[
+      {name:"Keylor Navas",        pos:"GK",  r:85},
+      {name:"Dani Carvajal",       pos:"RB",  r:85},
+      {name:"Sergio Ramos",        pos:"CB",  r:91},
+      {name:"Raphaël Varane",      pos:"CB",  r:88},
+      {name:"Marcelo",             pos:"LB",  r:87},
+      {name:"Toni Kroos",          pos:"CM",  r:90},
+      {name:"Luka Modrić",         pos:"CM",  r:91},
+      {name:"Casemiro",            pos:"CDM", r:86},
+      {name:"Cristiano Ronaldo",   pos:"LW",  r:97},
+      {name:"Karim Benzema",       pos:"ST",  r:87},
+      {name:"Gareth Bale",         pos:"RW",  r:88},
+      {name:"Isco",                pos:"CAM", r:85},
+      {name:"Marco Asensio",       pos:"LW",  r:82},
+      {name:"Lucas Vázquez",       pos:"RM",  r:80},
+      {name:"James Rodríguez",     pos:"CAM", r:84}
+    ]
+  },
+  { club:"Juventus", season:"2016/17", country:"ITA", note:"Finalist",
+    players:[
+      {name:"Gianluigi Buffon",    pos:"GK",  r:90},
+      {name:"Dani Alves",          pos:"RB",  r:84},
+      {name:"Giorgio Chiellini",   pos:"CB",  r:87},
+      {name:"Leonardo Bonucci",    pos:"CB",  r:89},
+      {name:"Alex Sandro",         pos:"LB",  r:85},
+      {name:"Miralem Pjanić",      pos:"CM",  r:86},
+      {name:"Sami Khedira",        pos:"CDM", r:84},
+      {name:"Mario Mandžukić",     pos:"CF",  r:82},
+      {name:"Paulo Dybala",        pos:"CAM", r:87},
+      {name:"Gonzalo Higuaín",     pos:"ST",  r:88},
+      {name:"Juan Cuadrado",       pos:"RM",  r:82},
+      {name:"Claudio Marchisio",   pos:"CM",  r:82},
+      {name:"Blaise Matuidi",      pos:"CM",  r:84},
+      {name:"Medhi Benatia",       pos:"CB",  r:82},
+      {name:"Stephan Lichtsteiner",pos:"RB",  r:79}
+    ]
+  },
+  // ── 2017/18 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2017/18", country:"ESP", note:"Champions — 13th",
+    players:[
+      {name:"Keylor Navas",        pos:"GK",  r:85},
+      {name:"Dani Carvajal",       pos:"RB",  r:85},
+      {name:"Sergio Ramos",        pos:"CB",  r:91},
+      {name:"Raphaël Varane",      pos:"CB",  r:89},
+      {name:"Marcelo",             pos:"LB",  r:86},
+      {name:"Toni Kroos",          pos:"CM",  r:90},
+      {name:"Luka Modrić",         pos:"CM",  r:92},
+      {name:"Casemiro",            pos:"CDM", r:87},
+      {name:"Cristiano Ronaldo",   pos:"LW",  r:97},
+      {name:"Karim Benzema",       pos:"ST",  r:87},
+      {name:"Gareth Bale",         pos:"RW",  r:86},
+      {name:"Isco",                pos:"CAM", r:86},
+      {name:"Marco Asensio",       pos:"LW",  r:83},
+      {name:"Lucas Vázquez",       pos:"RM",  r:80},
+      {name:"Nacho Fernández",     pos:"CB",  r:81}
+    ]
+  },
+  { club:"Liverpool", season:"2017/18", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Loris Karius",        pos:"GK",  r:78},
+      {name:"Trent Alexander-Arnold",pos:"RB",r:82},
+      {name:"Virgil van Dijk",     pos:"CB",  r:89},
+      {name:"Dejan Lovren",        pos:"CB",  r:80},
+      {name:"Andrew Robertson",    pos:"LB",  r:86},
+      {name:"Jordan Henderson",    pos:"CDM", r:82},
+      {name:"Georginio Wijnaldum", pos:"CM",  r:83},
+      {name:"James Milner",        pos:"CM",  r:81},
+      {name:"Mohamed Salah",       pos:"RW",  r:91},
+      {name:"Roberto Firmino",     pos:"ST",  r:86},
+      {name:"Sadio Mané",          pos:"LW",  r:89},
+      {name:"Alex Oxlade-Chamberlain",pos:"CM",r:80},
+      {name:"Emre Can",            pos:"CM",  r:81},
+      {name:"Adam Lallana",        pos:"CAM", r:79},
+      {name:"Dominic Solanke",     pos:"ST",  r:73}
+    ]
+  },
+  // ── 2018/19 ──────────────────────────────────────────────────────────────
+  { club:"Liverpool", season:"2018/19", country:"ENG", note:"Champions",
+    players:[
+      {name:"Alisson Becker",      pos:"GK",  r:89},
+      {name:"Trent Alexander-Arnold",pos:"RB",r:86},
+      {name:"Virgil van Dijk",     pos:"CB",  r:93},
+      {name:"Joel Matip",          pos:"CB",  r:82},
+      {name:"Andrew Robertson",    pos:"LB",  r:87},
+      {name:"Fabinho",             pos:"CDM", r:86},
+      {name:"Georginio Wijnaldum", pos:"CM",  r:84},
+      {name:"Jordan Henderson",    pos:"CDM", r:83},
+      {name:"Mohamed Salah",       pos:"RW",  r:92},
+      {name:"Roberto Firmino",     pos:"ST",  r:86},
+      {name:"Sadio Mané",          pos:"LW",  r:90},
+      {name:"Naby Keïta",          pos:"CM",  r:81},
+      {name:"James Milner",        pos:"CM",  r:81},
+      {name:"Joe Gomez",           pos:"CB",  r:80},
+      {name:"Divock Origi",        pos:"ST",  r:77}
+    ]
+  },
+  { club:"Tottenham Hotspur", season:"2018/19", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Hugo Lloris",         pos:"GK",  r:87},
+      {name:"Kieran Trippier",     pos:"RB",  r:81},
+      {name:"Toby Alderweireld",   pos:"CB",  r:85},
+      {name:"Jan Vertonghen",      pos:"CB",  r:84},
+      {name:"Ben Davies",          pos:"LB",  r:78},
+      {name:"Moussa Sissoko",      pos:"CM",  r:79},
+      {name:"Victor Wanyama",      pos:"CDM", r:78},
+      {name:"Christian Eriksen",   pos:"CAM", r:87},
+      {name:"Heung-min Son",       pos:"LW",  r:87},
+      {name:"Harry Kane",          pos:"ST",  r:90},
+      {name:"Lucas Moura",         pos:"RW",  r:81},
+      {name:"Dele Alli",           pos:"CAM", r:84},
+      {name:"Harry Winks",         pos:"CM",  r:78},
+      {name:"Erik Lamela",         pos:"RM",  r:80},
+      {name:"Fernando Llorente",   pos:"ST",  r:77}
+    ]
+  },
+  // ── 2019/20 ──────────────────────────────────────────────────────────────
+  { club:"Bayern Munich", season:"2019/20", country:"GER", note:"Champions — Flick's invincibles",
+    players:[
+      {name:"Manuel Neuer",        pos:"GK",  r:91},
+      {name:"Joshua Kimmich",      pos:"RB",  r:89},
+      {name:"David Alaba",         pos:"LB",  r:88},
+      {name:"Jérôme Boateng",      pos:"CB",  r:84},
+      {name:"Niklas Süle",         pos:"CB",  r:83},
+      {name:"Thomas Müller",       pos:"CF",  r:87},
+      {name:"Leon Goretzka",       pos:"CM",  r:85},
+      {name:"Thiago Alcântara",    pos:"CM",  r:89},
+      {name:"Serge Gnabry",        pos:"RW",  r:87},
+      {name:"Robert Lewandowski",  pos:"ST",  r:94},
+      {name:"Kingsley Coman",      pos:"LW",  r:85},
+      {name:"Philippe Coutinho",   pos:"CAM", r:83},
+      {name:"Ivan Perišić",        pos:"LW",  r:82},
+      {name:"Corentin Tolisso",    pos:"CM",  r:81},
+      {name:"Alphonso Davies",     pos:"LB",  r:82}
+    ]
+  },
+  { club:"Paris Saint-Germain", season:"2019/20", country:"FRA", note:"Finalist",
+    players:[
+      {name:"Keylor Navas",        pos:"GK",  r:87},
+      {name:"Thilo Kehrer",        pos:"RB",  r:79},
+      {name:"Marquinhos",          pos:"CB",  r:88},
+      {name:"Presnel Kimpembe",    pos:"CB",  r:83},
+      {name:"Juan Bernat",         pos:"LB",  r:78},
+      {name:"Marco Verratti",      pos:"CM",  r:88},
+      {name:"Leandro Paredes",     pos:"CDM", r:81},
+      {name:"Ander Herrera",       pos:"CM",  r:80},
+      {name:"Neymar Jr",           pos:"LW",  r:92},
+      {name:"Kylian Mbappé",       pos:"ST",  r:92},
+      {name:"Angel Di María",      pos:"RW",  r:85},
+      {name:"Pablo Sarabia",       pos:"RW",  r:80},
+      {name:"Idrissa Gueye",       pos:"CDM", r:82},
+      {name:"Mauro Icardi",        pos:"ST",  r:82},
+      {name:"Eric Maxim Choupo-Moting",pos:"CF",r:75}
+    ]
+  },
+  // ── 2020/21 ──────────────────────────────────────────────────────────────
+  { club:"Chelsea", season:"2020/21", country:"ENG", note:"Champions — Tuchel",
+    players:[
+      {name:"Edouard Mendy",       pos:"GK",  r:86},
+      {name:"Reece James",         pos:"RB",  r:84},
+      {name:"Andreas Christensen", pos:"CB",  r:82},
+      {name:"Thiago Silva",        pos:"CB",  r:87},
+      {name:"Ben Chilwell",        pos:"LB",  r:82},
+      {name:"Jorginho",            pos:"CDM", r:83},
+      {name:"N'Golo Kanté",        pos:"CDM", r:89},
+      {name:"Mason Mount",         pos:"CAM", r:83},
+      {name:"Hakim Ziyech",        pos:"RW",  r:82},
+      {name:"Kai Havertz",         pos:"CF",  r:83},
+      {name:"Christian Pulisic",   pos:"LW",  r:82},
+      {name:"Timo Werner",         pos:"ST",  r:83},
+      {name:"Marcos Alonso",       pos:"LB",  r:79},
+      {name:"Mateo Kovačić",       pos:"CM",  r:83},
+      {name:"Callum Hudson-Odoi",  pos:"RW",  r:77}
+    ]
+  },
+  { club:"Manchester City", season:"2020/21", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Ederson",             pos:"GK",  r:89},
+      {name:"Kyle Walker",         pos:"RB",  r:87},
+      {name:"Rúben Dias",          pos:"CB",  r:89},
+      {name:"John Stones",         pos:"CB",  r:83},
+      {name:"Oleksandr Zinchenko", pos:"LB",  r:79},
+      {name:"Kevin De Bruyne",     pos:"CAM", r:94},
+      {name:"İlkay Gündoğan",      pos:"CM",  r:85},
+      {name:"Bernardo Silva",      pos:"CM",  r:87},
+      {name:"Riyad Mahrez",        pos:"RW",  r:87},
+      {name:"Phil Foden",          pos:"LW",  r:87},
+      {name:"Gabriel Jesus",       pos:"ST",  r:83},
+      {name:"Raheem Sterling",     pos:"LW",  r:87},
+      {name:"Fernandinho",         pos:"CDM", r:82},
+      {name:"Aymeric Laporte",     pos:"CB",  r:86},
+      {name:"Sergio Agüero",       pos:"ST",  r:87}
+    ]
+  },
+  // ── 2021/22 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2021/22", country:"ESP", note:"Champions — 14th",
+    players:[
+      {name:"Thibaut Courtois",    pos:"GK",  r:91},
+      {name:"Dani Carvajal",       pos:"RB",  r:84},
+      {name:"Eder Militão",        pos:"CB",  r:86},
+      {name:"David Alaba",         pos:"CB",  r:86},
+      {name:"Ferland Mendy",       pos:"LB",  r:83},
+      {name:"Luka Modrić",         pos:"CM",  r:91},
+      {name:"Toni Kroos",          pos:"CM",  r:87},
+      {name:"Casemiro",            pos:"CDM", r:89},
+      {name:"Vinícius Júnior",     pos:"LW",  r:89},
+      {name:"Karim Benzema",       pos:"ST",  r:93},
+      {name:"Rodrygo",             pos:"RW",  r:83},
+      {name:"Federico Valverde",   pos:"CM",  r:85},
+      {name:"Marco Asensio",       pos:"RW",  r:80},
+      {name:"Eduardo Camavinga",   pos:"CM",  r:81},
+      {name:"Gareth Bale",         pos:"RW",  r:80}
+    ]
+  },
+  { club:"Liverpool", season:"2021/22", country:"ENG", note:"Finalist",
+    players:[
+      {name:"Alisson Becker",      pos:"GK",  r:91},
+      {name:"Trent Alexander-Arnold",pos:"RB",r:87},
+      {name:"Virgil van Dijk",     pos:"CB",  r:90},
+      {name:"Joël Matip",          pos:"CB",  r:83},
+      {name:"Andrew Robertson",    pos:"LB",  r:87},
+      {name:"Fabinho",             pos:"CDM", r:87},
+      {name:"Thiago Alcântara",    pos:"CM",  r:87},
+      {name:"Jordan Henderson",    pos:"CDM", r:83},
+      {name:"Mohamed Salah",       pos:"RW",  r:92},
+      {name:"Roberto Firmino",     pos:"ST",  r:84},
+      {name:"Sadio Mané",          pos:"LW",  r:89},
+      {name:"Luis Díaz",           pos:"LW",  r:83},
+      {name:"Diogo Jota",          pos:"CF",  r:83},
+      {name:"Naby Keïta",          pos:"CM",  r:79},
+      {name:"Harvey Elliott",      pos:"CM",  r:75}
+    ]
+  },
+  // ── 2022/23 ──────────────────────────────────────────────────────────────
+  { club:"Manchester City", season:"2022/23", country:"ENG", note:"Champions — Treble",
+    players:[
+      {name:"Ederson",             pos:"GK",  r:90},
+      {name:"Kyle Walker",         pos:"RB",  r:85},
+      {name:"Rúben Dias",          pos:"CB",  r:88},
+      {name:"Manuel Akanji",       pos:"CB",  r:83},
+      {name:"Josko Gvardiol",      pos:"LB",  r:84},
+      {name:"Kevin De Bruyne",     pos:"CAM", r:92},
+      {name:"Rodri",               pos:"CDM", r:91},
+      {name:"Bernardo Silva",      pos:"CM",  r:87},
+      {name:"Riyad Mahrez",        pos:"RW",  r:85},
+      {name:"Phil Foden",          pos:"LW",  r:89},
+      {name:"Erling Haaland",      pos:"ST",  r:94},
+      {name:"İlkay Gündoğan",      pos:"CM",  r:84},
+      {name:"Jack Grealish",       pos:"LW",  r:82},
+      {name:"Julián Álvarez",      pos:"CF",  r:83},
+      {name:"Matheus Nunes",       pos:"CM",  r:78}
+    ]
+  },
+  { club:"Inter Milan", season:"2022/23", country:"ITA", note:"Finalist",
+    players:[
+      {name:"André Onana",         pos:"GK",  r:86},
+      {name:"Denzel Dumfries",     pos:"RB",  r:82},
+      {name:"Francesco Acerbi",    pos:"CB",  r:83},
+      {name:"Stefan de Vrij",      pos:"CB",  r:83},
+      {name:"Federico Dimarco",    pos:"LB",  r:83},
+      {name:"Nicolo Barella",      pos:"CM",  r:88},
+      {name:"Marcelo Brozović",    pos:"CDM", r:85},
+      {name:"Henrikh Mkhitaryan",  pos:"CM",  r:81},
+      {name:"Federico Dimarco",    pos:"LW",  r:82},
+      {name:"Romelu Lukaku",       pos:"ST",  r:84},
+      {name:"Lautaro Martínez",    pos:"ST",  r:89},
+      {name:"Edin Džeko",          pos:"CF",  r:79},
+      {name:"Joaquín Correa",      pos:"CF",  r:78},
+      {name:"Robin Gosens",        pos:"LB",  r:79},
+      {name:"Kristjan Asllani",    pos:"CM",  r:74}
+    ]
+  },
+  // ── 2023/24 ──────────────────────────────────────────────────────────────
+  { club:"Real Madrid", season:"2023/24", country:"ESP", note:"Champions — 15th",
+    players:[
+      {name:"Thibaut Courtois",    pos:"GK",  r:91},
+      {name:"Dani Carvajal",       pos:"RB",  r:85},
+      {name:"Eder Militão",        pos:"CB",  r:86},
+      {name:"Aurélien Tchouaméni", pos:"CDM", r:86},
+      {name:"Ferland Mendy",       pos:"LB",  r:83},
+      {name:"Luka Modrić",         pos:"CM",  r:88},
+      {name:"Toni Kroos",          pos:"CM",  r:88},
+      {name:"Federico Valverde",   pos:"CM",  r:88},
+      {name:"Vinícius Júnior",     pos:"LW",  r:92},
+      {name:"Karim Benzema",       pos:"ST",  r:91},
+      {name:"Rodrygo",             pos:"RW",  r:86},
+      {name:"Jude Bellingham",     pos:"CAM", r:91},
+      {name:"Eduardo Camavinga",   pos:"CM",  r:84},
+      {name:"Joselu",              pos:"ST",  r:79},
+      {name:"Brahim Díaz",         pos:"CAM", r:80}
+    ]
+  },
+  { club:"Borussia Dortmund", season:"2023/24", country:"GER", note:"Finalist",
+    players:[
+      {name:"Gregor Kobel",        pos:"GK",  r:84},
+      {name:"Julian Ryerson",      pos:"RB",  r:76},
+      {name:"Mats Hummels",        pos:"CB",  r:83},
+      {name:"Nico Schlotterbeck",  pos:"CB",  r:81},
+      {name:"Ian Maatsen",         pos:"LB",  r:80},
+      {name:"Emre Can",            pos:"CDM", r:81},
+      {name:"Marcel Sabitzer",     pos:"CM",  r:81},
+      {name:"Julian Brandt",       pos:"CAM", r:82},
+      {name:"Karim Adeyemi",       pos:"LW",  r:80},
+      {name:"Niclas Füllkrug",     pos:"ST",  r:80},
+      {name:"Jamie Bynoe-Gittens", pos:"RW",  r:76},
+      {name:"Sebastien Haller",    pos:"ST",  r:78},
+      {name:"Felix Nmecha",        pos:"CM",  r:77},
+      {name:"Donyell Malen",       pos:"RW",  r:80},
+      {name:"Marco Reus",          pos:"CAM", r:82}
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FORMATIONS  —  slots define draft order; dots are [x,y] for SVG preview
+// ═══════════════════════════════════════════════════════════════════════════
+var FORMATIONS = {
+  "4-3-3": {
+    label:"4-3-3", style:"Attacking", desc:"High press, wide forwards",
+    slots:["GK","RB","CB","CB","LB","CM","CM","CM","RW","ST","LW"],
+    dots:[[50,115],[78,87],[57,84],[33,84],[12,87],[70,54],[50,51],[20,54],[82,17],[50,14],[18,17]]
+  },
+  "4-4-2": {
+    label:"4-4-2", style:"Classic", desc:"Two strikers, balanced midfield",
+    slots:["GK","RB","CB","CB","LB","RM","CM","CM","LM","ST","ST"],
+    dots:[[50,115],[78,87],[57,84],[33,84],[12,87],[84,50],[58,48],[32,48],[6,50],[62,17],[28,17]]
+  },
+  "4-2-3-1": {
+    label:"4-2-3-1", style:"Modern", desc:"Double pivot, creator behind striker",
+    slots:["GK","RB","CB","CB","LB","CDM","CDM","RW","CAM","LW","ST"],
+    dots:[[50,115],[78,87],[57,84],[33,84],[12,87],[62,65],[28,65],[82,37],[50,34],[8,37],[50,14]]
+  },
+  "3-5-2": {
+    label:"3-5-2", style:"Wing play", desc:"Three at the back, attacking wingbacks",
+    slots:["GK","CB","CB","CB","RM","CM","CDM","CM","LM","ST","ST"],
+    dots:[[50,115],[65,87],[50,84],[25,87],[84,52],[64,49],[50,57],[26,49],[6,52],[62,17],[28,17]]
+  },
+  "4-1-4-1": {
+    label:"4-1-4-1", style:"Balanced", desc:"Single pivot, disciplined midfield block",
+    slots:["GK","RB","CB","CB","LB","CDM","RM","CM","CM","LM","ST"],
+    dots:[[50,115],[78,87],[57,84],[33,84],[12,87],[50,68],[82,43],[60,40],[30,40],[8,43],[50,14]]
+  },
+  "3-4-3": {
+    label:"3-4-3", style:"Ultra attack", desc:"Three defenders, three forwards",
+    slots:["GK","CB","CB","CB","RM","CM","CM","LM","RW","ST","LW"],
+    dots:[[50,115],[65,87],[50,84],[25,87],[84,52],[60,49],[30,49],[6,52],[80,17],[50,14],[18,17]]
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MULTI-POSITION COMPATIBILITY
+// CAN_PLAY[pos] = list of slot positions the player is eligible to fill
+// ═══════════════════════════════════════════════════════════════════════════
+var CAN_PLAY = {
+  "GK":  ["GK"],
+  "CB":  ["CB","CDM"],
+  "RB":  ["RB","CB","RM","CDM"],
+  "LB":  ["LB","CB","LM","CDM"],
+  "CDM": ["CDM","CM","CB"],
+  "CM":  ["CM","CDM","CAM","RM","LM"],
+  "CAM": ["CAM","CM","RW","LW","CF","ST"],
+  "RM":  ["RM","RW","CM","RB"],
+  "LM":  ["LM","LW","CM","LB"],
+  "RW":  ["RW","RM","CAM","ST"],
+  "LW":  ["LW","LM","CAM","ST"],
+  "CF":  ["CF","ST","CAM","RW","LW"],
+  "ST":  ["ST","CF","RW","LW"]
+};
+
+function canFillSlot(playerPos, slotPos) {
+  var eligible = CAN_PLAY[playerPos];
+  return eligible ? eligible.indexOf(slotPos) !== -1 : false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════════════════════════
+var chosenFormKey = null;
+var formSlots = [];       // e.g. ["GK","RB","CB",...]
+var slotIndex = 0;        // which slot we're currently filling
+var XI = [];              // [{name, pos, slotPos, r, club, season}, ...]
+var selectedPlayer = null;
+var currentSquad = null;
+
+var STAGE_NAMES = ["Group Stage","Round of 16","Quarter-Final","Semi-Final","Final"];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+function showPhase(id) {
+  document.querySelectorAll(".phase").forEach(function(p){ p.classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INTRO → FORMATION SELECT
+// ═══════════════════════════════════════════════════════════════════════════
+function goToFormation() {
+  renderFormationCards();
+  showPhase("phase-formation");
+}
+
+function posColor(pos) {
+  if (pos === "GK") return "#facc15";
+  if (["CB","RB","LB"].indexOf(pos) !== -1) return "#60a5fa";
+  if (["CDM","CM","CAM","RM","LM"].indexOf(pos) !== -1) return "#34d399";
+  return "#f87171";
+}
+
+function generateFormationSVG(key) {
+  var f = FORMATIONS[key];
+  var parts = [
+    '<svg width="88" height="116" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">',
+    '<rect width="100" height="130" fill="#060f0a" rx="5"/>',
+    '<rect x="4" y="4" width="92" height="122" stroke="rgba(255,255,255,0.07)" stroke-width="0.8" fill="none" rx="2"/>',
+    '<line x1="4" y1="65" x2="96" y2="65" stroke="rgba(255,255,255,0.05)" stroke-width="0.7"/>',
+    '<rect x="28" y="4" width="44" height="13" stroke="rgba(255,255,255,0.06)" stroke-width="0.7" fill="none"/>',
+    '<rect x="28" y="113" width="44" height="13" stroke="rgba(255,255,255,0.06)" stroke-width="0.7" fill="none"/>'
+  ];
+  f.slots.forEach(function(pos, i) {
+    var d = f.dots[i];
+    var c = posColor(pos);
+    parts.push('<circle cx="' + d[0] + '" cy="' + d[1] + '" r="4.8" fill="' + c + '" opacity="0.82"/>');
+  });
+  parts.push('</svg>');
+  return parts.join("");
+}
+
+function renderFormationCards() {
+  var grid = document.getElementById("formation-grid");
+  grid.innerHTML = "";
+  Object.keys(FORMATIONS).forEach(function(key) {
+    var f = FORMATIONS[key];
+    var card = document.createElement("div");
+    card.className = "formation-card";
+    card.setAttribute("data-key", key);
+    card.innerHTML =
+      '<div class="formation-pitch">' + generateFormationSVG(key) + '</div>' +
+      '<div class="formation-body">' +
+        '<div class="formation-name">' + f.label + '</div>' +
+        '<div class="formation-style">' + f.style + '</div>' +
+        '<div class="formation-desc">' + f.desc + '</div>' +
+      '</div>';
+    card.addEventListener("click", function(){ selectFormation(key); });
+    grid.appendChild(card);
+  });
+}
+
+function selectFormation(key) {
+  chosenFormKey = key;
+  document.querySelectorAll(".formation-card").forEach(function(c){
+    c.classList.toggle("selected", c.getAttribute("data-key") === key);
+  });
+  var btn = document.getElementById("btn-confirm-formation");
+  btn.disabled = false;
+  document.getElementById("formation-btn-label").textContent = "Draft with " + FORMATIONS[key].label;
+}
+
+function confirmFormation() {
+  if (!chosenFormKey) return;
+  formSlots = FORMATIONS[chosenFormKey].slots;
+  slotIndex = 0;
+  XI = [];
+  selectedPlayer = null;
+  currentSquad = null;
+
+  document.getElementById("xi-form-label").textContent = FORMATIONS[chosenFormKey].label;
+  document.getElementById("slot-formation-label").textContent = FORMATIONS[chosenFormKey].label + " · " + FORMATIONS[chosenFormKey].style;
+  document.getElementById("spin-card").innerHTML = '<div class="spin-blank">Press spin to get a squad</div>';
+  document.getElementById("btn-spin").style.display = "inline-block";
+  document.getElementById("btn-respin").style.display = "none";
+  document.getElementById("draft-layout").style.display = "none";
+  document.getElementById("btn-play-stage").style.display = "inline-block";
+
+  updateSlotIndicator();
+  renderXI();
+  showPhase("phase-draft");
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DRAFT — SPIN + PICK
+// ═══════════════════════════════════════════════════════════════════════════
+function updateSlotIndicator() {
+  document.getElementById("slot-pos-label").textContent = formSlots[slotIndex];
+  document.getElementById("pick-num").textContent = slotIndex + 1;
+}
+
+function doSpin() {
+  selectedPlayer = null;
+  currentSquad = SQUADS[Math.floor(Math.random() * SQUADS.length)];
+
+  var card = document.getElementById("spin-card");
+  card.innerHTML =
+    '<div class="spin-season">' + currentSquad.season + " · " + currentSquad.country + "</div>" +
+    '<div class="spin-club">' + currentSquad.club + "</div>" +
+    '<div class="spin-info">' + (currentSquad.note || "") + "</div>";
+
+  document.getElementById("draft-club-name").textContent = currentSquad.club;
+  document.getElementById("draft-season-label").textContent =
+    currentSquad.season + (currentSquad.note ? "  ·  " + currentSquad.note : "");
+
+  renderPlayerList();
+  document.getElementById("draft-layout").style.display = "grid";
+  document.getElementById("btn-spin").style.display = "none";
+  document.getElementById("btn-respin").style.display = "inline-block";
+  document.getElementById("btn-confirm-pick").disabled = true;
+}
+
+function renderPlayerList() {
+  var slotPos = formSlots[slotIndex];
+  var list = document.getElementById("player-list");
+  list.innerHTML = "";
+
+  var natural = [], alternate = [], oop = [];
+  currentSquad.players.forEach(function(p) {
+    if (p.pos === slotPos) natural.push(p);
+    else if (canFillSlot(p.pos, slotPos)) alternate.push(p);
+    else oop.push(p);
+  });
+
+  natural.sort(function(a,b){ return b.r - a.r; });
+  alternate.sort(function(a,b){ return b.r - a.r; });
+  oop.sort(function(a,b){ return b.r - a.r; });
+
+  var eligible = natural.concat(alternate);
+
+  if (eligible.length === 0) {
+    var note = document.createElement("div");
+    note.style.cssText = "color:#f59e0b;font-size:.75rem;padding:.4rem .2rem;margin-bottom:.4rem";
+    note.textContent = "No players eligible for " + slotPos + " — all shown.";
+    list.appendChild(note);
+    currentSquad.players.slice().sort(function(a,b){ return b.r-a.r; }).forEach(function(p){
+      appendPlayerRow(p, slotPos, true, true, list);
+    });
+    return;
+  }
+
+  eligible.forEach(function(p){
+    var isNatural = p.pos === slotPos;
+    appendPlayerRow(p, slotPos, true, isNatural, list);
+  });
+
+  if (oop.length > 0) {
+    var div = document.createElement("div");
+    div.className = "oop-divider";
+    div.textContent = "Out of position";
+    list.appendChild(div);
+    oop.forEach(function(p){ appendPlayerRow(p, slotPos, false, false, list); });
+  }
+}
+
+function appendPlayerRow(p, slotPos, eligible, isNatural, list) {
+  var div = document.createElement("div");
+  div.className = eligible ? "player-row" : "player-row-oop";
+
+  var altBadge = (!isNatural && eligible)
+    ? '<span class="alt-badge">' + p.pos + '</span>'
+    : "";
+
+  div.innerHTML =
+    '<span class="player-pos">' + p.pos + "</span>" +
+    '<span class="player-name">' + p.name + altBadge + "</span>" +
+    '<span class="player-rating ' + ratingClass(p.r) + '">' + p.r + "</span>";
+
+  if (eligible) {
+    div.addEventListener("click", function(){ selectPlayer(p, div); });
+  }
+  list.appendChild(div);
+}
+
+function selectPlayer(p, el) {
+  selectedPlayer = p;
+  document.querySelectorAll(".player-row").forEach(function(r){ r.classList.remove("selected"); });
+  el.classList.add("selected");
+  document.getElementById("btn-confirm-pick").disabled = false;
+}
+
+function ratingClass(r) {
+  if (r >= 92) return "rating-elite";
+  if (r >= 86) return "rating-world";
+  if (r >= 80) return "rating-good";
+  return "rating-avg";
+}
+
+function confirmPick() {
+  if (!selectedPlayer) return;
+  XI.push({
+    name: selectedPlayer.name,
+    pos: selectedPlayer.pos,
+    slotPos: formSlots[slotIndex],
+    r: selectedPlayer.r,
+    club: currentSquad.club,
+    season: currentSquad.season
+  });
+  selectedPlayer = null;
+  currentSquad = null;
+  slotIndex++;
+  renderXI();
+
+  if (slotIndex >= 11) {
+    document.getElementById("draft-layout").style.display = "none";
+    document.getElementById("spin-card").innerHTML =
+      '<div style="color:#10b981;font-size:1.05rem;font-weight:700">Squad complete — entering the tournament…</div>';
+    document.getElementById("btn-respin").style.display = "none";
+    setTimeout(startTournament, 800);
+    return;
+  }
+
+  updateSlotIndicator();
+  document.getElementById("spin-card").innerHTML = '<div class="spin-blank">Press spin to get a squad</div>';
+  document.getElementById("draft-layout").style.display = "none";
+  document.getElementById("btn-spin").style.display = "inline-block";
+  document.getElementById("btn-respin").style.display = "none";
+}
+
+function renderXI() {
+  var container = document.getElementById("xi-slots");
+  container.innerHTML = "";
+  var totalR = 0;
+  for (var i = 0; i < 11; i++) {
+    var div = document.createElement("div");
+    var slotPos = formSlots[i] || "?";
+    if (i < XI.length) {
+      var p = XI[i];
+      totalR += p.r;
+      var posLabel = p.pos !== p.slotPos
+        ? p.slotPos + '<sup style="color:#334155;font-size:.55em"> ' + p.pos + "</sup>"
+        : p.slotPos;
+      div.className = "xi-slot filled";
+      div.innerHTML =
+        '<span class="xi-slot-num">' + (i+1) + "</span>" +
+        '<span class="xi-slot-pos">' + posLabel + "</span>" +
+        '<span class="xi-slot-name">' + p.name + "</span>" +
+        '<span class="xi-slot-rating">' + p.r + "</span>";
+    } else if (i === slotIndex) {
+      div.className = "xi-slot current-slot";
+      div.innerHTML =
+        '<span class="xi-slot-num">' + (i+1) + "</span>" +
+        '<span class="xi-slot-pos">' + slotPos + "</span>" +
+        '<span class="xi-slot-name">← pick now</span>';
+    } else {
+      div.className = "xi-slot";
+      div.innerHTML =
+        '<span class="xi-slot-num">' + (i+1) + "</span>" +
+        '<span class="xi-slot-pos">' + slotPos + "</span>" +
+        '<span class="xi-slot-name" style="color:#1e293b">—</span>';
+    }
+    container.appendChild(div);
+  }
+  var avg = XI.length > 0 ? (totalR / XI.length).toFixed(1) : "—";
+  document.getElementById("xi-avg-val").textContent = avg;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TOURNAMENT
+// ═══════════════════════════════════════════════════════════════════════════
+var stageIndex = 0;
+var matchResults = [];
+var eliminated = false;
+var usedOpponents = [];
+var MY_TEAM_NAME = "Your XI";
+
+function avgRating(squad) {
+  var s = 0; squad.forEach(function(p){ s += p.r; }); return s / squad.length;
+}
+function myAvgRating() { return avgRating(XI); }
+
+function pickOpponent() {
+  var pool = SQUADS.filter(function(s){
+    return !usedOpponents.includes(s.club + s.season);
+  });
+  if (pool.length === 0) { usedOpponents = []; pool = SQUADS; }
+  var s = pool[Math.floor(Math.random() * pool.length)];
+  usedOpponents.push(s.club + s.season);
+  return s;
+}
+
+function simulateMatch(myRating, oppRating) {
+  // Base win prob from ratings gap, then add noise
+  var gap = myRating - oppRating;
+  var baseProb = 0.5 + gap * 0.018;
+  baseProb = Math.max(0.10, Math.min(0.90, baseProb));
+
+  // Scores: random goals 0-4
+  var roll = Math.random();
+  var myGoals, oppGoals;
+
+  if (roll < baseProb * 0.55) {
+    // Win
+    myGoals = 1 + Math.floor(Math.random() * 3);
+    oppGoals = Math.floor(Math.random() * myGoals);
+  } else if (roll < baseProb * 0.55 + 0.18) {
+    // Draw (goes to extra time / pens if knockout)
+    myGoals = Math.floor(Math.random() * 3);
+    oppGoals = myGoals;
+  } else {
+    // Loss
+    oppGoals = 1 + Math.floor(Math.random() * 3);
+    myGoals = Math.floor(Math.random() * oppGoals);
+  }
+
+  return { myGoals: myGoals, oppGoals: oppGoals };
+}
+
+function startTournament() {
+  stageIndex = 0;
+  matchResults = [];
+  eliminated = false;
+  usedOpponents = [];
+  showPhase("phase-tournament");
+  document.getElementById("tourn-sub").textContent = "Your squad avg: " + myAvgRating().toFixed(1);
+  renderBracket();
+  document.getElementById("btn-play-stage").textContent = "Play " + STAGE_NAMES[stageIndex];
+}
+
+function renderBracket() {
+  var bracket = document.getElementById("bracket");
+  bracket.innerHTML = "";
+
+  matchResults.forEach(function(stage, si) {
+    var section = document.createElement("div");
+    section.className = "bracket-stage";
+    section.innerHTML = '<div class="stage-label">' + STAGE_NAMES[si] + '</div>';
+
+    var matchesHtml = "";
+    stage.forEach(function(m) {
+      var scoreClass = m.myGoals > m.oppGoals ? "win" : m.myGoals < m.oppGoals ? "loss" : "draw";
+      var label = m.myGoals > m.oppGoals ? "Win" : m.myGoals < m.oppGoals ? "Eliminated" : "Draw";
+      matchesHtml +=
+        '<div class="match-card">' +
+          '<div>' +
+            '<div class="match-team player-team">' + MY_TEAM_NAME + '</div>' +
+            '<div class="match-team-rating">Avg ' + m.myRating.toFixed(1) + '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div class="match-score ' + scoreClass + '">' + m.myGoals + ' – ' + m.oppGoals + '</div>' +
+            '<div class="match-result-label ' + scoreClass + '">' + label + '</div>' +
+          '</div>' +
+          '<div style="text-align:right">' +
+            '<div class="match-team opp-team">' + m.opp.club + '</div>' +
+            '<div class="match-team-rating" style="text-align:right">' + m.opp.season + '  ·  Avg ' + m.oppRating.toFixed(1) + '</div>' +
+          '</div>' +
+        '</div>';
+    });
+    section.innerHTML += matchesHtml;
+    bracket.appendChild(section);
+  });
+}
+
+function playNextStage() {
+  if (eliminated) return;
+
+  var stageName = STAGE_NAMES[stageIndex];
+  var matchCount = stageIndex === 0 ? 6 : 1; // group stage: 6 matches; KO: 1
+  var stageMatches = [];
+  var myRating = myAvgRating();
+
+  for (var i = 0; i < matchCount; i++) {
+    var opp = pickOpponent();
+    var oppRating = avgRating(opp.players);
+    var result = simulateMatch(myRating, oppRating);
+    stageMatches.push({ myGoals: result.myGoals, oppGoals: result.oppGoals, opp: opp, myRating: myRating, oppRating: oppRating });
+  }
+
+  matchResults.push(stageMatches);
+  renderBracket();
+
+  // Check group stage outcome
+  if (stageIndex === 0) {
+    var wins = stageMatches.filter(function(m){ return m.myGoals > m.oppGoals; }).length;
+    var pts = stageMatches.reduce(function(a,m){ return a + (m.myGoals > m.oppGoals ? 3 : m.myGoals === m.oppGoals ? 1 : 0); }, 0);
+    document.getElementById("tourn-sub").textContent = "Group Stage: " + wins + "W — " + pts + " pts";
+
+    if (pts < 7) {
+      // Fail group stage — eliminated
+      eliminated = true;
+      showResult(false, "Out in the Group Stage", "Only " + pts + " points — better luck next time.");
+      return;
+    }
+    stageIndex++;
+    document.getElementById("btn-play-stage").textContent = "Play " + STAGE_NAMES[stageIndex];
+    return;
+  }
+
+  // KO stage
+  var lastMatch = stageMatches[0];
+  if (lastMatch.myGoals < lastMatch.oppGoals) {
+    eliminated = true;
+    showResult(false, "Eliminated in the " + stageName, lastMatch.opp.club + " (" + lastMatch.opp.season + ") beat you " + lastMatch.oppGoals + "–" + lastMatch.myGoals + ".");
+    return;
+  }
+
+  if (stageIndex === 4) {
+    // Won the final
+    showResult(true, "Champions of Europe!", "You beat " + lastMatch.opp.club + " " + lastMatch.myGoals + "–" + lastMatch.oppGoals + " in the Final.");
+    return;
+  }
+
+  stageIndex++;
+  document.getElementById("btn-play-stage").textContent = "Play " + STAGE_NAMES[stageIndex];
+  document.getElementById("tourn-sub").textContent = STAGE_NAMES[stageIndex - 1] + " — through to the " + STAGE_NAMES[stageIndex];
+}
+
+function showResult(won, title, sub) {
+  document.getElementById("result-trophy").textContent = won ? "🏆" : "❌";
+  document.getElementById("result-title").textContent = title;
+  document.getElementById("result-sub").textContent = sub;
+
+  var xiHtml = '<div class="final-xi-title">Your XI</div>';
+  XI.forEach(function(p) {
+    xiHtml +=
+      '<div class="final-player">' +
+        '<span class="final-player-pos">' + p.pos + '</span>' +
+        '<span class="final-player-name">' + p.name + '</span>' +
+        '<span style="font-size:.68rem;color:#475569;flex:1">' + p.club + " '" + p.season.slice(2,4) + '</span>' +
+        '<span class="final-player-rating">' + p.r + '</span>' +
+      '</div>';
+  });
+  document.getElementById("result-xi").innerHTML = xiHtml;
+
+  setTimeout(function(){ showPhase("phase-result"); }, 400);
+  document.getElementById("btn-play-stage").style.display = "none";
+}
+
+function restartGame() {
+  chosenFormKey = null;
+  formSlots = [];
+  slotIndex = 0;
+  XI = [];
+  selectedPlayer = null;
+  currentSquad = null;
+  stageIndex = 0;
+  matchResults = [];
+  eliminated = false;
+  usedOpponents = [];
+  document.querySelectorAll(".formation-card").forEach(function(c){ c.classList.remove("selected"); });
+  document.getElementById("btn-confirm-formation").disabled = true;
+  document.getElementById("formation-btn-label").textContent = "Select a formation";
+  renderFormationCards();
+  showPhase("phase-formation");
+}
+
+// init
+renderFormationCards();
+</script>
+</body>
+</html>
