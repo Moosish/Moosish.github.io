@@ -468,7 +468,16 @@ def simulated_point_in_time_returns(
                 <p>The academic literature, which has access to real point-in-time CRSP data, documents
                 survivorship bias of 1–4 percentage points in annual return and Sharpe ratio inflations of
                 30–60% depending on asset class, time period, and universe construction.
-                <strong>Our 8% simulation result is a conservative lower bound, not a full estimate.</strong></p>
+                <strong>Our 8% simulation result is a conservative lower bound, not a full estimate.</strong>
+                The return drag of ~1.2 percentage points annually is real and compounds — that is roughly
+                20% of terminal portfolio value over a 15-year horizon — but the volatility effect that
+                academia documents (from high-vol distressed stocks being excluded) is attenuated in our
+                simulation because we are sampling delistees from an already-clean universe.</p>
+
+                <p>The max drawdown figure is often where the real damage appears in practice. A risk manager
+                relying on a biased backtest with full historical constituent drift (not our simulation) would
+                see materially optimistic drawdown estimates. When the real drawdown hits on a portfolio that
+                includes the historical laggards, a levered account sized to the biased estimates can blow up.</p>
 
                 <hr>
 
@@ -509,9 +518,13 @@ def simulated_point_in_time_returns(
                     failures).</figcaption>
                 </figure>
 
+                <p>The attribution analysis breaks the Sharpe gap into two components:</p>
+
                 <p><strong>Return inflation</strong> dominates in years with significant index turnover or
-                market stress. The effect is largest following significant drawdowns (2011, 2016, 2020),
-                when companies that underperformed were removed from the index.</p>
+                market stress. When failing companies are removed, their negative terminal returns are
+                excluded from the biased portfolio. The effect is largest in years following significant
+                market stress (2011, 2016, 2020), when companies that underperformed during the drawdown
+                were removed from the index.</p>
 
                 <p><strong>Volatility suppression</strong> tends to be more stable across years. Struggling
                 companies exhibit elevated volatility before removal — distressed equity is volatile equity.
@@ -542,6 +555,14 @@ def simulated_point_in_time_returns(
                 30–50% overstated. This is not a sign of bad intentions — most practitioners who do this
                 haven't thought carefully about data construction methodology. But it's a sign that the
                 results need recalibrating before they inform position sizing.</p>
+
+                <p><strong>If the bias is smaller than you expected:</strong></p>
+
+                <p>For some periods and some strategies, the survivorship effect is genuinely modest.
+                An equal-weight strategy applied to large-cap US equities in a sustained bull market may
+                show only a 10–15% Sharpe inflation. This is still meaningful, but it doesn't invalidate
+                the strategy. The danger is not that the strategy is necessarily bad — it's that you don't
+                know how much to trust your risk estimates.</p>
 
                 <p><strong>The deeper point:</strong></p>
 
@@ -579,14 +600,15 @@ python week1_survivorship_bias.py</code></pre>
 
                 <h2>Coming Up: Week 2</h2>
 
-                <p>Next week we'll move from <em>what</em> to <em>how much</em>. The topic is
-                <strong>factor exposure and style drift</strong> — specifically, how easy it is to build a
-                "value" strategy that is actually a disguised momentum strategy, and how to detect this
-                before it blows up in a momentum reversal.</p>
+                <p>Next week we build the raw material for everything that follows:
+                <strong>feature engineering for quantitative signals</strong>. We'll turn price history
+                and fundamentals into ML-ready inputs — momentum, mean-reversion, value, and carry factors
+                — while being rigorous about look-ahead contamination (a subtler cousin of the survivorship
+                problem we tackled here).</p>
 
-                <p>We'll use the same clean data-construction discipline developed here, apply it to
-                Fama-French factor data, and show how a simple PCA separates genuine factor loading from
-                accidental exposure.</p>
+                <p>We'll then use information coefficients to triage the feature set: which signals have
+                genuine predictive content, which are noise dressed up as structure, and how to tell the
+                difference before you've trained a model on them.</p>
 
                 <hr>
 
