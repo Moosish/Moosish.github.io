@@ -459,6 +459,69 @@
     margin: 1.5rem 0;
 }
 
+/* Figures */
+.prose figure {
+    margin: 2rem 0;
+}
+
+.prose figure img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    display: block;
+}
+
+.prose figcaption {
+    font-size: 0.815rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 0.625rem;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* Tables */
+.prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+}
+
+.prose th {
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 0.6rem 1rem;
+    border-bottom: 2px solid var(--border-color);
+    text-align: left;
+    background: var(--bg-secondary);
+}
+
+.prose td {
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.prose tr:last-child td { border-bottom: none; }
+.prose tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* Viz panel figures */
+.viz-figure { margin-bottom: 0.25rem; }
+.viz-figure img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    display: block;
+}
+.viz-figure-caption {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    font-style: italic;
+    line-height: 1.45;
+}
+
 .prose .callout-label {
     font-weight: 700;
     font-size: 0.8rem;

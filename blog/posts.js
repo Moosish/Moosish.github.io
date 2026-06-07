@@ -7,12 +7,12 @@
  */
 const BLOG_POSTS = [
     {
-        slug: 'feature-engineering-financial-time-series',
-        title: 'Feature Engineering for Financial Time-Series',
-        description: 'A practical walkthrough of building meaningful features from raw OHLCV data — lag features, rolling statistics, and technical indicators that actually improve model performance.',
-        date: '2026-06-05',
-        readTime: 8,
-        tags: ['Python', 'Machine Learning', 'Feature Engineering', 'Finance'],
+        slug: 'week1-survivorship-bias',
+        title: 'Week 1: Survivorship Bias and the Hidden Cost of Dirty Data',
+        description: 'The single most common reason backtests look better than live trading — and how to measure the damage. We build two portfolios, compare the results, and are honest about what the simulation can and cannot tell us.',
+        date: '2026-06-07',
+        readTime: 10,
+        tags: ['Quantitative Finance', 'Data Quality', 'Backtesting', 'Python'],
         featured: true
     }
 ];
