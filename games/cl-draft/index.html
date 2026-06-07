@@ -40,15 +40,17 @@ body{background:#0a0e14;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
 .formation-style{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#10b981;margin-bottom:.3rem}
 .formation-desc{font-size:.72rem;color:#64748b;line-height:1.45}
 
-/* ── SLOT INDICATOR ── */
-.slot-indicator{
+/* ── DRAFT PROGRESS ── */
+.draft-progress{
   display:flex;align-items:center;gap:1rem;
-  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);
-  border-radius:10px;padding:.75rem 1.25rem;margin-bottom:1.25rem;
+  background:#111827;border:1px solid #1e293b;
+  border-radius:10px;padding:.65rem 1.1rem;margin-bottom:1rem;
 }
-.slot-ind-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#475569}
-.slot-ind-pos{font-size:1.4rem;font-weight:800;color:#10b981;min-width:52px}
-.slot-ind-progress{font-size:.8rem;color:#64748b;margin-left:auto}
+.dp-formation{font-size:.82rem;font-weight:700;color:#10b981;flex-shrink:0}
+.dp-pips{display:flex;gap:4px;flex:1}
+.dp-pip{width:16px;height:6px;border-radius:3px;background:#1e293b;flex-shrink:0}
+.dp-pip.filled{background:#10b981}
+.dp-count{font-size:.75rem;color:#475569;flex-shrink:0;min-width:40px;text-align:right}
 
 /* ── SPIN ── */
 .spin-card{
@@ -71,24 +73,15 @@ body{background:#0a0e14;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
 .draft-squad-sub{font-size:.75rem;color:#64748b;margin-bottom:1rem}
 .player-list{display:flex;flex-direction:column;gap:.35rem;max-height:400px;overflow-y:auto}
 
-/* eligible player rows */
+/* player rows */
 .player-row{
   display:flex;align-items:center;gap:.7rem;
   padding:.55rem .75rem;border-radius:8px;border:1px solid #1e293b;
-  background:#0f172a;cursor:pointer;transition:border-color .15s,background .15s;
+  background:#0f172a;cursor:pointer;transition:border-color .15s,background .15s,opacity .15s;
 }
 .player-row:hover{border-color:#10b981;background:#0d1f18}
 .player-row.selected{border-color:#10b981;background:#0d2418}
-/* out-of-position rows */
-.player-row-oop{
-  display:flex;align-items:center;gap:.7rem;
-  padding:.55rem .75rem;border-radius:8px;border:1px solid #141d2b;
-  background:#0a1020;opacity:.45;
-}
-.oop-divider{
-  font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  color:#334155;padding:.5rem 0 .25rem;border-top:1px solid #1e293b;margin-top:.35rem;
-}
+.player-row.dimmed{opacity:.3;pointer-events:none}
 /* alt-position badge */
 .alt-badge{
   font-size:.58rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
@@ -120,14 +113,17 @@ body{background:#0a0e14;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
   background:#0f172a;border:1px solid #1e293b;min-height:36px;
 }
 .xi-slot.filled{border-color:#1a3028}
-.xi-slot.current-slot{border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.06)}
+.xi-slot.slot-eligible{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.05);cursor:pointer}
+.xi-slot.slot-eligible:hover{border-color:#10b981;background:rgba(16,185,129,.1)}
+.xi-slot.slot-selected{border-color:#10b981;background:rgba(16,185,129,.1);cursor:pointer}
 .xi-slot-num{font-size:.62rem;color:#334155;width:14px;flex-shrink:0;text-align:right}
 .xi-slot-pos{font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;width:26px;text-align:center;color:#334155}
-.xi-slot.current-slot .xi-slot-pos{color:#10b981}
+.xi-slot.slot-eligible .xi-slot-pos,.xi-slot.slot-selected .xi-slot-pos{color:#10b981}
 .xi-slot.filled .xi-slot-pos{color:#1e4434}
 .xi-slot-name{font-size:.75rem;font-weight:600;flex:1}
 .xi-slot.filled .xi-slot-name{color:#cbd5e1}
-.xi-slot.current-slot .xi-slot-name{color:#34d399;font-size:.7rem}
+.xi-slot.slot-eligible .xi-slot-name{color:#4b9e7a;font-size:.7rem}
+.xi-slot.slot-selected .xi-slot-name{color:#34d399;font-size:.7rem}
 .xi-slot-rating{font-size:.75rem;font-weight:700;color:#10b981}
 .xi-avg{
   margin-top:.65rem;padding:.45rem .55rem;border-radius:6px;
@@ -234,22 +230,16 @@ body{background:#0a0e14;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
 
   <!-- ══ PHASE 2 — DRAFT ══ -->
   <div id="phase-draft" class="phase">
-    <div class="slot-indicator">
-      <div>
-        <div class="slot-ind-label">Now picking</div>
-        <div class="slot-ind-pos" id="slot-pos-label">GK</div>
-      </div>
-      <div>
-        <div class="slot-ind-label">Slot</div>
-        <div style="font-size:.95rem;font-weight:700;color:#e2e8f0"><span id="pick-num">1</span> of 11</div>
-      </div>
-      <div class="slot-ind-progress" id="slot-formation-label"></div>
+    <div class="draft-progress">
+      <span class="dp-formation" id="dp-formation"></span>
+      <div class="dp-pips" id="dp-pips"></div>
+      <span class="dp-count" id="dp-count">0 / 11</span>
     </div>
 
     <div class="spin-card" id="spin-card">
       <div class="spin-blank">Press spin to get a squad</div>
     </div>
-    <div class="btn-row" style="margin-top:0;margin-bottom:1.25rem">
+    <div class="btn-row" style="margin-top:0;margin-bottom:1.1rem">
       <button class="btn btn-primary" id="btn-spin" onclick="doSpin()">Spin</button>
       <button class="btn btn-secondary" id="btn-respin" onclick="doSpin()" style="display:none">Respin squad</button>
     </div>
@@ -258,9 +248,12 @@ body{background:#0a0e14;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
       <div class="draft-pick-area">
         <div class="draft-squad-name" id="draft-club-name"></div>
         <div class="draft-squad-sub" id="draft-season-label"></div>
+        <div style="font-size:.72rem;color:#475569;margin-bottom:.65rem" id="draft-hint">Click a player, then pick a slot — or click a slot first.</div>
         <div class="player-list" id="player-list"></div>
         <div class="btn-row">
-          <button class="btn btn-primary" id="btn-confirm-pick" onclick="confirmPick()" disabled>Confirm pick</button>
+          <button class="btn btn-primary" id="btn-confirm-pick" onclick="confirmPick()" disabled>
+            <span id="confirm-label">Select a player and slot</span>
+          </button>
         </div>
       </div>
       <div class="xi-panel">
@@ -1545,10 +1538,10 @@ function canFillSlot(playerPos, slotPos) {
 // GAME STATE
 // ═══════════════════════════════════════════════════════════════════════════
 var chosenFormKey = null;
-var formSlots = [];       // e.g. ["GK","RB","CB",...]
-var slotIndex = 0;        // which slot we're currently filling
-var XI = [];              // [{name, pos, slotPos, r, club, season}, ...]
-var selectedPlayer = null;
+var formSlots = [];         // ["GK","RB","CB",...] length 11
+var XI = [];                // length-11 array, XI[i] = player object or null
+var selectedPlayer = null;  // currently highlighted player
+var selectedSlot = -1;      // currently highlighted slot index (-1 = none)
 var currentSquad = null;
 
 var STAGE_NAMES = ["Group Stage","Round of 16","Quarter-Final","Semi-Final","Final"];
@@ -1628,20 +1621,20 @@ function selectFormation(key) {
 function confirmFormation() {
   if (!chosenFormKey) return;
   formSlots = FORMATIONS[chosenFormKey].slots;
-  slotIndex = 0;
-  XI = [];
+  XI = formSlots.map(function(){ return null; });
   selectedPlayer = null;
+  selectedSlot = -1;
   currentSquad = null;
 
   document.getElementById("xi-form-label").textContent = FORMATIONS[chosenFormKey].label;
-  document.getElementById("slot-formation-label").textContent = FORMATIONS[chosenFormKey].label + " · " + FORMATIONS[chosenFormKey].style;
+  document.getElementById("dp-formation").textContent = FORMATIONS[chosenFormKey].label;
   document.getElementById("spin-card").innerHTML = '<div class="spin-blank">Press spin to get a squad</div>';
   document.getElementById("btn-spin").style.display = "inline-block";
   document.getElementById("btn-respin").style.display = "none";
   document.getElementById("draft-layout").style.display = "none";
   document.getElementById("btn-play-stage").style.display = "inline-block";
 
-  updateSlotIndicator();
+  updateProgress();
   renderXI();
   showPhase("phase-draft");
 }
@@ -1649,17 +1642,28 @@ function confirmFormation() {
 // ═══════════════════════════════════════════════════════════════════════════
 // DRAFT — SPIN + PICK
 // ═══════════════════════════════════════════════════════════════════════════
-function updateSlotIndicator() {
-  document.getElementById("slot-pos-label").textContent = formSlots[slotIndex];
-  document.getElementById("pick-num").textContent = slotIndex + 1;
+function filledCount() {
+  return XI.filter(function(p){ return p !== null; }).length;
+}
+
+function updateProgress() {
+  var filled = filledCount();
+  var pips = document.getElementById("dp-pips");
+  pips.innerHTML = "";
+  for (var i = 0; i < 11; i++) {
+    var pip = document.createElement("div");
+    pip.className = "dp-pip" + (XI[i] ? " filled" : "");
+    pips.appendChild(pip);
+  }
+  document.getElementById("dp-count").textContent = filled + " / 11";
 }
 
 function doSpin() {
   selectedPlayer = null;
+  selectedSlot = -1;
   currentSquad = SQUADS[Math.floor(Math.random() * SQUADS.length)];
 
-  var card = document.getElementById("spin-card");
-  card.innerHTML =
+  document.getElementById("spin-card").innerHTML =
     '<div class="spin-season">' + currentSquad.season + " · " + currentSquad.country + "</div>" +
     '<div class="spin-club">' + currentSquad.club + "</div>" +
     '<div class="spin-info">' + (currentSquad.note || "") + "</div>";
@@ -1668,80 +1672,153 @@ function doSpin() {
   document.getElementById("draft-season-label").textContent =
     currentSquad.season + (currentSquad.note ? "  ·  " + currentSquad.note : "");
 
-  renderPlayerList();
   document.getElementById("draft-layout").style.display = "grid";
   document.getElementById("btn-spin").style.display = "none";
   document.getElementById("btn-respin").style.display = "inline-block";
-  document.getElementById("btn-confirm-pick").disabled = true;
+
+  refreshDraftUI();
+}
+
+// Renders player list + XI sidebar + confirm button to reflect current selection state
+function refreshDraftUI() {
+  renderPlayerList();
+  renderXI();
+  updateConfirmButton();
 }
 
 function renderPlayerList() {
-  var slotPos = formSlots[slotIndex];
   var list = document.getElementById("player-list");
   list.innerHTML = "";
 
-  var natural = [], alternate = [], oop = [];
-  currentSquad.players.forEach(function(p) {
-    if (p.pos === slotPos) natural.push(p);
-    else if (canFillSlot(p.pos, slotPos)) alternate.push(p);
-    else oop.push(p);
-  });
+  var sorted = currentSquad.players.slice().sort(function(a,b){ return b.r - a.r; });
+  sorted.forEach(function(p) {
+    var isSelected = selectedPlayer && selectedPlayer.name === p.name && selectedPlayer.r === p.r;
 
-  natural.sort(function(a,b){ return b.r - a.r; });
-  alternate.sort(function(a,b){ return b.r - a.r; });
-  oop.sort(function(a,b){ return b.r - a.r; });
+    // Dim if: a slot is selected AND this player can't fill it
+    var isDimmed = selectedSlot >= 0 && !canFillSlot(p.pos, formSlots[selectedSlot]);
 
-  var eligible = natural.concat(alternate);
-
-  if (eligible.length === 0) {
-    var note = document.createElement("div");
-    note.style.cssText = "color:#f59e0b;font-size:.75rem;padding:.4rem .2rem;margin-bottom:.4rem";
-    note.textContent = "No players eligible for " + slotPos + " — all shown.";
-    list.appendChild(note);
-    currentSquad.players.slice().sort(function(a,b){ return b.r-a.r; }).forEach(function(p){
-      appendPlayerRow(p, slotPos, true, true, list);
-    });
-    return;
-  }
-
-  eligible.forEach(function(p){
-    var isNatural = p.pos === slotPos;
-    appendPlayerRow(p, slotPos, true, isNatural, list);
-  });
-
-  if (oop.length > 0) {
     var div = document.createElement("div");
-    div.className = "oop-divider";
-    div.textContent = "Out of position";
+    div.className = "player-row" +
+      (isSelected ? " selected" : "") +
+      (isDimmed ? " dimmed" : "");
+
+    // Show alt-pos badge when player's natural pos ≠ selected slot pos but still eligible
+    var altBadge = "";
+    if (selectedSlot >= 0) {
+      var slotPos = formSlots[selectedSlot];
+      if (!isDimmed && p.pos !== slotPos) {
+        altBadge = '<span class="alt-badge">' + p.pos + "→" + slotPos + "</span>";
+      }
+    } else if (isSelected) {
+      // Show positions this player CAN fill among empty slots
+    }
+
+    div.innerHTML =
+      '<span class="player-pos">' + p.pos + "</span>" +
+      '<span class="player-name">' + p.name + altBadge + "</span>" +
+      '<span class="player-rating ' + ratingClass(p.r) + '">' + p.r + "</span>";
+
+    div.addEventListener("click", function(){ onPlayerClick(p); });
     list.appendChild(div);
-    oop.forEach(function(p){ appendPlayerRow(p, slotPos, false, false, list); });
-  }
+  });
 }
 
-function appendPlayerRow(p, slotPos, eligible, isNatural, list) {
-  var div = document.createElement("div");
-  div.className = eligible ? "player-row" : "player-row-oop";
+function renderXI() {
+  var container = document.getElementById("xi-slots");
+  container.innerHTML = "";
+  var totalR = 0, filledN = 0;
 
-  var altBadge = (!isNatural && eligible)
-    ? '<span class="alt-badge">' + p.pos + '</span>'
-    : "";
+  for (var i = 0; i < 11; i++) {
+    var slotPos = formSlots[i];
+    var div = document.createElement("div");
 
-  div.innerHTML =
-    '<span class="player-pos">' + p.pos + "</span>" +
-    '<span class="player-name">' + p.name + altBadge + "</span>" +
-    '<span class="player-rating ' + ratingClass(p.r) + '">' + p.r + "</span>";
+    if (XI[i]) {
+      var p = XI[i];
+      totalR += p.r; filledN++;
+      var posLabel = p.pos !== slotPos
+        ? slotPos + '<sup style="color:#334155;font-size:.55em"> ' + p.pos + "</sup>"
+        : slotPos;
+      div.className = "xi-slot filled";
+      div.innerHTML =
+        '<span class="xi-slot-num">' + (i+1) + "</span>" +
+        '<span class="xi-slot-pos">' + posLabel + "</span>" +
+        '<span class="xi-slot-name">' + p.name + "</span>" +
+        '<span class="xi-slot-rating">' + p.r + "</span>";
+    } else {
+      // Determine state of this empty slot
+      var isSelectedSlot = selectedSlot === i;
+      var isEligible = selectedPlayer && canFillSlot(selectedPlayer.pos, slotPos);
 
-  if (eligible) {
-    div.addEventListener("click", function(){ selectPlayer(p, div); });
+      var cls = "xi-slot";
+      var nameText = '<span class="xi-slot-name" style="color:#1e293b">—</span>';
+
+      if (isSelectedSlot) {
+        cls = "xi-slot slot-selected";
+        nameText = '<span class="xi-slot-name">← selected</span>';
+      } else if (isEligible) {
+        cls = "xi-slot slot-eligible";
+        nameText = '<span class="xi-slot-name">click to assign</span>';
+      }
+
+      div.className = cls;
+      div.innerHTML =
+        '<span class="xi-slot-num">' + (i+1) + "</span>" +
+        '<span class="xi-slot-pos">' + slotPos + "</span>" +
+        nameText;
+
+      if (isEligible || isSelectedSlot) {
+        (function(idx){ div.addEventListener("click", function(){ onSlotClick(idx); }); })(i);
+      }
+    }
+    container.appendChild(div);
   }
-  list.appendChild(div);
+
+  var avg = filledN > 0 ? (totalR / filledN).toFixed(1) : "—";
+  document.getElementById("xi-avg-val").textContent = avg;
 }
 
-function selectPlayer(p, el) {
-  selectedPlayer = p;
-  document.querySelectorAll(".player-row").forEach(function(r){ r.classList.remove("selected"); });
-  el.classList.add("selected");
-  document.getElementById("btn-confirm-pick").disabled = false;
+function onPlayerClick(p) {
+  if (selectedPlayer && selectedPlayer.name === p.name && selectedPlayer.r === p.r) {
+    // Deselect
+    selectedPlayer = null;
+    // Keep slot selection as-is
+  } else {
+    selectedPlayer = p;
+    // If current slot selection is incompatible with new player, clear it
+    if (selectedSlot >= 0 && !canFillSlot(p.pos, formSlots[selectedSlot])) {
+      selectedSlot = -1;
+    }
+  }
+  refreshDraftUI();
+}
+
+function onSlotClick(i) {
+  if (XI[i]) return; // already filled
+  if (selectedSlot === i) {
+    // Deselect slot
+    selectedSlot = -1;
+  } else {
+    // If a player is selected and can't fill this slot, don't allow
+    if (selectedPlayer && !canFillSlot(selectedPlayer.pos, formSlots[i])) return;
+    selectedSlot = i;
+  }
+  refreshDraftUI();
+}
+
+function updateConfirmButton() {
+  var btn = document.getElementById("btn-confirm-pick");
+  var label = document.getElementById("confirm-label");
+  var ready = selectedPlayer !== null && selectedSlot >= 0;
+  btn.disabled = !ready;
+  if (ready) {
+    label.textContent = "Add " + selectedPlayer.name + " → " + formSlots[selectedSlot];
+  } else if (selectedPlayer) {
+    label.textContent = "Now pick a slot →";
+  } else if (selectedSlot >= 0) {
+    label.textContent = "← Now pick a player";
+  } else {
+    label.textContent = "Select a player and slot";
+  }
 }
 
 function ratingClass(r) {
@@ -1752,21 +1829,23 @@ function ratingClass(r) {
 }
 
 function confirmPick() {
-  if (!selectedPlayer) return;
-  XI.push({
+  if (!selectedPlayer || selectedSlot < 0) return;
+  XI[selectedSlot] = {
     name: selectedPlayer.name,
     pos: selectedPlayer.pos,
-    slotPos: formSlots[slotIndex],
+    slotPos: formSlots[selectedSlot],
     r: selectedPlayer.r,
     club: currentSquad.club,
     season: currentSquad.season
-  });
+  };
   selectedPlayer = null;
+  selectedSlot = -1;
   currentSquad = null;
-  slotIndex++;
+
+  updateProgress();
   renderXI();
 
-  if (slotIndex >= 11) {
+  if (filledCount() >= 11) {
     document.getElementById("draft-layout").style.display = "none";
     document.getElementById("spin-card").innerHTML =
       '<div style="color:#10b981;font-size:1.05rem;font-weight:700">Squad complete — entering the tournament…</div>';
@@ -1775,49 +1854,12 @@ function confirmPick() {
     return;
   }
 
-  updateSlotIndicator();
   document.getElementById("spin-card").innerHTML = '<div class="spin-blank">Press spin to get a squad</div>';
   document.getElementById("draft-layout").style.display = "none";
   document.getElementById("btn-spin").style.display = "inline-block";
   document.getElementById("btn-respin").style.display = "none";
-}
-
-function renderXI() {
-  var container = document.getElementById("xi-slots");
-  container.innerHTML = "";
-  var totalR = 0;
-  for (var i = 0; i < 11; i++) {
-    var div = document.createElement("div");
-    var slotPos = formSlots[i] || "?";
-    if (i < XI.length) {
-      var p = XI[i];
-      totalR += p.r;
-      var posLabel = p.pos !== p.slotPos
-        ? p.slotPos + '<sup style="color:#334155;font-size:.55em"> ' + p.pos + "</sup>"
-        : p.slotPos;
-      div.className = "xi-slot filled";
-      div.innerHTML =
-        '<span class="xi-slot-num">' + (i+1) + "</span>" +
-        '<span class="xi-slot-pos">' + posLabel + "</span>" +
-        '<span class="xi-slot-name">' + p.name + "</span>" +
-        '<span class="xi-slot-rating">' + p.r + "</span>";
-    } else if (i === slotIndex) {
-      div.className = "xi-slot current-slot";
-      div.innerHTML =
-        '<span class="xi-slot-num">' + (i+1) + "</span>" +
-        '<span class="xi-slot-pos">' + slotPos + "</span>" +
-        '<span class="xi-slot-name">← pick now</span>';
-    } else {
-      div.className = "xi-slot";
-      div.innerHTML =
-        '<span class="xi-slot-num">' + (i+1) + "</span>" +
-        '<span class="xi-slot-pos">' + slotPos + "</span>" +
-        '<span class="xi-slot-name" style="color:#1e293b">—</span>';
-    }
-    container.appendChild(div);
-  }
-  var avg = XI.length > 0 ? (totalR / XI.length).toFixed(1) : "—";
-  document.getElementById("xi-avg-val").textContent = avg;
+  document.getElementById("btn-confirm-pick").disabled = true;
+  document.getElementById("confirm-label").textContent = "Select a player and slot";
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1832,7 +1874,10 @@ var MY_TEAM_NAME = "Your XI";
 function avgRating(squad) {
   var s = 0; squad.forEach(function(p){ s += p.r; }); return s / squad.length;
 }
-function myAvgRating() { return avgRating(XI); }
+function myAvgRating() {
+  var ps = XI.filter(function(p){ return p !== null; });
+  return ps.reduce(function(a,p){ return a + p.r; }, 0) / ps.length;
+}
 
 function pickOpponent() {
   var pool = SQUADS.filter(function(s){
@@ -1975,13 +2020,14 @@ function showResult(won, title, sub) {
   document.getElementById("result-title").textContent = title;
   document.getElementById("result-sub").textContent = sub;
 
-  var xiHtml = '<div class="final-xi-title">Your XI</div>';
-  XI.forEach(function(p) {
+  var xiHtml = '<div class="final-xi-title">Your XI  ·  ' + (chosenFormKey || '') + '</div>';
+  XI.filter(function(p){ return p !== null; }).forEach(function(p) {
+    var posLabel = p.pos !== p.slotPos ? p.slotPos + " (" + p.pos + ")" : p.slotPos;
     xiHtml +=
       '<div class="final-player">' +
-        '<span class="final-player-pos">' + p.pos + '</span>' +
+        '<span class="final-player-pos">' + posLabel + '</span>' +
         '<span class="final-player-name">' + p.name + '</span>' +
-        '<span style="font-size:.68rem;color:#475569;flex:1">' + p.club + " '" + p.season.slice(2,4) + '</span>' +
+        '<span class="final-player-club">' + p.club + " '" + p.season.slice(2,4) + '</span>' +
         '<span class="final-player-rating">' + p.r + '</span>' +
       '</div>';
   });
@@ -1994,9 +2040,9 @@ function showResult(won, title, sub) {
 function restartGame() {
   chosenFormKey = null;
   formSlots = [];
-  slotIndex = 0;
   XI = [];
   selectedPlayer = null;
+  selectedSlot = -1;
   currentSquad = null;
   stageIndex = 0;
   matchResults = [];
