@@ -57,62 +57,38 @@
 
         <div class="viz-content">
 
-            <!-- TAB 1: The 4 research figures -->
+            <!-- TAB 1: Interactive charts -->
             <div class="viz-pane active" id="viz-charts" role="tabpanel">
 
                 <div class="viz-item">
                     <p class="viz-item-title">Fig 1 — Cumulative Returns</p>
-                    <div class="viz-item-body" style="padding:0.75rem;">
-                        <div class="viz-figure">
-                            <img src="../images/week1/fig1_cumulative_returns.png"
-                                 alt="Log-scale cumulative returns: biased survivors-only vs reference portfolio" />
-                            <p class="viz-figure-caption">
-                                Log-scale cumulative returns. The biased (survivors-only) portfolio consistently
-                                outperforms. The gap is a measurement artifact.
-                            </p>
-                        </div>
+                    <div class="viz-item-body" style="padding:0.25rem 0.5rem 0.5rem;">
+                        <div id="ch-viz-1" style="min-height:240px;"></div>
+                        <p class="viz-figure-caption">Log-scale cumulative returns. The biased (survivors-only) portfolio consistently outperforms. The gap is a measurement artifact.</p>
                     </div>
                 </div>
 
                 <div class="viz-item">
                     <p class="viz-item-title">Fig 2 — Sharpe Comparison</p>
-                    <div class="viz-item-body" style="padding:0.75rem;">
-                        <div class="viz-figure">
-                            <img src="../images/week1/fig2_sharpe_comparison.png"
-                                 alt="Side-by-side comparison of Sharpe ratio, Calmar ratio, and maximum drawdown" />
-                            <p class="viz-figure-caption">
-                                Sharpe ratio, Calmar ratio, and max drawdown. The percentage label shows
-                                the bias magnitude.
-                            </p>
-                        </div>
+                    <div class="viz-item-body" style="padding:0.25rem 0.5rem 0.5rem;">
+                        <div id="ch-viz-2" style="min-height:240px;"></div>
+                        <p class="viz-figure-caption">Sharpe ratio, Calmar ratio, and max drawdown side-by-side. The annotation shows the bias magnitude.</p>
                     </div>
                 </div>
 
                 <div class="viz-item">
                     <p class="viz-item-title">Fig 3 — Rolling Sharpe Bias</p>
-                    <div class="viz-item-body" style="padding:0.75rem;">
-                        <div class="viz-figure">
-                            <img src="../images/week1/fig3_rolling_bias.png"
-                                 alt="Rolling 3-year Sharpe ratio showing survivorship premium across market regimes" />
-                            <p class="viz-figure-caption">
-                                Rolling 3-year Sharpe ratio for both portfolios. The shaded region is
-                                the survivorship premium — it varies substantially across regimes.
-                            </p>
-                        </div>
+                    <div class="viz-item-body" style="padding:0.25rem 0.5rem 0.5rem;">
+                        <div id="ch-viz-3" style="min-height:240px;"></div>
+                        <p class="viz-figure-caption">Rolling 3-year Sharpe ratio for both portfolios. The shaded region is the survivorship premium — it varies substantially across regimes.</p>
                     </div>
                 </div>
 
                 <div class="viz-item">
                     <p class="viz-item-title">Fig 4 — Return Decomposition</p>
-                    <div class="viz-item-body" style="padding:0.75rem;">
-                        <div class="viz-figure">
-                            <img src="../images/week1/fig4_return_decomposition.png"
-                                 alt="Annual Sharpe gap decomposed into return inflation vs volatility suppression" />
-                            <p class="viz-figure-caption">
-                                Sharpe gap decomposed into return inflation (excluding losers) vs.
-                                volatility suppression (excluding high-vol failures).
-                            </p>
-                        </div>
+                    <div class="viz-item-body" style="padding:0.25rem 0.5rem 0.5rem;">
+                        <div id="ch-viz-4" style="min-height:240px;"></div>
+                        <p class="viz-figure-caption">Sharpe gap decomposed into return inflation (excluding losers) vs. volatility suppression (excluding high-vol failures).</p>
                     </div>
                 </div>
 
@@ -133,37 +109,8 @@
                                     <th style="padding:0.5rem 0.5rem;border-bottom:1px solid var(--border-color);color:var(--accent);font-weight:600;text-align:right;">Bias</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-secondary);">Annual Return</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--primary-light);text-align:right;">~17.5%</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-muted);text-align:right;">~16.3%</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--accent);text-align:right;">+1.2pp</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-secondary);">Annual Vol</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--primary-light);text-align:right;">~15.2%</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-muted);text-align:right;">~15.2%</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-muted);text-align:right;">~0pp</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-secondary);">Sharpe Ratio</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--primary-light);text-align:right;">~1.05</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-muted);text-align:right;">~0.97</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--accent);text-align:right;">+8%</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-secondary);">Max Drawdown</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--primary-light);text-align:right;">−24%</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-muted);text-align:right;">−24%</td>
-                                    <td style="padding:0.45rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-muted);text-align:right;">~0pp</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:0.45rem 0.5rem;color:var(--text-secondary);">Calmar Ratio</td>
-                                    <td style="padding:0.45rem 0.5rem;color:var(--primary-light);text-align:right;">~0.73</td>
-                                    <td style="padding:0.45rem 0.5rem;color:var(--text-muted);text-align:right;">~0.68</td>
-                                    <td style="padding:0.45rem 0.5rem;color:var(--accent);text-align:right;">+7%</td>
-                                </tr>
+                            <tbody id="results-tbody">
+                                <tr><td colspan="4" style="padding:1rem;color:var(--text-muted);text-align:center;font-size:0.75rem;">Loading…</td></tr>
                             </tbody>
                         </table>
                         <p style="font-size:0.7rem;color:var(--text-muted);margin-top:0.75rem;font-style:italic;line-height:1.5;">
@@ -272,9 +219,9 @@
                 Week 1 starts with the foundational problem that corrupts almost every backtest that
                 hasn't been built carefully: survivorship bias.</em></p>
 
-                <p>The <strong>Visuals</strong> panel on the right contains all four research figures,
-                a results summary table, and a concept glossary — open it to follow along with the charts
-                as you read.</p>
+                <p>The <strong>Visuals</strong> panel on the right contains all four interactive charts,
+                a live results summary table, and a concept glossary — open it to explore the data
+                alongside the text. All charts below are interactive: hover for values, drag to zoom.</p>
 
                 <hr>
 
@@ -415,11 +362,10 @@ def simulated_point_in_time_returns(
                 <h2>The Results</h2>
 
                 <figure>
-                    <img src="../images/week1/fig1_cumulative_returns.png"
-                         alt="Log-scale cumulative returns: biased vs reference portfolio" />
+                    <div id="ch-prose-1" style="min-height:370px;"></div>
                     <figcaption>Figure 1: Log-scale cumulative returns. The biased (survivors-only) line
-                    consistently outperforms. The shaded region quantifies the survivorship premium —
-                    how much of the gap is a measurement artifact.</figcaption>
+                    consistently outperforms. The amber shaded region quantifies the survivorship premium —
+                    how much of the gap is a measurement artifact. Hover for monthly values.</figcaption>
                 </figure>
 
                 <p>The cumulative return chart tells the story clearly. Both portfolios track the same
@@ -429,10 +375,10 @@ def simulated_point_in_time_returns(
                 that survived.</p>
 
                 <figure>
-                    <img src="../images/week1/fig2_sharpe_comparison.png"
-                         alt="Side-by-side comparison of Sharpe ratio, Calmar ratio, and maximum drawdown" />
+                    <div id="ch-prose-2" style="min-height:340px;"></div>
                     <figcaption>Figure 2: Side-by-side comparison of Sharpe ratio, Calmar ratio, and maximum
-                    drawdown. The percentage label on the Sharpe panel shows the bias magnitude.</figcaption>
+                    drawdown. The annotation on the Sharpe panel shows the bias magnitude. Max drawdown is
+                    negative — bars closer to zero represent shallower drawdowns.</figcaption>
                 </figure>
 
                 <p>The numbers, from the 2010–2026 simulation window:</p>
@@ -446,12 +392,8 @@ def simulated_point_in_time_returns(
                             <th>Bias</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td>Annual Return</td><td>~17.5%</td><td>~16.3%</td><td>+~1.2pp</td></tr>
-                        <tr><td>Annual Volatility</td><td>~15.2%</td><td>~15.2%</td><td>~0pp</td></tr>
-                        <tr><td>Sharpe Ratio</td><td>~1.05</td><td>~0.97</td><td>+~8%</td></tr>
-                        <tr><td>Max Drawdown</td><td>−24%</td><td>−24%</td><td>~0pp</td></tr>
-                        <tr><td>Calmar Ratio</td><td>~0.73</td><td>~0.68</td><td>+~7%</td></tr>
+                    <tbody id="prose-results-tbody">
+                        <tr><td colspan="4" style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Loading…</td></tr>
                     </tbody>
                 </table>
 
@@ -484,10 +426,10 @@ def simulated_point_in_time_returns(
                 <h2>How the Bias Changes Over Time</h2>
 
                 <figure>
-                    <img src="../images/week1/fig3_rolling_bias.png"
-                         alt="Rolling 3-year Sharpe ratio showing time-varying survivorship premium" />
-                    <figcaption>Figure 3: Rolling 3-year Sharpe ratio for both portfolios. The shaded region
-                    shows the survivorship premium, which varies substantially across market regimes.</figcaption>
+                    <div id="ch-prose-3" style="min-height:370px;"></div>
+                    <figcaption>Figure 3: Rolling 3-year Sharpe ratio for both portfolios. The amber shaded
+                    region shows the survivorship premium, which varies substantially across market regimes.
+                    Drag to zoom into specific periods.</figcaption>
                 </figure>
 
                 <p>One of the more interesting findings is that the bias is not constant. On a rolling
@@ -511,11 +453,10 @@ def simulated_point_in_time_returns(
                 <h2>Where Does the Bias Come From?</h2>
 
                 <figure>
-                    <img src="../images/week1/fig4_return_decomposition.png"
-                         alt="Annual Sharpe gap decomposed into return inflation vs volatility suppression" />
+                    <div id="ch-prose-4" style="min-height:360px;"></div>
                     <figcaption>Figure 4: Annual Sharpe gap decomposed into return inflation (higher returns
-                    from excluding losers) versus volatility suppression (lower vol from excluding high-volatility
-                    failures).</figcaption>
+                    from excluding losers) versus volatility suppression (lower vol from excluding
+                    high-volatility failures). Hover the amber line for the total gap per year.</figcaption>
                 </figure>
 
                 <p>The attribution analysis breaks the Sharpe gap into two components:</p>
@@ -661,5 +602,297 @@ python week1_survivorship_bias.py</code></pre>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-basic-dist-min@2/plotly.min.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        // ── Theme palette matching blog CSS custom properties ─────────────────
+        var C = {
+            em:  '#34d399',  // --primary-light (emerald)
+            bl:  '#60a5fa',  // blue series
+            am:  '#f59e0b',  // amber (premium fill / total gap line)
+            re:  '#f87171',  // red
+            bgP: '#1a1a1a',  // --bg-secondary (panel bg)
+            bgA: '#141414',  // axes bg (slightly darker)
+            bgC: '#242424',  // card bg (legend)
+            txH: '#f8fafc',  // --text-primary
+            txM: '#cbd5e1',  // --text-secondary
+            txL: '#94a3b8',  // --text-muted
+            bd:  '#2d2d2d'   // --bg-tertiary (border / grid)
+        };
+
+        var BASE = {
+            paper_bgcolor: C.bgP,
+            plot_bgcolor:  C.bgA,
+            font: { family: 'Inter, sans-serif', size: 10, color: C.txM },
+            legend: { bgcolor: C.bgC, bordercolor: C.bd, borderwidth: 1, font: { size: 10 } },
+            hoverlabel: { bgcolor: C.bgC, bordercolor: C.bd, font: { color: C.txH, family: 'Inter, sans-serif' } }
+        };
+
+        var AX = {
+            gridcolor: C.bd, linecolor: C.bd, showline: true,
+            tickcolor: C.txL, tickfont: { color: C.txL, size: 9 }
+        };
+
+        var AXZ = Object.assign({}, AX, { zeroline: true, zerolinecolor: C.bd, zerolinewidth: 1 });
+        var CFG = { responsive: true, displayModeBar: false };
+
+        function lay(o) { return Object.assign({}, BASE, o); }
+
+        // ── Chart 1: Cumulative Returns ───────────────────────────────────────
+        function c1(id, compact) {
+            var d  = _D.cumulative_returns;
+            var ev = _D.events;
+            var shapes = [], anns = [];
+
+            Object.keys(ev).forEach(function (k) {
+                var dt = k + '-01';
+                shapes.push({ type: 'line', x0: dt, x1: dt, y0: 0, y1: 1,
+                    yref: 'paper', line: { color: C.txL, width: 1, dash: 'dot' } });
+                if (!compact) {
+                    anns.push({ x: dt, y: 0.06, yref: 'paper', text: ev[k],
+                        textangle: -90, showarrow: false,
+                        font: { color: C.txL, size: 8 }, xanchor: 'right' });
+                }
+            });
+
+            Plotly.newPlot(id, [
+                { x: d.dates, y: d.reference, mode: 'none', showlegend: false, hoverinfo: 'skip' },
+                { x: d.dates, y: d.biased, type: 'scatter', mode: 'lines',
+                  name: 'Biased (survivors-only)',
+                  line: { color: C.em, width: 2 },
+                  fill: 'tonexty', fillcolor: 'rgba(245,158,11,0.09)',
+                  hovertemplate: '<b>%{x|%b %Y}</b><br>%{y:.2f}×<extra>Biased</extra>' },
+                { x: d.dates, y: d.reference, type: 'scatter', mode: 'lines',
+                  name: 'Reference (sim. PIT)',
+                  line: { color: C.bl, width: 2 },
+                  hovertemplate: '<b>%{x|%b %Y}</b><br>%{y:.2f}×<extra>Reference</extra>' }
+            ], lay({
+                height: compact ? 240 : 370,
+                margin: compact ? { t: 20, r: 10, b: 38, l: 44 } : { t: 32, r: 20, b: 50, l: 56 },
+                xaxis: Object.assign({}, AX, { type: 'date', tickformat: '%Y', dtick: 'M24' }),
+                yaxis: Object.assign({}, AX, {
+                    ticksuffix: '×',
+                    title: compact ? '' : { text: 'Portfolio value', font: { color: C.txM, size: 10 } }
+                }),
+                shapes: shapes, annotations: anns
+            }), CFG);
+        }
+
+        // ── Chart 2: Metrics Comparison (3-panel subplot) ─────────────────────
+        function c2(id, compact) {
+            var m   = _D.metrics;
+            var bp  = ((m.biased['Sharpe Ratio'] - m.reference['Sharpe Ratio']) / m.reference['Sharpe Ratio'] * 100).toFixed(1);
+            var mdd = Math.min(m.biased['Max Drawdown'], m.reference['Max Drawdown']);
+
+            var traces = [
+                // Sharpe — axis x / y
+                { x: ['Biased'], y: [m.biased['Sharpe Ratio']], type: 'bar', name: 'Biased',
+                  marker: { color: C.em }, opacity: 0.90, xaxis: 'x', yaxis: 'y', showlegend: true,
+                  hovertemplate: 'Biased Sharpe: %{y:.4f}<extra></extra>' },
+                { x: ['Ref.'], y: [m.reference['Sharpe Ratio']], type: 'bar', name: 'Reference',
+                  marker: { color: C.bl }, opacity: 0.90, xaxis: 'x', yaxis: 'y', showlegend: true,
+                  hovertemplate: 'Reference Sharpe: %{y:.4f}<extra></extra>' },
+                // Calmar — axis x2 / y2
+                { x: ['Biased'], y: [m.biased['Calmar Ratio']], type: 'bar', name: 'Biased',
+                  marker: { color: C.em }, opacity: 0.90, xaxis: 'x2', yaxis: 'y2', showlegend: false,
+                  hovertemplate: 'Biased Calmar: %{y:.4f}<extra></extra>' },
+                { x: ['Ref.'], y: [m.reference['Calmar Ratio']], type: 'bar', name: 'Reference',
+                  marker: { color: C.bl }, opacity: 0.90, xaxis: 'x2', yaxis: 'y2', showlegend: false,
+                  hovertemplate: 'Reference Calmar: %{y:.4f}<extra></extra>' },
+                // Max Drawdown — axis x3 / y3 (negative)
+                { x: ['Biased'], y: [m.biased['Max Drawdown']], type: 'bar', name: 'Biased',
+                  marker: { color: C.em }, opacity: 0.90, xaxis: 'x3', yaxis: 'y3', showlegend: false,
+                  hovertemplate: 'Biased MaxDD: %{y:.1%}<extra></extra>' },
+                { x: ['Ref.'], y: [m.reference['Max Drawdown']], type: 'bar', name: 'Reference',
+                  marker: { color: C.bl }, opacity: 0.90, xaxis: 'x3', yaxis: 'y3', showlegend: false,
+                  hovertemplate: 'Reference MaxDD: %{y:.1%}<extra></extra>' }
+            ];
+
+            var anns = compact ? [] : [
+                { x: 0.14, y: 1.12, xref: 'paper', yref: 'paper', xanchor: 'center',
+                  text: 'Sharpe Ratio', showarrow: false, font: { color: C.txH, size: 11 } },
+                { x: 0.14, y: 1.05, xref: 'paper', yref: 'paper', xanchor: 'center',
+                  text: '+' + bp + '% inflation', showarrow: false, font: { color: C.am, size: 9 } },
+                { x: 0.51, y: 1.12, xref: 'paper', yref: 'paper', xanchor: 'center',
+                  text: 'Calmar Ratio', showarrow: false, font: { color: C.txH, size: 11 } },
+                { x: 0.865, y: 1.12, xref: 'paper', yref: 'paper', xanchor: 'center',
+                  text: 'Max Drawdown', showarrow: false, font: { color: C.txH, size: 11 } },
+                { x: 0.865, y: -0.10, xref: 'paper', yref: 'paper', xanchor: 'center',
+                  text: 'closer to 0 = better', showarrow: false, font: { color: C.txL, size: 8 } }
+            ];
+
+            Plotly.newPlot(id, traces, lay({
+                height: compact ? 240 : 340,
+                margin: compact ? { t: 20, r: 10, b: 38, l: 36 } : { t: 58, r: 20, b: 58, l: 46 },
+                barmode: 'group',
+                annotations: anns,
+                xaxis:  Object.assign({}, AX, { domain: [0.00, 0.28], anchor: 'y'  }),
+                xaxis2: Object.assign({}, AX, { domain: [0.37, 0.65], anchor: 'y2' }),
+                xaxis3: Object.assign({}, AX, { domain: [0.73, 1.00], anchor: 'y3' }),
+                yaxis:  Object.assign({}, AX,  { anchor: 'x',  domain: [0, 1] }),
+                yaxis2: Object.assign({}, AX,  { anchor: 'x2', domain: [0, 1] }),
+                yaxis3: Object.assign({}, AXZ, { anchor: 'x3', domain: [0, 1],
+                    tickformat: '.0%',
+                    range: [mdd * 1.30, Math.abs(mdd) * 0.18]
+                })
+            }), CFG);
+        }
+
+        // ── Chart 3: Rolling 3-Year Sharpe ────────────────────────────────────
+        function c3(id, compact) {
+            var d  = _D.rolling_sharpe;
+            var ev = _D.events;
+            var dates = [], bi = [], ref = [];
+
+            for (var i = 0; i < d.dates.length; i++) {
+                if (d.biased[i] !== null && d.reference[i] !== null) {
+                    dates.push(d.dates[i]);
+                    bi.push(d.biased[i]);
+                    ref.push(d.reference[i]);
+                }
+            }
+
+            var shapes = [], anns = [];
+            Object.keys(ev).forEach(function (k) {
+                var dt = k + '-01';
+                if (new Date(dt) >= new Date(dates[0])) {
+                    shapes.push({ type: 'line', x0: dt, x1: dt, y0: 0, y1: 1,
+                        yref: 'paper', line: { color: C.txL, width: 1, dash: 'dot' } });
+                    if (!compact) {
+                        anns.push({ x: dt, y: 0.06, yref: 'paper', text: ev[k],
+                            textangle: -90, showarrow: false,
+                            font: { color: C.txL, size: 8 }, xanchor: 'right' });
+                    }
+                }
+            });
+
+            Plotly.newPlot(id, [
+                { x: dates, y: ref, mode: 'none', showlegend: false, hoverinfo: 'skip' },
+                { x: dates, y: bi, type: 'scatter', mode: 'lines',
+                  name: 'Biased (survivors-only)',
+                  line: { color: C.em, width: 2 },
+                  fill: 'tonexty', fillcolor: 'rgba(245,158,11,0.09)',
+                  hovertemplate: '<b>%{x|%b %Y}</b><br>Sharpe: %{y:.3f}<extra>Biased</extra>' },
+                { x: dates, y: ref, type: 'scatter', mode: 'lines',
+                  name: 'Reference (sim. PIT)',
+                  line: { color: C.bl, width: 2 },
+                  hovertemplate: '<b>%{x|%b %Y}</b><br>Sharpe: %{y:.3f}<extra>Reference</extra>' }
+            ], lay({
+                height: compact ? 240 : 370,
+                margin: compact ? { t: 20, r: 10, b: 38, l: 44 } : { t: 32, r: 20, b: 50, l: 56 },
+                xaxis: Object.assign({}, AX, { type: 'date', tickformat: '%Y', dtick: 'M24' }),
+                yaxis: Object.assign({}, AXZ, {
+                    title: compact ? '' : { text: 'Sharpe ratio (3yr rolling)', font: { color: C.txM, size: 10 } }
+                }),
+                shapes: shapes, annotations: anns
+            }), CFG);
+        }
+
+        // ── Chart 4: Annual Sharpe Gap Decomposition ──────────────────────────
+        function c4(id, compact) {
+            var d = _D.decomposition;
+
+            Plotly.newPlot(id, [
+                { x: d.years, y: d.return_inflation, type: 'bar', name: 'Return inflation',
+                  marker: { color: C.em }, opacity: 0.88,
+                  hovertemplate: '%{x}: %{y:+.3f}<extra>Return inflation</extra>' },
+                { x: d.years, y: d.vol_suppression, type: 'bar', name: 'Vol suppression',
+                  marker: { color: C.bl }, opacity: 0.88,
+                  hovertemplate: '%{x}: %{y:+.3f}<extra>Vol suppression</extra>' },
+                { x: d.years, y: d.total_gap, type: 'scatter', mode: 'lines+markers',
+                  name: 'Total Sharpe gap',
+                  line: { color: C.am, width: 2 },
+                  marker: { color: C.am, size: 5, line: { width: 0 } },
+                  hovertemplate: '%{x}: %{y:+.3f}<extra>Total gap</extra>' }
+            ], lay({
+                height: compact ? 240 : 360,
+                margin: compact ? { t: 20, r: 10, b: 38, l: 44 } : { t: 32, r: 20, b: 50, l: 56 },
+                barmode: 'group',
+                xaxis: Object.assign({}, AX, { type: 'category' }),
+                yaxis: Object.assign({}, AXZ, {
+                    tickformat: '+.2f',
+                    title: compact ? '' : { text: 'Sharpe gap contribution', font: { color: C.txM, size: 10 } }
+                })
+            }), CFG);
+        }
+
+        // ── Populate results tables from live data ────────────────────────────
+        function populateTables() {
+            var m = _D.metrics;
+
+            function fPct(v) { return (v * 100).toFixed(1) + '%'; }
+            function fNum(v) { return v.toFixed(3); }
+            function biasPct(a, b) { return '+' + ((a - b) / Math.abs(b) * 100).toFixed(1) + '%'; }
+            function biasPP(a, b)  { return '+' + ((a - b) * 100).toFixed(1) + 'pp'; }
+
+            var rows = [
+                ['Annual Return',   fPct(m.biased['Annual Return']),    fPct(m.reference['Annual Return']),    biasPP(m.biased['Annual Return'], m.reference['Annual Return'])],
+                ['Annual Vol',      fPct(m.biased['Annual Volatility']), fPct(m.reference['Annual Volatility']), '~0pp'],
+                ['Sharpe Ratio',    fNum(m.biased['Sharpe Ratio']),      fNum(m.reference['Sharpe Ratio']),     biasPct(m.biased['Sharpe Ratio'], m.reference['Sharpe Ratio'])],
+                ['Max Drawdown',    fPct(m.biased['Max Drawdown']),      fPct(m.reference['Max Drawdown']),     '~0pp'],
+                ['Calmar Ratio',    fNum(m.biased['Calmar Ratio']),      fNum(m.reference['Calmar Ratio']),     biasPct(m.biased['Calmar Ratio'], m.reference['Calmar Ratio'])]
+            ];
+
+            var html = rows.map(function (r, i) {
+                var bb = i === rows.length - 1 ? '' : 'border-bottom:1px solid rgba(255,255,255,0.04);';
+                return '<tr>'
+                    + '<td style="padding:0.45rem 0.5rem;' + bb + 'color:var(--text-secondary);">'  + r[0] + '</td>'
+                    + '<td style="padding:0.45rem 0.5rem;' + bb + 'color:var(--primary-light);text-align:right;">' + r[1] + '</td>'
+                    + '<td style="padding:0.45rem 0.5rem;' + bb + 'color:var(--text-muted);text-align:right;">'    + r[2] + '</td>'
+                    + '<td style="padding:0.45rem 0.5rem;' + bb + 'color:var(--accent);text-align:right;">'        + r[3] + '</td>'
+                    + '</tr>';
+            }).join('');
+
+            var t1 = document.getElementById('results-tbody');
+            var t2 = document.getElementById('prose-results-tbody');
+            if (t1) t1.innerHTML = html;
+            if (t2) t2.innerHTML = html;
+        }
+
+        // ── Render all charts ─────────────────────────────────────────────────
+        function init() {
+            c1('ch-prose-1', false);
+            c2('ch-prose-2', false);
+            c3('ch-prose-3', false);
+            c4('ch-prose-4', false);
+            c1('ch-viz-1', true);
+            c2('ch-viz-2', true);
+            c3('ch-viz-3', true);
+            c4('ch-viz-4', true);
+            populateTables();
+
+            // Resize viz charts on panel open (panel uses CSS transform, not display:none,
+            // so charts render correctly, but a resize on open ensures correct width
+            // if the panel was never in the viewport before.)
+            var panel = document.getElementById('vizPanel');
+            if (panel) {
+                new MutationObserver(function () {
+                    if (panel.classList.contains('open')) {
+                        ['ch-viz-1', 'ch-viz-2', 'ch-viz-3', 'ch-viz-4'].forEach(function (id) {
+                            var el = document.getElementById(id);
+                            if (el && el.layout) Plotly.Plots.resize(el);
+                        });
+                    }
+                }).observe(panel, { attributes: true, attributeFilter: ['class'] });
+            }
+        }
+
+        // ── Fetch data and kick off ───────────────────────────────────────────
+        var _D;
+        fetch('../data/week1_chart_data.json')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                _D = data;
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', init);
+                } else {
+                    init();
+                }
+            });
+
+    })();
+    </script>
 </body>
 </html>
