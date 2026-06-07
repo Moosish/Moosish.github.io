@@ -334,7 +334,7 @@
 
                 <h3>Step 1: The Survivors-Only Universe</h3>
 
-<pre><code>def sp500_current_tickers() -> list[str]:
+<pre><code class="language-python">def sp500_current_tickers() -> list[str]:
     """Return tickers currently in the S&P 500 (from Wikipedia)."""
     url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
     tables = pd.read_html(url, attrs={"id": "constituents"})
@@ -365,7 +365,7 @@ def survivors_only_prices(prices: pd.DataFrame, min_coverage: float) -> pd.DataF
                 is unavailable, our script falls back to a calibrated simulation — and it's important to
                 understand what that simulation assumes.</p>
 
-<pre><code>SIMULATED_DELISTING_RATE = 0.03   # ~3% of universe delisted per year
+<pre><code class="language-python">SIMULATED_DELISTING_RATE = 0.03   # ~3% of universe delisted per year
 DELISTING_RETURN_MEAN = -0.40     # mean terminal return for delisted stocks
 DELISTING_RETURN_STD = 0.20
 
@@ -398,7 +398,7 @@ def simulated_point_in_time_returns(
 
                 <h3>Step 3: Equal-Weight Monthly Portfolios</h3>
 
-<pre><code>def equal_weight_monthly_returns(prices: pd.DataFrame) -> pd.Series:
+<pre><code class="language-python">def equal_weight_monthly_returns(prices: pd.DataFrame) -> pd.Series:
     """Equal-weight portfolio, rebalanced monthly."""
     monthly = prices.resample("ME").last().ffill()
     returns = monthly.pct_change().dropna(how="all")
@@ -563,7 +563,7 @@ def simulated_point_in_time_returns(
                 </a>.
                 Each week has its own directory. Week 1 runs as:</p>
 
-<pre><code>git clone https://github.com/Moosish/comp-finance-blog.git
+<pre><code class="language-bash">git clone https://github.com/Moosish/comp-finance-blog.git
 cd "comp-finance-blog/week1 - Survivorship bias and the cost of dirty data/analysis"
 python week1_survivorship_bias.py</code></pre>
 
@@ -636,5 +636,8 @@ python week1_survivorship_bias.py</code></pre>
     </footer>
 
     <script src="../blog.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
 </body>
 </html>

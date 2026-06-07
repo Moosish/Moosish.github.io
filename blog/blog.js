@@ -9,6 +9,7 @@
         initNav();
         initListingPage();
         initVizPanel();
+        initCodeBlocks();
     });
 
     // ==================== NAV ====================
@@ -186,6 +187,47 @@
                 btn.classList.add('active');
                 const pane = panel.querySelector('#viz-' + target);
                 if (pane) pane.classList.add('active');
+            });
+        });
+    }
+
+    // ==================== CODE BLOCKS ====================
+    function initCodeBlocks() {
+        var blocks = document.querySelectorAll('.prose pre');
+        if (!blocks.length) return;
+
+        blocks.forEach(function (pre) {
+            var code = pre.querySelector('code');
+            if (!code) return;
+
+            var langClass = Array.from(code.classList).find(function (c) { return c.startsWith('language-'); });
+            var lang = langClass ? langClass.replace('language-', '') : 'code';
+
+            // Wrap pre in .code-block container
+            var wrapper = document.createElement('div');
+            wrapper.className = 'code-block';
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+
+            // Insert header above pre
+            var header = document.createElement('div');
+            header.className = 'code-header';
+            header.innerHTML =
+                '<span class="code-lang">' + lang + '</span>' +
+                '<button class="code-copy" type="button"><i class="fas fa-copy"></i> Copy</button>';
+            wrapper.insertBefore(header, pre);
+
+            // Copy button
+            header.querySelector('.code-copy').addEventListener('click', function () {
+                var btn = this;
+                navigator.clipboard.writeText(code.textContent).then(function () {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+                    btn.classList.add('copied');
+                    setTimeout(function () {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
             });
         });
     }

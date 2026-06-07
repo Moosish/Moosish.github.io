@@ -795,6 +795,108 @@
     margin: 0;
 }
 
+/* ==================== CODE BLOCKS ==================== */
+.code-block {
+    margin: 1.5rem 0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 1rem;
+    background: #111111;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.code-lang {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--primary-light);
+}
+
+.code-copy {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 5px;
+    transition: color 0.2s, background 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.code-copy:hover { color: var(--text-primary); background: rgba(255,255,255,0.07); }
+.code-copy.copied { color: var(--primary-light); }
+
+/* Override prose pre inside a code-block wrapper */
+.code-block .prose pre,
+.prose .code-block pre {
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    background: #141414;
+    padding: 1.35rem 1.5rem;
+}
+
+/* ---- Prism token colours (Catppuccin-inspired, fits dark grey bg) ---- */
+code[class*="language-"],
+pre[class*="language-"] {
+    text-shadow: none !important;
+    background: none !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: 0.875rem !important;
+    line-height: 1.7 !important;
+    color: #cdd6f4;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata          { color: #45475a; font-style: italic; }
+
+.token.punctuation    { color: #9399b2; }
+
+.token.number,
+.token.boolean,
+.token.constant,
+.token.symbol         { color: #fab387; } /* orange  */
+
+.token.string,
+.token.char,
+.token.attr-value     { color: #a6e3a1; } /* green   */
+
+.token.operator,
+.token.entity         { color: #89dceb; } /* teal    */
+
+.token.keyword,
+.token.atrule         { color: #cba6f7; } /* violet  */
+
+.token.function,
+.token.function-name  { color: #89b4fa; } /* blue    */
+
+.token.class-name,
+.token.variable       { color: #f9e2af; } /* yellow  */
+
+.token.regex,
+.token.important      { color: #f38ba8; } /* pink    */
+
+.token.builtin,
+.token.selector       { color: #a6e3a1; } /* green   */
+
+/* Bash-specific */
+.language-bash .token.function { color: #89b4fa; }
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 900px) {
     :root { --viz-w: calc(100vw - 48px); }
