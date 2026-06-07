@@ -13,6 +13,8 @@ const BLOG_POSTS = [
         date: '2026-06-07',
         readTime: 10,
         tags: ['Quantitative Finance', 'Data Quality', 'Backtesting', 'Python'],
+        image: 'images/week1/fig1_cumulative_returns.png',
+        imageAlt: 'Cumulative returns: biased vs reference portfolio',
         featured: true
     }
 ];

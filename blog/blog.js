@@ -105,9 +105,12 @@
 
     function buildFeaturedCard(post) {
         const href = 'posts/' + escHtml(post.slug) + '.html';
+        const visual = post.image
+            ? '<img src="' + escHtml(post.image) + '" alt="' + escHtml(post.imageAlt || '') + '" style="width:100%;height:100%;object-fit:cover;opacity:0.85;" />'
+            : pipelineIconSVG();
         return [
             '<a href="' + href + '" class="post-card featured" data-tags="' + escHtml(post.tags.join(',')) + '" style="text-decoration:none">',
-            '  <div class="card-visual" aria-hidden="true">' + pipelineIconSVG() + '</div>',
+            '  <div class="card-visual" aria-hidden="true">' + visual + '</div>',
             '  <div class="card-body">',
             '    <span class="card-featured-label">Featured Post</span>',
             '    <div class="card-meta">',
