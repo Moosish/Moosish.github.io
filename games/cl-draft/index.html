@@ -1927,36 +1927,45 @@ function startTournament() {
   document.getElementById("btn-play-stage").textContent = "Play " + STAGE_NAMES[stageIndex];
 }
 
+function buildMatchCard(m) {
+  var scoreClass = m.myGoals > m.oppGoals ? "win" : m.myGoals < m.oppGoals ? "loss" : "draw";
+  var label = m.myGoals > m.oppGoals ? "Win" : m.myGoals < m.oppGoals ? "Eliminated" : "Draw";
+  var div = document.createElement("div");
+  div.className = "match-card";
+  div.innerHTML =
+    '<div>' +
+      '<div class="match-team player-team">' + MY_TEAM_NAME + '</div>' +
+      '<div class="match-team-rating">Avg ' + m.myRating.toFixed(1) + '</div>' +
+    '</div>' +
+    '<div>' +
+      '<div class="match-score ' + scoreClass + '">' + m.myGoals + ' – ' + m.oppGoals + '</div>' +
+      '<div class="match-result-label ' + scoreClass + '">' + label + '</div>' +
+    '</div>' +
+    '<div style="text-align:right">' +
+      '<div class="match-team opp-team">' + m.opp.club + '</div>' +
+      '<div class="match-team-rating" style="text-align:right">' + m.opp.season + '  \xb7  Avg ' + m.oppRating.toFixed(1) + '</div>' +
+    '</div>';
+  return div;
+}
+
+function revealMatchCard(section, card) {
+  card.style.opacity = "0";
+  card.style.transform = "translateY(10px)";
+  section.appendChild(card);
+  card.getBoundingClientRect(); // force reflow
+  card.style.transition = "opacity 0.35s ease, transform 0.35s ease";
+  card.style.opacity = "1";
+  card.style.transform = "translateY(0)";
+}
+
 function renderBracket() {
   var bracket = document.getElementById("bracket");
   bracket.innerHTML = "";
-
   matchResults.forEach(function(stage, si) {
     var section = document.createElement("div");
     section.className = "bracket-stage";
     section.innerHTML = '<div class="stage-label">' + STAGE_NAMES[si] + '</div>';
-
-    var matchesHtml = "";
-    stage.forEach(function(m) {
-      var scoreClass = m.myGoals > m.oppGoals ? "win" : m.myGoals < m.oppGoals ? "loss" : "draw";
-      var label = m.myGoals > m.oppGoals ? "Win" : m.myGoals < m.oppGoals ? "Eliminated" : "Draw";
-      matchesHtml +=
-        '<div class="match-card">' +
-          '<div>' +
-            '<div class="match-team player-team">' + MY_TEAM_NAME + '</div>' +
-            '<div class="match-team-rating">Avg ' + m.myRating.toFixed(1) + '</div>' +
-          '</div>' +
-          '<div>' +
-            '<div class="match-score ' + scoreClass + '">' + m.myGoals + ' – ' + m.oppGoals + '</div>' +
-            '<div class="match-result-label ' + scoreClass + '">' + label + '</div>' +
-          '</div>' +
-          '<div style="text-align:right">' +
-            '<div class="match-team opp-team">' + m.opp.club + '</div>' +
-            '<div class="match-team-rating" style="text-align:right">' + m.opp.season + '  ·  Avg ' + m.oppRating.toFixed(1) + '</div>' +
-          '</div>' +
-        '</div>';
-    });
-    section.innerHTML += matchesHtml;
+    stage.forEach(function(m) { section.appendChild(buildMatchCard(m)); });
     bracket.appendChild(section);
   });
 }
@@ -1964,8 +1973,12 @@ function renderBracket() {
 function playNextStage() {
   if (eliminated) return;
 
+  var btn = document.getElementById("btn-play-stage");
+  btn.disabled = true;
+  btn.textContent = "Simulating…";
+
   var stageName = STAGE_NAMES[stageIndex];
-  var matchCount = stageIndex === 0 ? 6 : 1; // group stage: 6 matches; KO: 1
+  var matchCount = stageIndex === 0 ? 6 : 1;
   var stageMatches = [];
   var myRating = myAvgRating();
 
@@ -1977,42 +1990,67 @@ function playNextStage() {
   }
 
   matchResults.push(stageMatches);
-  renderBracket();
 
-  // Check group stage outcome
+  var bracket = document.getElementById("bracket");
+  var section = document.createElement("div");
+  section.className = "bracket-stage";
+  section.innerHTML = '<div class="stage-label">' + stageName + '</div>';
+  bracket.appendChild(section);
+
+  setTimeout(function() {
+    section.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, 80);
+
+  var MATCH_GAP = 650;  // ms between consecutive match reveals
+  var SETTLE    = 800;  // ms after last match before processing outcome
+
+  stageMatches.forEach(function(m, idx) {
+    setTimeout(function() {
+      revealMatchCard(section, buildMatchCard(m));
+    }, MATCH_GAP * (idx + 1));
+  });
+
+  var finishAt = MATCH_GAP * (stageMatches.length + 1) + SETTLE;
+  setTimeout(function() { finishStage(stageMatches, stageName, btn); }, finishAt);
+}
+
+function finishStage(stageMatches, stageName, btn) {
   if (stageIndex === 0) {
     var wins = stageMatches.filter(function(m){ return m.myGoals > m.oppGoals; }).length;
     var pts = stageMatches.reduce(function(a,m){ return a + (m.myGoals > m.oppGoals ? 3 : m.myGoals === m.oppGoals ? 1 : 0); }, 0);
     document.getElementById("tourn-sub").textContent = "Group Stage: " + wins + "W — " + pts + " pts";
 
     if (pts < 7) {
-      // Fail group stage — eliminated
       eliminated = true;
       showResult(false, "Out in the Group Stage", "Only " + pts + " points — better luck next time.");
       return;
     }
     stageIndex++;
-    document.getElementById("btn-play-stage").textContent = "Play " + STAGE_NAMES[stageIndex];
+    btn.disabled = false;
+    btn.textContent = "Play " + STAGE_NAMES[stageIndex];
     return;
   }
 
-  // KO stage
   var lastMatch = stageMatches[0];
   if (lastMatch.myGoals < lastMatch.oppGoals) {
     eliminated = true;
-    showResult(false, "Eliminated in the " + stageName, lastMatch.opp.club + " (" + lastMatch.opp.season + ") beat you " + lastMatch.oppGoals + "–" + lastMatch.myGoals + ".");
+    showResult(false, "Eliminated in the " + stageName,
+      lastMatch.opp.club + " (" + lastMatch.opp.season + ") beat you " +
+      lastMatch.oppGoals + "–" + lastMatch.myGoals + ".");
     return;
   }
 
   if (stageIndex === 4) {
-    // Won the final
-    showResult(true, "Champions of Europe!", "You beat " + lastMatch.opp.club + " " + lastMatch.myGoals + "–" + lastMatch.oppGoals + " in the Final.");
+    showResult(true, "Champions of Europe!",
+      "You beat " + lastMatch.opp.club + " " + lastMatch.myGoals + "–" + lastMatch.oppGoals + " in the Final.");
     return;
   }
 
   stageIndex++;
-  document.getElementById("btn-play-stage").textContent = "Play " + STAGE_NAMES[stageIndex];
-  document.getElementById("tourn-sub").textContent = STAGE_NAMES[stageIndex - 1] + " — through to the " + STAGE_NAMES[stageIndex];
+  btn.disabled = false;
+  btn.textContent = "Play " + STAGE_NAMES[stageIndex];
+  document.getElementById("tourn-sub").textContent =
+    STAGE_NAMES[stageIndex - 1] + " — through to the " + STAGE_NAMES[stageIndex];
 }
 
 function showResult(won, title, sub) {
