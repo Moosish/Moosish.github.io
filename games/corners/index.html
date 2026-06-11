@@ -480,7 +480,8 @@
 
     function drawBall() {
         if (!ball) return;
-        var h = Math.sin((ball.t / ball.dur) * Math.PI);
+        var prog = ball.t / ball.dur;
+        var h = Math.sin(Math.pow(prog, 0.6) * Math.PI); // peaks early, descends into box
         if (h > 0.05) {
             ctx.beginPath();
             ctx.ellipse(ball.x+h*4, ball.y+h*8, (5+h*3)*1.4, (5+h*3)*0.6, 0, 0, Math.PI*2);
@@ -643,18 +644,20 @@
             driven:     { x: PA_X+PA_W/2,     y: PA_Y+PS_D },
         },
     };
+    // Cubic bezier: two control points per delivery type
+    // P0 = corner, P1a = initial direction off boot, P1b = bend point, P2 = landing zone
     var CTRLS = {
         right: {
-            inswinger:  { x: 340, y: 280 },
-            outswinger: { x: 560, y: 50  },
-            nearpost:   { x: 580, y: 44  },
-            driven:     { x: 560, y: 155 },
+            inswinger:  [{ x:743, y:105 }, { x:450, y:140 }], // straight into box then bends left to near post
+            outswinger: [{ x:700, y:75  }, { x:520, y:170 }], // shallow start then drops to back post
+            nearpost:   [{ x:650, y:46  }, { x:480, y:54  }], // flat delivery along goal line
+            driven:     [{ x:680, y:62  }, { x:550, y:162 }], // hard low ball to pen spot
         },
         left: {
-            inswinger:  { x: 460, y: 280 },
-            outswinger: { x: 240, y: 50  },
-            nearpost:   { x: 220, y: 44  },
-            driven:     { x: 240, y: 155 },
+            inswinger:  [{ x: 57, y:105 }, { x:350, y:140 }], // mirrors right
+            outswinger: [{ x:100, y:75  }, { x:280, y:170 }],
+            nearpost:   [{ x:150, y:46  }, { x:320, y:54  }],
+            driven:     [{ x:120, y:62  }, { x:250, y:162 }],
         },
     };
 
@@ -689,8 +692,10 @@
         };
         ball = {
             x:cp.x, y:cp.y, trail:[],
-            p0:{x:cp.x, y:cp.y}, p1:ctrl, p2:end,
-            t:0, dur: ctype === 'driven' ? 50 : 66,
+            p0:{x:cp.x, y:cp.y},
+            p1a: ctrl[0], p1b: ctrl[1],
+            p2:end,
+            t:0, dur: ctype === 'nearpost' ? 82 : ctype === 'driven' ? 98 : 125,
         };
         phase = 'flight';
         setDefenderTargets();
@@ -700,8 +705,8 @@
         if (!ball) return;
         ball.t = Math.min(ball.t+1, ball.dur);
         var t = ball.t / ball.dur, mt = 1-t;
-        var nx = mt*mt*ball.p0.x + 2*mt*t*ball.p1.x + t*t*ball.p2.x;
-        var ny = mt*mt*ball.p0.y + 2*mt*t*ball.p1.y + t*t*ball.p2.y;
+        var nx = mt*mt*mt*ball.p0.x + 3*mt*mt*t*ball.p1a.x + 3*mt*t*t*ball.p1b.x + t*t*t*ball.p2.x;
+        var ny = mt*mt*mt*ball.p0.y + 3*mt*mt*t*ball.p1a.y + 3*mt*t*t*ball.p1b.y + t*t*t*ball.p2.y;
         ball.trail.push({x:ball.x, y:ball.y});
         if (ball.trail.length > 16) ball.trail.shift();
         ball.x = nx; ball.y = ny;
