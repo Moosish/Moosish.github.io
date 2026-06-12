@@ -19461,6 +19461,11 @@ function restartGame() {
   document.querySelectorAll(".formation-card").forEach(function(c){ c.classList.remove("selected"); });
   document.getElementById("btn-confirm-formation").disabled = true;
   document.getElementById("formation-btn-label").textContent = "Select a formation";
+  var playBtn = document.getElementById("btn-play-stage");
+  playBtn.disabled = false;
+  playBtn.textContent = "Play Group Stage";
+  playBtn.style.display = "inline-block";
+  document.getElementById("bracket").innerHTML = "";
   renderFormationCards();
   showPhase("phase-formation");
 }
